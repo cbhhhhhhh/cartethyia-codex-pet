@@ -1,0 +1,317 @@
+{
+  "baseline": "macOS v2.2.0",
+  "host": {
+    "windows": "Windows 11 Pro 10.0.22631 x64",
+    "cpu": "Intel Core i5-14600KF",
+    "gpu": "NVIDIA GeForce RTX 5060 Ti",
+    "codex_desktop": "26.1117.4957.0",
+    "codex_cli": "0.171.0-alpha.13",
+    "session": 2,
+    "display": "G52E 2560x1440 @ 125%",
+    "native_windows": true
+  },
+  "installer": {
+    "clean_install": {
+      "id": 41976,
+      "registered": true,
+      "shortcut": true,
+      "preinstall_config_backup": true
+    },
+    "upgrade": {
+      "settings_width": 172,
+      "history_preserved": true,
+      "project_registrations": 1,
+      "active_mcp_closed": true,
+      "new_gui": 42456
+    },
+    "uninstall": {
+      "app_removed": true,
+      "registry_removed": true,
+      "shortcut_removed": true,
+      "personal_history_retained": true,
+      "unrelated_config_retained": true,
+      "active_mcp_closed": true
+    },
+    "installed_pid": 43064,
+    "installer_sha256": "d41c6ef07c4b7e475dc6bdf80121d8fcb83ae920a01ae194dc147728c32d3105"
+  },
+  "turn_render_latency_ms": {
+    "success": {
+      "status": "completed",
+      "onset_ms": 52,
+      "terminal_ms": 54,
+      "idle_ms": 612,
+      "painted": [
+        "thinking",
+        "working",
+        "thinking",
+        "review",
+        "success",
+        "idle"
+      ],
+      "hook_events": [
+        "start",
+        "tool",
+        "result"
+      ],
+      "end_reference": "rollout"
+    },
+    "interrupt": {
+      "status": "interrupted",
+      "onset_ms": 82,
+      "terminal_ms": 38,
+      "idle_ms": 38,
+      "painted": [
+        "thinking",
+        "idle"
+      ],
+      "hook_events": [],
+      "end_reference": "rollout"
+    },
+    "failure": {
+      "status": "failed",
+      "onset_ms": 108,
+      "terminal_ms": 20,
+      "idle_ms": 590,
+      "painted": [
+        "thinking",
+        "error",
+        "idle"
+      ],
+      "hook_events": [
+        "start"
+      ],
+      "end_reference": "rollout"
+    },
+    "approval": {
+      "status": "completed",
+      "onset_ms": 80,
+      "terminal_ms": 70,
+      "idle_ms": 634,
+      "painted": [
+        "thinking",
+        "working",
+        "waiting-for-approval",
+        "success",
+        "idle"
+      ],
+      "hook_events": [
+        "start",
+        "tool",
+        "approval"
+      ],
+      "end_reference": "rollout",
+      "approval_ms": 184
+    }
+  },
+  "art": {
+    "clips": 109,
+    "frames_decoded": 1744,
+    "groups": 13,
+    "portraits": 10
+  },
+  "pixel_hit_and_acl": {
+    "pet_rect": [
+      100,
+      100,
+      280,
+      295
+    ],
+    "corner_hits_underlay": true,
+    "body_hits_pet": true,
+    "target_received_button_messages": true,
+    "layered": true,
+    "topmost": true,
+    "dpi": 120,
+    "pipe_current_user_only": true,
+    "backup_current_user_only": true
+  },
+  "native_window_motion": {
+    "slow_drop_middle": [
+      1190,
+      593,
+      1370,
+      788
+    ],
+    "circle": {
+      "physical_pixel_span": 2380,
+      "rebound": true
+    },
+    "shake": {
+      "physical_pixel_span": 2380,
+      "rebound": true
+    },
+    "final_rect": [
+      2300,
+      1144,
+      2480,
+      1339
+    ]
+  },
+  "qt_interactions": {
+    "scale": 1.25,
+    "screen_count": 1,
+    "clips": 109,
+    "frames": 1744,
+    "portraits": 10,
+    "slow_drop": [
+      1003,
+      474
+    ],
+    "circle": {
+      "span": 1904,
+      "rebound": true
+    },
+    "shake": {
+      "span": 1889,
+      "rebound": true
+    },
+    "hover": "思考   ·   2 秒\n工具   —\n计划   —",
+    "menu": [
+      "点播动作",
+      "待办事项",
+      "聊天记录",
+      "查看额度",
+      "设置",
+      "收起",
+      "静音",
+      "退出"
+    ],
+    "input_above": true,
+    "text_chat": {
+      "chunks": 27,
+      "text": "我是一只精灵，拥有金色长发和尖耳朵，戴着一顶帽子，穿着格子裙，面带微笑。",
+      "emotion": "happy",
+      "action": "waving"
+    },
+    "chat_cancel": {
+      "chunks_before_stop": 4,
+      "history_preserved": true
+    },
+    "image_reply": {
+      "text": "我是一只可爱的精灵，有着金色长发和尖耳朵，戴着一顶帽子，穿着格子裙，面带微笑。",
+      "image_saved": true
+    },
+    "todo_toggle": true,
+    "wake_hide": true
+  },
+  "settings_download": {
+    "seconds": 208.27,
+    "settings_status": "已校验，可在头顶聊天",
+    "qwen2.5-1.5b-instruct-q4_k_m.gguf": true,
+    "cpu": true,
+    "vulkan": true
+  },
+  "inference_processes": {
+    "cpu": {
+      "seconds": 3.311,
+      "chunks": 9,
+      "rss_peak_mib": 1805.57,
+      "sampled_cpu_seconds": 13.672,
+      "first_partial_seconds": 1.998
+    },
+    "auto": {
+      "seconds": 1.818,
+      "chunks": 22,
+      "rss_peak_mib": 1975.16,
+      "sampled_cpu_seconds": 0.531,
+      "first_partial_seconds": 1.505
+    }
+  },
+  "resident_chat_cancel": {
+    "real_resident_pid": 43064,
+    "model_child": 37584,
+    "model_rss_observed_peak_mib": 456.38,
+    "partial_text_observed": false,
+    "model_exited": true,
+    "local_history_unchanged": true
+  },
+  "profile_and_quiet_policy": {
+    "independent_histories": true,
+    "independent_personas": true,
+    "custom_pack_loaded": true,
+    "real_whisper_after_seconds": 311.16,
+    "muted_focus_quiet_suppression": true,
+    "due_notification": true
+  },
+  "qt_scaling_tests": [
+    {
+      "scale": 1.0,
+      "geometry_cases": 9
+    },
+    {
+      "scale": 1.25,
+      "geometry_cases": 9
+    },
+    {
+      "scale": 1.5,
+      "geometry_cases": 9
+    },
+    {
+      "scale": 2.0,
+      "geometry_cases": 9
+    }
+  ],
+  "virtual_dual_display": {
+    "screens": [
+      {
+        "name": "Left 150%",
+        "rect": [
+          -1706,
+          -100,
+          1706,
+          960
+        ],
+        "dpr": 1.5
+      },
+      {
+        "name": "Primary",
+        "rect": [
+          0,
+          0,
+          1920,
+          1080
+        ],
+        "dpr": 1.0
+      }
+    ],
+    "drag_primary_to_left": true,
+    "restored_xy": [
+      -924,
+      302
+    ],
+    "backend": "offscreen"
+  },
+  "global_shortcut": {
+    "shortcut_rebind": true,
+    "old_chord_released": true,
+    "hide_wake_via_WM_HOTKEY": true,
+    "settings_saved": true
+  },
+  "soak": {
+    "start": "2026-11-25T14:04:47+08:00",
+    "end": "2026-11-25T15:04:47+08:00",
+    "pid": 43064,
+    "monitored_seconds": 3600.007,
+    "samples": 121,
+    "exceptions": [],
+    "gui_cpu_percent_one_core": 0.01,
+    "gui_cpu_interval_peak_percent": 0.21,
+    "gui_rss_peak_mib": 96.98,
+    "gui_rss_median_mib": 96.81,
+    "gui_rss_final_mib": 96.96,
+    "process_tree_rss_sampled_peak_mib": 96.98,
+    "gui_cpu_p95_percent_one_core": 0.052,
+    "gui_cpu_seconds": 0.375
+  },
+  "additional_checks": {
+    "installed_files_matching_staging": 261,
+    "unit_passed": 25,
+    "mac_specific_skipped": 3,
+    "real_quota_snapshot_rendered": true,
+    "sapi_voice": "Microsoft Huihui Desktop - Chinese (Simplified)",
+    "sapi_wav_bytes": 135592,
+    "main_history_and_memory_cleared_after_fixture": true,
+    "unrelated_real_config_matches_preinstall_backup": true
+  }
+}

@@ -15,6 +15,8 @@ Get-FileHash .\dist\Cartethyia-2.2.0-Windows-x64-Setup.exe -Algorithm SHA256
 
 ## 工作与聊天
 
+本机 Codex CLI 的 `HooksListResponse` 架构列出 14 种事件。Windows 插件注册其中七种，分别为 `UserPromptSubmit`、`PreToolUse`、`PostToolUse`、`PermissionRequest`、`Stop`、`Interrupt`、`SubagentStop`。同一架构还列出模型请求前后、压缩前后、会话开始和结束、子代理启动七种事件。一次回合可能只发送其中一部分，验收报告记录了每个真实回合实际收到的事件。
+
 - Windows 角色窗口和独立气泡运行于登录用户的图形会话。鼠标在分层 HWND 上按 alpha 命中。Qt 提供逻辑坐标和每显示器缩放，Win32 注册全局快捷键。重复启动通过用户管道请求已有进程将设置置前。每个档案使用独立的进程锁。
 - 安装器通过 Codex CLI 增删 pet-plus@cartethyia-windows-local。服务在更改前备份当前配置并核对来源。Windows hook 调用使用当前环境的 PowerShell 命令形式，发送器仅投递规范化事件。接收端和本地档案目录的 DACL 限定为当前用户。审批决定留给 Codex 的会话客户端。
 - core.py 将官方 hook、rollout 增量记录和本机分页历史的活动条目交给 src/state.py。observe.py 解析 rollout。events.py 使用 Windows 目录变化通知，并以只读 SQLite 连接投影回合状态及工具标识。SQLite 表结构和 JSONL 字段属于本机兼容路径。启动从现有尾部起读。无信号、回合超时、审批超时均会收敛到待机。
