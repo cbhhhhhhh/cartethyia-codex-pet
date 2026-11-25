@@ -1,12 +1,21 @@
 # 卡提希娅codex桌宠
 
-这是读取本机 Codex 事件的 macOS 桌面伙伴。将鼠标放在卡提身上看工作详情，右键点播动作或打开待办，单击在她头顶聊天。菜单栏 **♧** 可以找回卡提。[2.1 手势、气泡和应用入口](docs/DESKTOP-V2.1.md) · [桌宠功能清单](docs/DESKTOP-V2.md)
+卡提希娅是运行在 macOS 和 Windows 桌面上的 Codex 伙伴。她会随本机任务切换动作。将鼠标放在卡提身上可以看工作详情，右键点播动作或打开待办，单击在她头顶聊天。
+
+## 下载安装
+
+| 选择你的系统 | v2.2.0 安装包 | 安装方法 |
+| --- | --- | --- |
+| Windows x64（已在 Windows 11 验证） | **[下载 Windows 安装包（EXE）](https://github.com/cbhhhhhhh/cartethyia-codex-pet/releases/download/v2.2.0/Cartethyia-2.2.0-Windows-x64-Setup.exe)** | 双击安装，从开始菜单打开「卡提希娅」。[Windows 使用与卸载说明](docs/WINDOWS.md) |
+| macOS 27.2 或更新版本，Apple Silicon（M 系列） | **[下载 Mac 安装包（ZIP）](https://github.com/cbhhhhhhh/cartethyia-codex-pet/releases/download/v2.2.0/Cartethyia-Codex-Pet-macOS-arm64.zip)** | 解压后双击 `安装.command`。菜单栏 **♧** 可以找回卡提。 |
+
+两个安装包都随附角色图集和 109 段扩展动作。工作提醒可以直接使用，本地聊天模型按需下载。[发行说明与 SHA-256 校验文件](https://github.com/cbhhhhhhh/cartethyia-codex-pet/releases/tag/v2.2.0)
 
 ![卡提希娅的工作气泡](docs/v21-preview.png)
 
-## Windows 桌面版
+Windows 用户可从开始菜单或系统托盘进入设置。[Windows 构建与接口](docs/WINDOWS-DEVELOPMENT.md) · [Windows 实机验收](docs/WINDOWS-ACCEPTANCE.md)
 
-本地分支 `codex/windows-port` 提供 Windows x64 安装器。双击 `dist/Cartethyia-2.2.0-Windows-x64-Setup.exe`，安装后从开始菜单「卡提希娅」或系统托盘进入设置。[中文安装与使用说明](docs/WINDOWS.md) · [Windows 构建与接口](docs/WINDOWS-DEVELOPMENT.md) · [本机验收](docs/WINDOWS-ACCEPTANCE.md)
+macOS 用户可查看 [2.1 手势、气泡和应用入口](docs/DESKTOP-V2.1.md) 与 [桌宠功能清单](docs/DESKTOP-V2.md)。
 
 ## 在另一台 Mac 上安装
 
