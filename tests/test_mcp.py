@@ -2,6 +2,8 @@ import json
 import os
 from pathlib import Path
 import sqlite3
+from contextlib import closing
+import sys
 import subprocess
 import tempfile
 import unittest
@@ -44,9 +46,10 @@ class McpTests(unittest.TestCase):
                 ),
             ]
             p = subprocess.run(
-                ["/usr/bin/python3", "-B", str(ROOT / "src/mcp.py")],
+                [sys.executable, "-B", str(ROOT / "src/mcp.py")],
                 input="\n".join(requests) + "\n",
-                env=dict(os.environ, HOME=temp),
+                env=dict(os.environ, HOME=temp, LOCALAPPDATA=temp, PYTHONIOENCODING="utf-8"),
+                encoding="utf-8",
                 text=True,
                 capture_output=True,
                 check=True,
@@ -64,7 +67,9 @@ class McpTests(unittest.TestCase):
             path = Path(
                 temp, "Library/Application Support/CodexPetPlus/reminders.sqlite3"
             )
-            with sqlite3.connect(path) as db:
+            if sys.platform == "win32":
+                path = Path(temp, "CartethyiaPet/reminders.sqlite3")
+            with closing(sqlite3.connect(path)) as db:
                 self.assertEqual(
                     db.execute("SELECT body FROM reminder WHERE id=?", (i,)).fetchone()[
                         0

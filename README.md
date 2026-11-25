@@ -4,6 +4,10 @@
 
 ![卡提希娅的工作气泡](docs/v21-preview.png)
 
+## Windows 桌面版
+
+本地分支 `codex/windows-port` 提供 Windows x64 安装器。双击 `dist/Cartethyia-2.2.0-Windows-x64-Setup.exe`，安装后从开始菜单「卡提希娅」或系统托盘进入设置。[中文安装与使用说明](docs/WINDOWS.md) · [Windows 构建与接口](docs/WINDOWS-DEVELOPMENT.md) · [本机验收](docs/WINDOWS-ACCEPTANCE.md)
+
 ## 在另一台 Mac 上安装
 
 **[下载 Mac 安装包](https://github.com/cbhhhhhhh/cartethyia-codex-pet/releases/latest/download/Cartethyia-Codex-Pet-macOS-arm64.zip)** · [版本说明与 SHA-256 校验文件](https://github.com/cbhhhhhhh/cartethyia-codex-pet/releases/latest)

@@ -1,9 +1,11 @@
 import sqlite3
 import uuid
 import time
+from contextlib import closing, contextmanager
 from datetime import datetime
 
 
+@contextmanager
 def db(base):
     base.mkdir(mode=0o700, parents=True, exist_ok=True)
     c = sqlite3.connect(base / "reminders.sqlite3", timeout=1)
@@ -11,7 +13,8 @@ def db(base):
         "CREATE TABLE IF NOT EXISTS reminder(id TEXT PRIMARY KEY,body TEXT,due REAL,thread TEXT,done INTEGER,notified INTEGER)"
     )
     c.execute("CREATE TABLE IF NOT EXISTS cadence(id TEXT PRIMARY KEY, last REAL)")
-    return c
+    with closing(c), c:
+        yield c
 
 
 def add(base, args):

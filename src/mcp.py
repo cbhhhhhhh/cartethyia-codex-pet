@@ -7,6 +7,8 @@ from pathlib import Path
 from reminders import add, complete
 
 base = Path.home() / "Library/Application Support/CodexPetPlus"
+if os.name == "nt":
+    base = Path(os.environ["LOCALAPPDATA"]) / "CartethyiaPet"
 
 
 def tool(name, desc, props, required):
@@ -52,11 +54,13 @@ def dispatch(m, p):
     args = p.get("arguments", {})
     if n == "pet_status":
         path = base / "profiles/main/status.json"
-        d = (
-            json.loads(path.read_text())
-            if path.exists() and (base / "events.sock").is_socket()
-            else {"state": "idle", "online": False}
-        )
+        if os.name == "nt":
+            import time
+            d = json.loads(path.read_text(encoding="utf-8")) if path.exists() else {}
+            if time.time() - d.get("updated", 0) > 12:
+                d = {"state": "idle", "online": False}
+        else:
+            d = json.loads(path.read_text()) if path.exists() and (base / "events.sock").is_socket() else {"state": "idle", "online": False}
     elif n == "pet_remind":
         d = add(base, args)
     elif n == "pet_complete":

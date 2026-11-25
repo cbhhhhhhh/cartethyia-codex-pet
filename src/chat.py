@@ -2,6 +2,7 @@
 
 import http.client
 import json
+import os
 import secrets
 import socket
 import subprocess
@@ -43,7 +44,8 @@ def partial_text(raw):
 
 
 def generate(
-    runtime, model, persona, history, user, cancel, publish, image=None, projector=None
+    runtime, model, persona, history, user, cancel, publish, image=None, projector=None,
+    backend="auto"
 ):
     models = Path(runtime).resolve()
     filename = Path(model).name
@@ -51,6 +53,9 @@ def generate(
     if path.parent != models or path.suffix != ".gguf" or not path.is_file():
         raise RuntimeError("请先安装或选择本地 GGUF 模型")
     server = models / "llama-b12675/llama-server"
+    if os.name == "nt":
+        gpu = models / "llama-b12675-vulkan/llama-server.exe"
+        server = gpu if backend != "cpu" and gpu.exists() else models / "llama-b12675-cpu/llama-server.exe"
     if not server.is_file():
         raise RuntimeError("本地推理程序尚未安装")
     with socket.socket() as pick:
@@ -101,9 +106,12 @@ def generate(
             {"type": "image_url", "image_url": {"url": url}},
         ]
         extra = ["--mmproj", str(mm)]
-    with tempfile.NamedTemporaryFile(mode="w") as secret:
-        secret.write(token)
-        secret.flush()
+    with tempfile.TemporaryDirectory() as private:
+        secret = Path(private) / "key"
+        with open(
+            secret, "x", encoding="ascii", opener=lambda p, flags: os.open(p, flags, 0o600)
+        ) as stream:
+            stream.write(token)
         proc = subprocess.Popen(
             [
                 str(server),
@@ -114,7 +122,7 @@ def generate(
                 "--port",
                 str(port),
                 "--api-key-file",
-                secret.name,
+                str(secret),
                 "-c",
                 "6144",
                 "-np",
@@ -126,6 +134,7 @@ def generate(
             cwd=models,
             stdout=subprocess.DEVNULL,
             stderr=subprocess.DEVNULL,
+            creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0),
         )
         import threading
 

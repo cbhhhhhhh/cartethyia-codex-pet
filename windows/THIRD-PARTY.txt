@@ -1,0 +1,11 @@
+卡提希娅 Windows 桌宠 2.2.0
+角色、二创插画与动作的署名和使用说明见安装目录的 NOTICE。
+
+CPython 3.13.9 来自 Python Software Foundation 的 Windows x64 embeddable package，随附 runtime/LICENSE.txt。
+PySide6-Essentials、shiboken6 和 Qt 6.9.3 来自 Qt for Python 的官方 wheels；以动态库方式加载，可原位替换对应 ABI 的库。开源版本的 GNU LGPL v3 与 GPL v3 条款随附于 windows/licenses。相应版本的源代码和构建说明：
+https://download.qt.io/archive/qt/6.9/6.9.3/
+https://download.qt.io/official_releases/QtForPython/
+https://code.qt.io/cgit/pyside/pyside-setup.git/tag/?h=v6.9.3
+上游 wheels 和元数据可从 https://pypi.org/project/PySide6-Essentials/6.9.3/ 和 https://pypi.org/project/shiboken6/6.9.3/ 获取。
+Inno Setup 版权归 Jordan Russell、Martijn Laan 及贡献者所有。https://jrsoftware.org/isinfo.php
+选装 llama.cpp 与 Qwen 模型的版本、来源及署名见 NOTICE。

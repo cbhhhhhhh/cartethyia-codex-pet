@@ -1,5 +1,6 @@
 import json
 import socket
+import sys
 import tempfile
 import unittest
 import uuid
@@ -7,6 +8,7 @@ from pathlib import Path
 from conversation import Broker
 
 
+@unittest.skipIf(sys.platform == "win32", "Mac broker uses Unix datagrams; Windows uses per-user named pipes")
 class FanoutTests(unittest.TestCase):
     def test_peer_pose_and_impulse_use_distinct_channel(self):
         with tempfile.TemporaryDirectory(dir="/tmp") as folder:

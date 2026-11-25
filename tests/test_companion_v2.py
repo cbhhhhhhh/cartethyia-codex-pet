@@ -1,4 +1,5 @@
 import json
+import os
 import sys
 import tempfile
 import unittest
@@ -55,6 +56,12 @@ class ArchiveTests(unittest.TestCase):
 class StageTests(unittest.TestCase):
     def setUp(self):
         self.tmp = tempfile.TemporaryDirectory()
+        for setting in (
+            patch.dict(os.environ, CODEX_HOME=self.tmp.name),
+            patch("local_api.SHIPPED_PETS", Path(__file__).resolve().parents[1] / "art/pets"),
+        ):
+            setting.start()
+            self.addCleanup(setting.stop)
         self.commands = []
         self.stage = LocalStage(
             Path(self.tmp.name),
@@ -88,7 +95,8 @@ class StageTests(unittest.TestCase):
             with self.assertRaises(HTTPError) as r:
                 self.api("/v1/state", **args)
             self.assertEqual(r.exception.code, 403)
-        self.assertEqual(self.stage.credentials.stat().st_mode & 0o777, 0o600)
+        if sys.platform != "win32":
+            self.assertEqual(self.stage.credentials.stat().st_mode & 0o777, 0o600)
         self.assertGreater(len(self.api("/v1/sprite")), 100)
 
     def test_lease_user_takeover_menus(self):
