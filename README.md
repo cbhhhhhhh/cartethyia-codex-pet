@@ -6,6 +6,8 @@
 
 ## 在另一台 Mac 上安装
 
+**[下载 Mac 安装包](https://github.com/cbhhhhhhh/cartethyia-codex-pet/releases/latest/download/Cartethyia-Codex-Pet-macOS-arm64.zip)** · [版本说明与 SHA-256 校验文件](https://github.com/cbhhhhhhh/cartethyia-codex-pet/releases/latest)
+
 需要 **M 系列芯片、macOS 27.2 或更新版本**，并已安装支持本地插件的 Codex。安装器优先使用 PATH 中的 `codex`，也能找到位于「应用程序」中的 Codex 桌面版内置 CLI。推理和工作提醒在本机运行，无需 API Key。发行包内含独立的 Python 运行环境，无需 Homebrew、Xcode 或单独安装 Python。
 
 1. 在这个 GitHub 仓库的 **Releases → Latest** 下载 **Cartethyia-Codex-Pet-macOS-arm64.zip**（Assets 下的安装包）。解压，打开文件夹，双击 **安装.command**。
