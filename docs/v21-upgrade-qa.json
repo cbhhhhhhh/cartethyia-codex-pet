@@ -1,0 +1,23 @@
+{
+  "version": "2.1",
+  "index_only_current_app": true,
+  "old_installed_archive_removed": true,
+  "byte_identical_before_and_after": [
+    "config.toml",
+    "pet.json",
+    "spritesheet.webp",
+    "history.json",
+    "memory.json"
+  ],
+  "settings_file_loaded_and_reserialized": true,
+  "finder_icon_file": "Cartethyia.icns",
+  "icon_bytes": 2121916,
+  "original_codex_config_uninstall_backup_present": true,
+  "unmodified_codex_signature_valid": true,
+  "windowserver_circle_trials": [
+    440,
+    897,
+    440
+  ],
+  "three_trials_rebounded": true
+}

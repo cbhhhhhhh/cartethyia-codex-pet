@@ -1,0 +1,74 @@
+# 架构与本机勘察
+
+## 桌面交互 2.1
+
+角色窗口和卡片分别由 AppKit 管理。角色按图集像素透明度接受指针事件。工作提示、输入、回复、待办共用贴在角色窗口上的面板，悬停与工作提示允许鼠标穿透。卡片优先放在角色上方，到达屏幕顶边时放在下方。聊天记录和设置各自有可聚焦的常规窗口。
+
+拖动时记录屏幕坐标。最多保存 750 毫秒的轨迹，通过路径长度、轨迹跨度、首尾距离和速度识别快速画圈或来回摇动，赋予随机左右方向和上扬初速。直线甩出使用最近 170 毫秒的速度；静止 180 毫秒后释放会保存当前位置。双击拖动使用拉距决定反方向初速。飞行期间积分重力、墙面法向反弹、地面阻力。多个本机档案通过带 token 的 Unix 数据报广播位置和碰撞冲量。
+
+broker 保存每个档案的完整历史，再从中截取模型上下文。图片在档案中按内容摘要保存。可选网页舞台和本机脚本接口由 broker 按需启动，使用单独的临时 Bearer token、回环地址和同源限制。渲染层只能触发预定义操作。安装器先验证独立应用签名，通过临时目录替换旧应用，去除早期备份的应用注册后将正式版注册到 Launch Services。安装前的 Codex 配置快照继续用于卸载恢复。模块和接口细节见 [2.0 交互与接口](docs/DESKTOP-V2.md)。
+
+气泡使用带定位指尖的 SwiftUI 形状、系统中文娃娃体及圆体。卡提使用十张本地透明插画，其他角色从各自图集取帧。一次回复确定情绪和动作，增量字符只更新文字。普通启动和系统重新打开事件显示设置，后台安装和附加档案使用显式参数。[2.1 画圈与气泡验收](docs/DESKTOP-V2.1.md)
+
+## 本机边界
+
+| 勘察对象 | 结果与工程决定 |
+| --- | --- |
+| ChatGPT.app、Codex CLI | macOS 应用 26.1117.41037，bundle ID `com.openai.codex`，CLI 0.171.0-alpha.13。通过 CLI 生成本版本 app-server JSON Schema。安装写入用户目录，只给独立 app 做 ad hoc 签名。 |
+| `~/.codex/config.toml` | 已有官方 marketplace、多个已启用插件，以及带环境配置的 MCP。工程用 CLI 加入独立 `cartethyia-local` marketplace，保留原设置。 |
+| 官方插件 manifest | `browser`、`chrome`、`unified-computer-use` 含 Stop、Interrupt、SubagentStop。`codex-app-tools` 等声明本地 MCP。插件支持 skills、命令 hooks、stdio MCP 以及客户端承载的应用内容。当前公开协议没有注册系统级、可拖动且每像素穿透的原生桌宠窗口的 API。 |
+| app-server 和 IPC | 公共协议提供回合、item、审批以及 `account/rateLimits/read`；审批是发给负责会话的客户端的请求。存在权限为用户私有的 `~/.codex/ipc/ipc.sock`，未发现对第三方保证的全桌面只读广播契约。工程对自己负责的公有协议请求使用 stdio，观察已有桌面任务采用 hook 与只读日志。 |
+| 用户图集 | 包声明 `spriteVersionNumber: 2`。读取真实 WebP，按每格 192×208 取前九行动画。兼容 1536×1872 和 1536×2288；v2 末两行的方向素材保留在原包，本窗口使用前九行。 |
+| dsh-pet | 本机 0.4.9。只读勘察了 work-status、whisper-policy、persona、setup、chat、todo、balance 和客户端 motion/chat/settings，并对照本地配置和记忆文件的结构。工程使用独立实现，未导入 DSH 的记忆、角色设定、图像或音频。 |
+
+可机读现场摘要见 [host-audit.json](docs/host-audit.json)。官方行为参考 [Hooks](https://learn.chatgpt.com/docs/hooks)、[应用深链接](https://learn.chatgpt.com/docs/reference/commands)、[App Server](https://developers.openai.com/codex/app-server/)。
+
+## Hook 与事件契约
+
+本机 `HooksListResponse.HookEventName` 有 14 种事件。模型请求前后为 PreModelRequest、PostModelRequest，工具前后为 PreToolUse、PostToolUse，授权为 PermissionRequest。其余为 PreCompact、PostCompact、SessionStart、SessionEnd、UserPromptSubmit、SubagentStart、SubagentStop、Stop、Interrupt。此版本没有 Notification hook。完整输入由 JSON 经 stdin 传入；公共字段包括 `session_id`、`hook_event_name`、`transcript_path`、`cwd`、`model`，回合及工具事件的专有字段按实际事件选择。大多数 hook 默认超时 600 秒，Interrupt 与 SessionEnd 默认 1 秒、最多 3 秒。本插件声明异步命令和 1 秒上限。发送器只提取最小字段，非阻塞投递后退出 0。它没有权限批准、拒绝或续跑任务。[官方输入、后台运行与超时说明](https://learn.chatgpt.com/docs/hooks)
+
+```text
+Codex 七项官方 hook → pet-hook → 带短期 token 的 Unix datagram ┐
+本地 rollout JSONL → 只读增量解析、过滤历史及重复事件         ├→ 单一 Reducer → 管道 → AppKit 浮窗
+Codex 的 update_plan、使用量快照 → 可用时显示详情             │
+本地 stdio MCP → SQLite 到期待办 → 提醒及庆祝                 ┘
+窗口聊天或定时闲聊 → 本机 llama-server → 结构化流式文字、情绪和动作
+```
+
+事件版本 `v=1`。包内保留 thread、turn、kind、call、tool、source 等字段。每次运行重建认证 token，Unix socket 及本地数据目录仅所属用户可读写。hook 忽略过大的 stdin，不保存 prompt、工具参数或输出。macOS 通过 kqueue 的 vnode 写入和目录变更事件通知尾读器，空闲期间无需反复遍历会话树。单实例最多监视 2,048 个路径，超过上限、目录尚未创建或系统缺少 kqueue 时回退到增量轮询。JSONL 尾读器从 EOF 开始，只投影相关事件；恢复旧会话时可以向前找最近的 turn ID，旧对话不会触发动画。JSONL 是兼容层，Codex 更新后可通过本机真实 CLI 测试发现字段变化。
+
+## 状态、绘制与故障恢复
+
+| 真实信号 | 工作状态 | 默认图集行 |
+| --- | --- | --- |
+| UserPromptSubmit / task_started | thinking | review |
+| PreToolUse / function_call | working | running |
+| PermissionRequest | waiting-for-approval | waiting |
+| PostToolUse / tool output | 其他工具仍在执行则 working，余下无工具则 thinking | running / review |
+| 最终答复阶段 | review | review |
+| Stop / SubagentStop | 短暂 review；其他 hook 可要求继续，后续真实工具重新进入 working | review |
+| task_complete | success 约 0.55 秒，随后 idle | jumping → idle |
+| Interrupt / turn_aborted | idle | idle |
+| 回合 error | error 约 0.55 秒，随后 idle | failed → idle |
+
+每个 thread/turn 独立归约，同时显示优先级最高的活动状态。审批优先于普通运行，终止回合有有限去重缓存，迟到的工具结果不会复活已结束回合。PermissionRequest 可以不含 call ID；有身份的请求按调用匹配，其余按官方工具名与后续结果关联。工具失败与回合失败分别处理，一个非零工具结果仍可由 Codex 继续修复。并行工具各有 call ID；已经完成的 call 去重。无权威状态时回到 idle。120 秒无新事件触发超时，审批上限 300 秒。broker 每 2 秒发本地心跳，原生窗口监视其退出与心跳超时并重启服务。
+
+AppKit 的 LSUIElement 应用包含透明无边框 NSPanel、菜单栏入口和 Carbon 全局快捷键。绘图复用 ImageIO 剪出的帧和 alpha 掩模，光标处的透明度决定窗口是否忽略鼠标事件。使用仅鼠标移动的 AppKit 监听，未采集键盘输入；监听不可用时回退到命中测试定时器。拖动使用 AppKit 屏幕坐标，按显示器的可用工作区限制位置；重力 1400 点/s²、弹性 0.78、地面摩擦 2.5、甩出速度倍率 1。Retina 缩放由系统处理。每次甩动单独启动 60 Hz 定时器，停稳即销毁。窗口收起暂停绘图和命中测试；后台仍接收工作通知。
+
+## 聊天与数据
+
+窗口和 broker 使用继承的进程管道。每次推理在临时的 127.0.0.1 端口启动 llama.cpp，使用随机 token 与仅所属用户可读的临时 key 文件。生成结束或中断时释放模型进程。默认模型是 Qwen2.5-1.5B-Instruct Q4_K_M。模型按 JSON Schema 返回文字、emotion、action，文字逐步解码，两者组合选择兼容动作。完整回复才进入记忆。清空或取消使旧流失效，避免迟到的字符重新出现。默认不调用云端模型。模型推理使用的统一内存要单独计算，超过 200 MB。
+
+主档案接收 hook、待办及日志。额外档案独立持有设置、记忆、窗口和日志观察器。主服务会经私有 socket 向运行中的其他档案转发已验证的 hook，包括审批事件。主伙伴退出后，额外档案继续使用只读日志。工作聊天内通过标准 deep link 跳到经过 UUID 校验的 thread。同步内置宠物只在显式授权的安装、切换或卸载时运行，调用官方 app-server 的 `mcpServer/tool/call` 和 `pets.select_pet`。使用临时本地会话承载 MCP，不启动模型回合。需要恢复的 ID 存于用户私有目录。
+
+天气默认关闭；选择开启后使用 Open-Meteo 城市搜索和当前天气，缓存一小时。设置中的专注开关以及真实工作状态会抑制碎碎念。系统通知授权、系统朗读、额度快照、可选图像理解各自独立。图像不进入持久记忆。[Open-Meteo 接口](https://open-meteo.com/en/docs)
+
+## 源码入口
+
+- `src/state.py` 管理工作状态和空闲策略；`src/observe.py` 读取本地事件；`src/hook.m` 发送最小事件。
+- `src/broker.py` 串行协调事件、聊天取消、持久化和通知；`chat.py` 管理推理进程，`weather.py` 管理城市缓存。
+- `src/Host.swift` 管理原生应用、输入、物理和菜单；`Companion.swift` 管理配置、图集、聊天与设置视图。
+- `src/mcp.py`、`reminders.py` 提供本地工具和提醒存储，`preference.py` 负责授权后的账户宠物选择。
+- `scripts/plugin.py` 根据每台 Mac 的安装位置生成本地 marketplace、hooks、MCP 清单和 skill。GitHub Release 分发 arm64 应用和安装器。角色基础图集和预渲染动作随应用提供，同名用户角色包可覆盖默认资源。
+
+本机通过 Apple SDK 确认存在 Focus Status API，自动读取需要应用能力和用户授权，当前独立本地签名版提供手动专注开关并在真实工作期间抑制碎碎念。[Apple 对 Focus 授权和应用能力的说明](https://developer.apple.com/documentation/UserNotifications/handling-communication-notifications-and-focus-status-updates)

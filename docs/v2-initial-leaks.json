@@ -1,0 +1,12 @@
+{
+  "gui": {
+    "returncode": 0,
+    "count": 0,
+    "bytes": 0
+  },
+  "broker": {
+    "returncode": 0,
+    "count": 0,
+    "bytes": 0
+  }
+}

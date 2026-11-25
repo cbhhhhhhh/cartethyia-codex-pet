@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Cartethyia · 本机舞台</title>
+    <link rel="stylesheet" href="/stage.css" />
+    <script defer src="/stage.js"></script>
+  </head>
+  <body>
+    <header>
+      <h1>Cartethyia</h1>
+      <span id="status" role="status">连接中</span>
+      <details id="motion" hidden>
+        <summary>触屏效果</summary>
+        <label><input type="checkbox" id="tilt" />倾斜重力</label
+        ><label><input type="checkbox" id="shake" />摇动甩出</label
+        ><label><input type="checkbox" id="buzz" />碰撞振动</label
+        ><button id="sensor">启用运动传感器</button>
+      </details>
+    </header>
+    <main id="stage">
+      <div id="anchor">
+        <section id="card" hidden></section>
+        <button id="pet" aria-label="和卡提说话"></button>
+      </div>
+    </main>
+    <menu id="menu" hidden>
+      <button data-op="compose">和卡提说话</button
+      ><button data-op="history">聊天记录</button
+      ><button data-op="detail">工作详情</button
+      ><button data-op="whisper">碎碎念</button
+      ><button data-op="todos">待办事项</button
+      ><button data-op="quota">查看额度</button
+      ><button data-op="weather">查询天气</button
+      ><button data-op="library">点播角色动作</button
+      ><button data-op="play">向你挥手</button
+      ><button data-op="sleep">睡觉</button><button data-op="wake">叫醒</button
+      ><button data-op="home">回到中间</button>
+    </menu>
+    <template id="composer"
+      ><form>
+        <input
+          aria-label="聊天内容"
+          placeholder="和卡提聊聊…"
+          maxlength="2000"
+          autocomplete="off"
+        /><label class="file" title="添加一张图片"
+          >图片<input type="file" accept="image/png,image/jpeg" /></label
+        ><button>发送</button
+        ><button type="button" data-op="cancel">中断</button>
+      </form></template
+    >
+  </body>
+</html>

@@ -1,0 +1,9 @@
+{
+  "installed_tools": [
+    "pet_complete",
+    "pet_remind",
+    "pet_status"
+  ],
+  "private_stdio_status_read": true,
+  "approval_control_returned": false
+}

@@ -1,0 +1,1695 @@
+{
+  "elapsed": 7200.07,
+  "target": 7200,
+  "complete": true,
+  "interrupted": false,
+  "samples": [
+    {
+      "t": 0.0,
+      "rssMiB": 118.36,
+      "cpu": 34.0,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 30.06,
+      "rssMiB": 137.41,
+      "cpu": 2.8,
+      "state": "thinking",
+      "healthy": true
+    },
+    {
+      "t": 60.13,
+      "rssMiB": 139.03,
+      "cpu": 1.1,
+      "state": "working",
+      "healthy": true
+    },
+    {
+      "t": 90.19,
+      "rssMiB": 138.42,
+      "cpu": 1.5,
+      "state": "working",
+      "healthy": true
+    },
+    {
+      "t": 120.25,
+      "rssMiB": 138.42,
+      "cpu": 1.6,
+      "state": "working",
+      "healthy": true
+    },
+    {
+      "t": 150.31,
+      "rssMiB": 138.44,
+      "cpu": 1.7,
+      "state": "working",
+      "healthy": true
+    },
+    {
+      "t": 180.37,
+      "rssMiB": 137.2,
+      "cpu": 0.5,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 210.44,
+      "rssMiB": 137.12,
+      "cpu": 0.7,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 240.51,
+      "rssMiB": 123.61,
+      "cpu": 0.9,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 270.57,
+      "rssMiB": 123.55,
+      "cpu": 0.5,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 300.64,
+      "rssMiB": 123.55,
+      "cpu": 0.7,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 330.71,
+      "rssMiB": 123.56,
+      "cpu": 1.4,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 360.78,
+      "rssMiB": 123.55,
+      "cpu": 0.4,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 390.85,
+      "rssMiB": 123.55,
+      "cpu": 1.0,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 420.91,
+      "rssMiB": 123.56,
+      "cpu": 1.3,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 450.98,
+      "rssMiB": 123.56,
+      "cpu": 0.5,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 481.06,
+      "rssMiB": 123.56,
+      "cpu": 0.8,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 511.12,
+      "rssMiB": 123.55,
+      "cpu": 1.3,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 541.19,
+      "rssMiB": 123.55,
+      "cpu": 0.4,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 571.26,
+      "rssMiB": 123.55,
+      "cpu": 1.0,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 601.32,
+      "rssMiB": 123.55,
+      "cpu": 0.3,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 631.39,
+      "rssMiB": 123.55,
+      "cpu": 0.8,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 661.45,
+      "rssMiB": 123.56,
+      "cpu": 1.1,
+      "state": "thinking",
+      "healthy": true
+    },
+    {
+      "t": 691.52,
+      "rssMiB": 123.56,
+      "cpu": 1.6,
+      "state": "working",
+      "healthy": true
+    },
+    {
+      "t": 721.59,
+      "rssMiB": 123.56,
+      "cpu": 1.1,
+      "state": "working",
+      "healthy": true
+    },
+    {
+      "t": 751.66,
+      "rssMiB": 123.56,
+      "cpu": 1.0,
+      "state": "working",
+      "healthy": true
+    },
+    {
+      "t": 781.73,
+      "rssMiB": 123.56,
+      "cpu": 1.2,
+      "state": "working",
+      "healthy": true
+    },
+    {
+      "t": 811.8,
+      "rssMiB": 123.92,
+      "cpu": 0.4,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 841.87,
+      "rssMiB": 123.69,
+      "cpu": 0.7,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 871.94,
+      "rssMiB": 123.69,
+      "cpu": 1.4,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 902.01,
+      "rssMiB": 123.7,
+      "cpu": 0.6,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 932.07,
+      "rssMiB": 123.69,
+      "cpu": 0.9,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 962.14,
+      "rssMiB": 123.69,
+      "cpu": 0.4,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 992.21,
+      "rssMiB": 123.69,
+      "cpu": 0.8,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 1022.28,
+      "rssMiB": 123.69,
+      "cpu": 1.4,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 1052.35,
+      "rssMiB": 101.56,
+      "cpu": 0.5,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 1082.41,
+      "rssMiB": 101.55,
+      "cpu": 1.0,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 1112.47,
+      "rssMiB": 101.55,
+      "cpu": 1.4,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 1142.54,
+      "rssMiB": 101.55,
+      "cpu": 0.5,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 1172.6,
+      "rssMiB": 101.55,
+      "cpu": 1.0,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 1202.66,
+      "rssMiB": 101.52,
+      "cpu": 0.7,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 1232.72,
+      "rssMiB": 101.52,
+      "cpu": 0.6,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 1262.79,
+      "rssMiB": 101.52,
+      "cpu": 0.9,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 1292.85,
+      "rssMiB": 101.52,
+      "cpu": 0.4,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 1322.91,
+      "rssMiB": 101.52,
+      "cpu": 0.9,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 1352.98,
+      "rssMiB": 101.52,
+      "cpu": 1.0,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 1383.04,
+      "rssMiB": 101.52,
+      "cpu": 0.5,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 1413.11,
+      "rssMiB": 101.52,
+      "cpu": 0.9,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 1443.18,
+      "rssMiB": 101.52,
+      "cpu": 1.4,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 1473.24,
+      "rssMiB": 101.52,
+      "cpu": 0.5,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 1503.31,
+      "rssMiB": 101.52,
+      "cpu": 0.9,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 1533.38,
+      "rssMiB": 101.52,
+      "cpu": 1.1,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 1563.45,
+      "rssMiB": 94.34,
+      "cpu": 0.5,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 1593.51,
+      "rssMiB": 94.34,
+      "cpu": 1.1,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 1623.58,
+      "rssMiB": 94.36,
+      "cpu": 0.5,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 1653.64,
+      "rssMiB": 94.34,
+      "cpu": 0.6,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 1683.7,
+      "rssMiB": 94.34,
+      "cpu": 1.5,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 1713.77,
+      "rssMiB": 94.34,
+      "cpu": 0.5,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 1743.83,
+      "rssMiB": 94.36,
+      "cpu": 0.5,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 1773.9,
+      "rssMiB": 94.38,
+      "cpu": 0.8,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 1803.96,
+      "rssMiB": 94.38,
+      "cpu": 0.5,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 1834.03,
+      "rssMiB": 94.38,
+      "cpu": 1.0,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 1864.09,
+      "rssMiB": 94.39,
+      "cpu": 0.4,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 1894.16,
+      "rssMiB": 123.88,
+      "cpu": 1.3,
+      "state": "thinking",
+      "healthy": true
+    },
+    {
+      "t": 1924.22,
+      "rssMiB": 125.47,
+      "cpu": 0.8,
+      "state": "working",
+      "healthy": true
+    },
+    {
+      "t": 1954.28,
+      "rssMiB": 125.47,
+      "cpu": 1.6,
+      "state": "working",
+      "healthy": true
+    },
+    {
+      "t": 1984.35,
+      "rssMiB": 125.47,
+      "cpu": 1.6,
+      "state": "working",
+      "healthy": true
+    },
+    {
+      "t": 2014.43,
+      "rssMiB": 125.47,
+      "cpu": 1.1,
+      "state": "working",
+      "healthy": true
+    },
+    {
+      "t": 2044.5,
+      "rssMiB": 125.89,
+      "cpu": 0.7,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 2074.57,
+      "rssMiB": 125.78,
+      "cpu": 1.0,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 2104.63,
+      "rssMiB": 125.78,
+      "cpu": 0.4,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 2134.7,
+      "rssMiB": 125.78,
+      "cpu": 1.1,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 2164.77,
+      "rssMiB": 125.78,
+      "cpu": 1.1,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 2194.84,
+      "rssMiB": 125.81,
+      "cpu": 0.6,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 2224.9,
+      "rssMiB": 110.53,
+      "cpu": 0.7,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 2254.96,
+      "rssMiB": 110.53,
+      "cpu": 0.4,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 2285.03,
+      "rssMiB": 110.53,
+      "cpu": 0.7,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 2315.09,
+      "rssMiB": 110.53,
+      "cpu": 1.5,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 2345.16,
+      "rssMiB": 110.53,
+      "cpu": 1.5,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 2375.22,
+      "rssMiB": 110.53,
+      "cpu": 0.5,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 2405.29,
+      "rssMiB": 110.53,
+      "cpu": 1.0,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 2435.35,
+      "rssMiB": 110.5,
+      "cpu": 0.5,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 2465.42,
+      "rssMiB": 110.52,
+      "cpu": 0.9,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 2495.48,
+      "rssMiB": 110.5,
+      "cpu": 1.4,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 2525.55,
+      "rssMiB": 110.5,
+      "cpu": 0.6,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 2555.61,
+      "rssMiB": 110.5,
+      "cpu": 1.0,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 2585.67,
+      "rssMiB": 110.5,
+      "cpu": 0.4,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 2615.74,
+      "rssMiB": 110.52,
+      "cpu": 0.7,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 2645.81,
+      "rssMiB": 110.5,
+      "cpu": 1.5,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 2675.88,
+      "rssMiB": 110.52,
+      "cpu": 1.4,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 2705.95,
+      "rssMiB": 110.5,
+      "cpu": 0.7,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 2736.02,
+      "rssMiB": 110.5,
+      "cpu": 1.0,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 2766.09,
+      "rssMiB": 110.5,
+      "cpu": 0.6,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 2796.15,
+      "rssMiB": 110.5,
+      "cpu": 0.9,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 2826.21,
+      "rssMiB": 110.5,
+      "cpu": 1.4,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 2856.27,
+      "rssMiB": 110.5,
+      "cpu": 0.5,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 2886.34,
+      "rssMiB": 110.5,
+      "cpu": 1.2,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 2916.41,
+      "rssMiB": 110.52,
+      "cpu": 1.4,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 2946.48,
+      "rssMiB": 110.5,
+      "cpu": 0.7,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 2976.55,
+      "rssMiB": 110.52,
+      "cpu": 1.3,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 3006.62,
+      "rssMiB": 110.5,
+      "cpu": 1.8,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 3036.69,
+      "rssMiB": 110.5,
+      "cpu": 0.7,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 3066.76,
+      "rssMiB": 110.5,
+      "cpu": 0.9,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 3096.83,
+      "rssMiB": 110.5,
+      "cpu": 0.5,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 3126.9,
+      "rssMiB": 110.5,
+      "cpu": 0.7,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 3156.97,
+      "rssMiB": 110.5,
+      "cpu": 1.4,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 3187.03,
+      "rssMiB": 110.5,
+      "cpu": 0.5,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 3217.1,
+      "rssMiB": 110.5,
+      "cpu": 0.7,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 3247.17,
+      "rssMiB": 110.5,
+      "cpu": 1.4,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 3277.24,
+      "rssMiB": 110.5,
+      "cpu": 0.7,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 3307.31,
+      "rssMiB": 110.5,
+      "cpu": 0.8,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 3337.37,
+      "rssMiB": 97.0,
+      "cpu": 1.2,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 3367.44,
+      "rssMiB": 97.0,
+      "cpu": 0.6,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 3397.51,
+      "rssMiB": 96.98,
+      "cpu": 0.9,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 3427.58,
+      "rssMiB": 95.03,
+      "cpu": 1.6,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 3457.65,
+      "rssMiB": 95.03,
+      "cpu": 0.8,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 3487.71,
+      "rssMiB": 94.98,
+      "cpu": 1.5,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 3517.78,
+      "rssMiB": 94.98,
+      "cpu": 0.4,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 3547.85,
+      "rssMiB": 94.98,
+      "cpu": 0.5,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 3577.92,
+      "rssMiB": 95.0,
+      "cpu": 1.5,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 3607.99,
+      "rssMiB": 94.98,
+      "cpu": 0.5,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 3638.06,
+      "rssMiB": 124.16,
+      "cpu": 1.9,
+      "state": "thinking",
+      "healthy": true
+    },
+    {
+      "t": 3668.13,
+      "rssMiB": 126.09,
+      "cpu": 1.2,
+      "state": "working",
+      "healthy": true
+    },
+    {
+      "t": 3698.2,
+      "rssMiB": 126.09,
+      "cpu": 1.5,
+      "state": "working",
+      "healthy": true
+    },
+    {
+      "t": 3728.27,
+      "rssMiB": 112.59,
+      "cpu": 2.1,
+      "state": "working",
+      "healthy": true
+    },
+    {
+      "t": 3758.34,
+      "rssMiB": 112.59,
+      "cpu": 1.6,
+      "state": "working",
+      "healthy": true
+    },
+    {
+      "t": 3788.4,
+      "rssMiB": 96.84,
+      "cpu": 0.9,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 3818.44,
+      "rssMiB": 125.28,
+      "cpu": 1.7,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 3848.5,
+      "rssMiB": 131.84,
+      "cpu": 0.7,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 3878.57,
+      "rssMiB": 131.84,
+      "cpu": 0.5,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 3908.63,
+      "rssMiB": 131.84,
+      "cpu": 0.8,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 3938.68,
+      "rssMiB": 131.84,
+      "cpu": 1.4,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 3968.74,
+      "rssMiB": 118.33,
+      "cpu": 0.5,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 3998.8,
+      "rssMiB": 118.3,
+      "cpu": 0.8,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 4028.86,
+      "rssMiB": 118.3,
+      "cpu": 0.4,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 4058.92,
+      "rssMiB": 118.3,
+      "cpu": 2.2,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 4088.96,
+      "rssMiB": 115.83,
+      "cpu": 1.1,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 4119.02,
+      "rssMiB": 97.02,
+      "cpu": 0.7,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 4149.09,
+      "rssMiB": 97.02,
+      "cpu": 0.7,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 4179.15,
+      "rssMiB": 97.02,
+      "cpu": 1.4,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 4209.21,
+      "rssMiB": 97.02,
+      "cpu": 0.6,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 4239.26,
+      "rssMiB": 97.02,
+      "cpu": 0.7,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 4269.32,
+      "rssMiB": 97.02,
+      "cpu": 1.3,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 4299.38,
+      "rssMiB": 97.02,
+      "cpu": 0.5,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 4329.45,
+      "rssMiB": 97.02,
+      "cpu": 0.6,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 4359.51,
+      "rssMiB": 96.86,
+      "cpu": 0.8,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 4389.57,
+      "rssMiB": 97.33,
+      "cpu": 0.8,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 4419.6,
+      "rssMiB": 96.8,
+      "cpu": 0.6,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 4449.65,
+      "rssMiB": 99.47,
+      "cpu": 10.3,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 4479.72,
+      "rssMiB": 100.23,
+      "cpu": 0.8,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 4509.78,
+      "rssMiB": 100.23,
+      "cpu": 0.5,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 4539.85,
+      "rssMiB": 100.23,
+      "cpu": 0.9,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 4569.92,
+      "rssMiB": 100.23,
+      "cpu": 1.4,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 4599.98,
+      "rssMiB": 100.23,
+      "cpu": 0.6,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 4630.04,
+      "rssMiB": 100.23,
+      "cpu": 0.6,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 4660.11,
+      "rssMiB": 100.23,
+      "cpu": 1.4,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 4690.17,
+      "rssMiB": 100.23,
+      "cpu": 0.5,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 4720.24,
+      "rssMiB": 100.23,
+      "cpu": 1.4,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 4750.3,
+      "rssMiB": 100.23,
+      "cpu": 1.4,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 4780.35,
+      "rssMiB": 88.34,
+      "cpu": 0.6,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 4810.42,
+      "rssMiB": 88.34,
+      "cpu": 1.4,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 4840.48,
+      "rssMiB": 88.34,
+      "cpu": 0.4,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 4870.55,
+      "rssMiB": 88.34,
+      "cpu": 0.9,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 4900.62,
+      "rssMiB": 88.33,
+      "cpu": 1.4,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 4930.68,
+      "rssMiB": 84.25,
+      "cpu": 0.4,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 4960.75,
+      "rssMiB": 84.27,
+      "cpu": 0.9,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 4990.79,
+      "rssMiB": 84.25,
+      "cpu": 0.4,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 5020.86,
+      "rssMiB": 84.25,
+      "cpu": 0.6,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 5050.91,
+      "rssMiB": 84.25,
+      "cpu": 1.4,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 5080.98,
+      "rssMiB": 84.25,
+      "cpu": 0.7,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 5111.04,
+      "rssMiB": 84.25,
+      "cpu": 0.6,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 5141.11,
+      "rssMiB": 84.25,
+      "cpu": 2.0,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 5171.17,
+      "rssMiB": 83.75,
+      "cpu": 0.7,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 5201.23,
+      "rssMiB": 83.75,
+      "cpu": 0.7,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 5231.3,
+      "rssMiB": 83.78,
+      "cpu": 1.5,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 5261.36,
+      "rssMiB": 83.78,
+      "cpu": 0.5,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 5291.43,
+      "rssMiB": 83.78,
+      "cpu": 1.4,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 5321.49,
+      "rssMiB": 83.78,
+      "cpu": 1.4,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 5351.56,
+      "rssMiB": 83.75,
+      "cpu": 0.6,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 5381.62,
+      "rssMiB": 83.75,
+      "cpu": 0.9,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 5411.68,
+      "rssMiB": 113.61,
+      "cpu": 1.1,
+      "state": "working",
+      "healthy": true
+    },
+    {
+      "t": 5441.75,
+      "rssMiB": 113.61,
+      "cpu": 2.0,
+      "state": "working",
+      "healthy": true
+    },
+    {
+      "t": 5471.79,
+      "rssMiB": 99.91,
+      "cpu": 1.3,
+      "state": "working",
+      "healthy": true
+    },
+    {
+      "t": 5501.86,
+      "rssMiB": 84.86,
+      "cpu": 1.9,
+      "state": "working",
+      "healthy": true
+    },
+    {
+      "t": 5531.93,
+      "rssMiB": 89.56,
+      "cpu": 3.4,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 5561.99,
+      "rssMiB": 89.36,
+      "cpu": 1.4,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 5592.05,
+      "rssMiB": 89.36,
+      "cpu": 0.5,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 5622.12,
+      "rssMiB": 89.36,
+      "cpu": 1.0,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 5652.18,
+      "rssMiB": 89.36,
+      "cpu": 0.6,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 5682.25,
+      "rssMiB": 89.36,
+      "cpu": 0.8,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 5712.31,
+      "rssMiB": 89.36,
+      "cpu": 1.4,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 5742.35,
+      "rssMiB": 88.66,
+      "cpu": 1.0,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 5772.42,
+      "rssMiB": 87.11,
+      "cpu": 2.4,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 5802.49,
+      "rssMiB": 87.03,
+      "cpu": 3.0,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 5832.55,
+      "rssMiB": 87.02,
+      "cpu": 2.4,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 5862.62,
+      "rssMiB": 88.53,
+      "cpu": 0.7,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 5892.68,
+      "rssMiB": 88.53,
+      "cpu": 0.4,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 5922.75,
+      "rssMiB": 88.53,
+      "cpu": 0.6,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 5952.81,
+      "rssMiB": 88.53,
+      "cpu": 1.4,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 5982.88,
+      "rssMiB": 88.53,
+      "cpu": 0.4,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 6012.94,
+      "rssMiB": 88.53,
+      "cpu": 0.4,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 6043.01,
+      "rssMiB": 88.53,
+      "cpu": 1.4,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 6073.07,
+      "rssMiB": 88.53,
+      "cpu": 0.7,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 6103.14,
+      "rssMiB": 88.53,
+      "cpu": 0.7,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 6133.2,
+      "rssMiB": 88.53,
+      "cpu": 0.5,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 6163.27,
+      "rssMiB": 88.53,
+      "cpu": 0.5,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 6193.34,
+      "rssMiB": 88.53,
+      "cpu": 1.0,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 6223.41,
+      "rssMiB": 88.53,
+      "cpu": 0.3,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 6253.48,
+      "rssMiB": 88.53,
+      "cpu": 0.4,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 6283.55,
+      "rssMiB": 88.53,
+      "cpu": 0.9,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 6313.62,
+      "rssMiB": 88.47,
+      "cpu": 0.4,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 6343.69,
+      "rssMiB": 88.47,
+      "cpu": 0.5,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 6373.76,
+      "rssMiB": 88.47,
+      "cpu": 0.5,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 6403.83,
+      "rssMiB": 88.47,
+      "cpu": 0.7,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 6433.89,
+      "rssMiB": 85.84,
+      "cpu": 1.6,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 6463.94,
+      "rssMiB": 85.84,
+      "cpu": 2.9,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 6494.0,
+      "rssMiB": 85.84,
+      "cpu": 0.7,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 6524.07,
+      "rssMiB": 85.84,
+      "cpu": 0.9,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 6554.13,
+      "rssMiB": 85.84,
+      "cpu": 1.3,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 6584.2,
+      "rssMiB": 85.84,
+      "cpu": 0.7,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 6614.27,
+      "rssMiB": 85.84,
+      "cpu": 1.4,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 6644.33,
+      "rssMiB": 85.84,
+      "cpu": 0.4,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 6674.4,
+      "rssMiB": 85.84,
+      "cpu": 0.9,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 6704.45,
+      "rssMiB": 85.84,
+      "cpu": 1.4,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 6734.51,
+      "rssMiB": 85.84,
+      "cpu": 0.5,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 6764.57,
+      "rssMiB": 85.84,
+      "cpu": 0.9,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 6794.63,
+      "rssMiB": 85.86,
+      "cpu": 0.4,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 6824.7,
+      "rssMiB": 85.84,
+      "cpu": 0.6,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 6854.76,
+      "rssMiB": 85.84,
+      "cpu": 0.8,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 6884.82,
+      "rssMiB": 85.84,
+      "cpu": 0.4,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 6914.88,
+      "rssMiB": 85.84,
+      "cpu": 0.7,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 6944.93,
+      "rssMiB": 85.84,
+      "cpu": 1.4,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 6974.99,
+      "rssMiB": 85.84,
+      "cpu": 0.7,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 7005.06,
+      "rssMiB": 85.84,
+      "cpu": 1.0,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 7035.12,
+      "rssMiB": 85.84,
+      "cpu": 0.4,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 7065.19,
+      "rssMiB": 85.84,
+      "cpu": 0.7,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 7095.25,
+      "rssMiB": 85.86,
+      "cpu": 1.1,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 7125.32,
+      "rssMiB": 85.81,
+      "cpu": 1.7,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 7155.39,
+      "rssMiB": 85.81,
+      "cpu": 0.8,
+      "state": "idle",
+      "healthy": true
+    },
+    {
+      "t": 7185.46,
+      "rssMiB": 115.75,
+      "cpu": 1.3,
+      "state": "thinking",
+      "healthy": true
+    },
+    {
+      "t": 7200.07,
+      "rssMiB": 115.14,
+      "cpu": 1.1,
+      "state": "thinking",
+      "healthy": true
+    }
+  ]
+}

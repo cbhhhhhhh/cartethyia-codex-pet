@@ -1,0 +1,92 @@
+{
+  "desktop": "26.1117.41037",
+  "bundle_id": "com.openai.codex",
+  "cli": "codex-cli 0.171.0-alpha.13",
+  "bundled_plugins": {
+    "browser": {
+      "mcp": false,
+      "hooks": [
+        "Interrupt",
+        "SubagentStop",
+        "Stop"
+      ],
+      "skills": true
+    },
+    "chrome": {
+      "mcp": false,
+      "hooks": [
+        "Interrupt",
+        "SubagentStop",
+        "Stop"
+      ],
+      "skills": true
+    },
+    "codex-app-tools": {
+      "mcp": true,
+      "hooks": [],
+      "skills": false
+    },
+    "computer-history": {
+      "mcp": true,
+      "hooks": [],
+      "skills": true
+    },
+    "computer-use": {
+      "mcp": false,
+      "hooks": [],
+      "skills": true
+    },
+    "latex": {
+      "mcp": false,
+      "hooks": [],
+      "skills": true
+    },
+    "messages": {
+      "mcp": true,
+      "hooks": [],
+      "skills": false
+    },
+    "record-and-replay": {
+      "mcp": true,
+      "hooks": [],
+      "skills": true
+    },
+    "unified-computer-use": {
+      "mcp": true,
+      "hooks": [
+        "Interrupt",
+        "SubagentStop",
+        "Stop"
+      ],
+      "skills": false
+    },
+    "visualize": {
+      "mcp": false,
+      "hooks": [],
+      "skills": true
+    }
+  },
+  "hook_schema": [
+    "preModelRequest",
+    "postModelRequest",
+    "preToolUse",
+    "permissionRequest",
+    "postToolUse",
+    "preCompact",
+    "postCompact",
+    "sessionStart",
+    "sessionEnd",
+    "userPromptSubmit",
+    "subagentStart",
+    "subagentStop",
+    "stop",
+    "interrupt"
+  ],
+  "socket_present": true,
+  "pet_version": 2,
+  "pet_dimensions": [
+    "  pixelWidth: 1536",
+    "  pixelHeight: 2288"
+  ],
+  "dsh_version": "0.4.9"
+}

@@ -1,0 +1,212 @@
+"""Use public app-server stdio + the Pets MCP connector for one account preference."""
+
+import json
+from pathlib import Path
+import os
+import queue
+import shutil
+import subprocess
+import sys
+import tempfile
+import threading
+import time
+
+BASE = Path.home() / "Library/Application Support/CodexPetPlus"
+
+
+class Rpc:
+    def __init__(self):
+        exe = shutil.which("codex")
+        if not exe:
+            candidates = (
+                folder / bundle / "Contents/Resources" / rel
+                for folder in (Path("/Applications"), Path.home() / "Applications")
+                for bundle in ("ChatGPT.app", "Codex.app")
+                for rel in ("codex-cli/CodexCLI.app/Contents/MacOS/codex", "codex")
+            )
+            exe = next((str(p) for p in candidates if p.is_file() and os.access(p, os.X_OK)), None)
+        if not exe:
+            raise RuntimeError("请先安装 Codex 桌面版或将 codex 加入 PATH。")
+        self.proc = subprocess.Popen(
+            [exe, "app-server", "--listen", "stdio://"],
+            stdin=subprocess.PIPE,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.DEVNULL,
+            text=True,
+            bufsize=1,
+        )
+        self.responses = queue.Queue()
+
+        def read():
+            for line in self.proc.stdout:
+                try:
+                    self.responses.put(json.loads(line))
+                except ValueError:
+                    pass
+            self.responses.put(None)
+
+        threading.Thread(target=read, daemon=True).start()
+        self.count = 0
+
+    def send(self, m):
+        self.proc.stdin.write(json.dumps(m) + "\n")
+        self.proc.stdin.flush()
+
+    def call(self, method, params):
+        self.count += 1
+        self.send(dict(id=self.count, method=method, params=params))
+        deadline = time.monotonic() + 25
+        while True:
+            try:
+                msg = self.responses.get(timeout=max(0, deadline - time.monotonic()))
+            except queue.Empty:
+                raise RuntimeError("本地 Codex 服务响应超时")
+            if msg is None:
+                raise RuntimeError("本地 Codex 服务不可用")
+            if msg.get("id") != self.count or "method" in msg:
+                continue
+            if "error" in msg:
+                raise RuntimeError(
+                    method + " 返回错误 " + str(msg["error"].get("code", ""))
+                )
+            return msg["result"]
+
+    def close(self):
+        self.proc.stdin.close()
+        try:
+            self.proc.wait(timeout=3)
+        except subprocess.TimeoutExpired:
+            self.proc.terminate()
+            self.proc.wait(timeout=3)
+
+
+def run(action):
+    file = BASE / "native-account.json"
+    if not file.exists() and action != "enable-sync":
+        raise ValueError("尚未允许同步宠物选择")
+    cfg = json.loads(file.read_text()) if file.exists() else {}
+    server = "codex_apps"
+    rpc = Rpc()
+    try:
+        rpc.call(
+            "initialize",
+            dict(
+                clientInfo=dict(name="cartethyia_companion", version="1.0"),
+                capabilities=dict(experimentalApi=True),
+            ),
+        )
+        rpc.send(dict(method="initialized", params={}))
+        # Ephemeral local thread, no turn or model call. No workspace or chat contents supplied.
+        with tempfile.TemporaryDirectory() as cwd:
+            session = rpc.call(
+                "thread/start",
+                dict(
+                    cwd=cwd, ephemeral=True, sandbox="read-only", approvalPolicy="never"
+                ),
+            )
+            tid = session["thread"]["id"]
+            inventory = rpc.call(
+                "mcpServerStatus/list",
+                dict(threadId=tid, serverName=server, detail="toolsAndAuthOnly"),
+            )
+            available = [
+                k
+                for r in inventory.get("data", [])
+                if r.get("name") == server
+                for k in r.get("tools", {})
+                if k == "pets.select_pet"
+            ]
+            if len(available) != 1:
+                raise RuntimeError(
+                    "当前 CLI 未挂载 Pets 连接，可在 Codex 的 Pets 中切换"
+                )
+            if action == "check":
+                return "available"
+            if action == "enable-sync" and not cfg:
+                listed = rpc.call(
+                    "mcpServer/tool/call",
+                    dict(
+                        threadId=tid,
+                        server=server,
+                        tool="pets.list_pets",
+                        arguments=dict(limit=1),
+                    ),
+                )
+
+                def active(v):
+                    if isinstance(v, dict):
+                        if isinstance(v.get("active_pet_id"), str):
+                            return v["active_pet_id"]
+                        for sub in v.values():
+                            found = active(sub)
+                            if found:
+                                return found
+                    if isinstance(v, list):
+                        for sub in v:
+                            found = active(sub)
+                            if found:
+                                return found
+                    if isinstance(v, str) and v.lstrip().startswith("{"):
+                        try:
+                            return active(json.loads(v))
+                        except ValueError:
+                            pass
+
+                previous = active(listed)
+                if not previous:
+                    raise RuntimeError("无法保存原宠物选择")
+                cfg = {"restore_id": previous}
+                file.write_text(json.dumps(cfg))
+                file.chmod(0o600)
+            pet_id = cfg["restore_id"] if action == "restore" else "default"
+            result = rpc.call(
+                "mcpServer/tool/call",
+                dict(
+                    threadId=tid,
+                    server=server,
+                    tool=available[0],
+                    arguments=dict(pet_id=pet_id),
+                ),
+            )
+
+            def match(value):
+                if isinstance(value, dict):
+                    return value.get("active_pet_id") == pet_id or any(
+                        match(v) for v in value.values()
+                    )
+                if isinstance(value, list):
+                    return any(match(v) for v in value)
+                if isinstance(value, str) and value.lstrip().startswith("{"):
+                    try:
+                        return match(json.loads(value))
+                    except ValueError:
+                        pass
+                return False
+
+            if result.get("isError") or not match(result):
+                raise RuntimeError("Pets 未确认选择；请在 Codex 中核对")
+            cfg["mode"] = "native" if action == "restore" else "companion"
+            tmp = file.with_suffix(".tmp")
+            tmp.write_text(json.dumps(cfg))
+            tmp.chmod(0o600)
+            tmp.replace(file)
+            return pet_id
+    finally:
+        rpc.close()
+
+
+if __name__ == "__main__":
+    try:
+        action = sys.argv[1]
+        if action not in ("check", "restore", "disable", "enable-sync"):
+            raise ValueError("无效的选择")
+        print(run(action))
+    except (
+        OSError,
+        ValueError,
+        KeyError,
+        RuntimeError,
+        subprocess.TimeoutExpired,
+    ) as e:
+        print(str(e), file=sys.stderr)
+        sys.exit(1)

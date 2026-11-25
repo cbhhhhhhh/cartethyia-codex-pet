@@ -1,0 +1,10 @@
+{
+  "sprite": true,
+  "full_character_library": true,
+  "right_click": true,
+  "focused_composer": true,
+  "enter_to_bubble": true,
+  "todo_list": true,
+  "history": true,
+  "fragment_removed": true
+}

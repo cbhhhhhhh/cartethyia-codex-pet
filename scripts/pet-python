@@ -1,0 +1,6 @@
+#!/bin/bash
+base=${PET_PLUS_HOME:-"$HOME/Library/Application Support/CodexPetPlus"}
+if [[ -x "$base/runtime/python/bin/python3" ]]; then
+  exec "$base/runtime/python/bin/python3" "$@"
+fi
+exec /usr/bin/python3 "$@"

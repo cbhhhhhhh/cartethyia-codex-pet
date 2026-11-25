@@ -1,0 +1,12 @@
+{
+  "existing_profile_settings_values_preserved" : true,
+  "finder_cold_open_shows_settings" : true,
+  "finder_reopen_reveals_settings" : true,
+  "finder_reopen_uses_existing_process" : true,
+  "quartz_closed_circle_hits_wall_and_reverses" : true,
+  "quartz_closed_circle_max_horizontal_points" : 440,
+  "quartz_event_posting_available" : true,
+  "settings_closed_before_quartz_gesture" : true,
+  "settings_closed_before_reopen" : true,
+  "windowserver_mouse_hits_character" : true
+}

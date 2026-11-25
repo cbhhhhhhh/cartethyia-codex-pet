@@ -1,0 +1,37 @@
+{
+  "seconds": 3600.06,
+  "samples": 121,
+  "same_gui_and_broker": true,
+  "idle_sample_count": 62,
+  "idle_cpu": {
+    "median": 1.0,
+    "p95": 4.0,
+    "max": 5.5
+  },
+  "warm_resident_MiB": {
+    "median": 126.7,
+    "p95": 146.25,
+    "max": 147.95
+  },
+  "first_10m_median_rss": 115.9,
+  "last_10m_median_rss": 126.77,
+  "codex_probe_count": 5,
+  "codex_probes_passed": 5,
+  "cli_seconds": {
+    "median": 1.69,
+    "p95": 1.7,
+    "max": 1.708
+  },
+  "final_leaks": {
+    "gui": {
+      "returncode": 0,
+      "count": 0,
+      "bytes": 0
+    },
+    "broker": {
+      "returncode": 0,
+      "count": 0,
+      "bytes": 0
+    }
+  }
+}

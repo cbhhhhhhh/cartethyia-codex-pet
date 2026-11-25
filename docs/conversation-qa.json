@@ -1,0 +1,10 @@
+{
+  "persona": true,
+  "stream": true,
+  "multi_turn": true,
+  "memory_after_restart": true,
+  "profile_isolation": true,
+  "cancel_during_stream": true,
+  "cancelled_turn_excluded": true,
+  "cleared_memory": true
+}

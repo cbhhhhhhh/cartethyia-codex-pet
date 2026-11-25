@@ -1,0 +1,8 @@
+{
+  "broker_death_resets_sprite" : true,
+  "broker_restarted" : true,
+  "PreToolUse_ms" : 44,
+  "PreToolUse-working" : true,
+  "UserPromptSubmit_ms" : 11,
+  "UserPromptSubmit-thinking" : true
+}

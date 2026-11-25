@@ -1,0 +1,10 @@
+{
+  "separate_app_processes": true,
+  "real_second_window_displacement_points": 47,
+  "selectable_baked_clips": 109,
+  "leased_two_step_sequence": true,
+  "authenticated_bubble": true,
+  "production_gguf_to_visible_bubble": true,
+  "response_characters": 10,
+  "separate_histories": true
+}

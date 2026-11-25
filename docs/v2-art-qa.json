@@ -1,0 +1,10 @@
+{
+  "reference_commit": "fb38ce620576f5ed3735a99536d2b1a4a9eb313f",
+  "listed_reference_actions": 109,
+  "cartethyia_clips": 109,
+  "rgba_frames": 1744,
+  "distinct_clips": 109,
+  "min_distinct_frames_per_clip": 16,
+  "transparent_backgrounds": true,
+  "disk_MiB": 48.59
+}

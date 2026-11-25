@@ -1,0 +1,983 @@
+[
+  {
+    "id": "daiji-huxi-xiuxian",
+    "group": "待机",
+    "title": "发梢随呼吸",
+    "pose": "idle",
+    "motion": "breathe",
+    "prop": "✦",
+    "path": "glow"
+  },
+  {
+    "id": "dongzhangxiwang",
+    "group": "待机",
+    "title": "侧耳听风",
+    "pose": "review",
+    "motion": "turn",
+    "prop": "🍃",
+    "path": "drift"
+  },
+  {
+    "id": "pangxie-zoulu",
+    "group": "移动",
+    "title": "骑士的横步",
+    "pose": "running-left",
+    "motion": "step",
+    "prop": "🍂",
+    "path": "trail"
+  },
+  {
+    "id": "yuandi-piaofu-tabu",
+    "group": "移动",
+    "title": "踏风悬浮",
+    "pose": "jumping",
+    "motion": "float",
+    "prop": "🪶",
+    "path": "orbit"
+  },
+  {
+    "id": "yuandi-zuozhuan-benpao",
+    "group": "移动",
+    "title": "踏着月光折返",
+    "pose": "running-right",
+    "motion": "run",
+    "prop": "🌙",
+    "path": "trail"
+  },
+  {
+    "id": "youxian-hengga",
+    "group": "生活",
+    "title": "小声哼一支歌",
+    "pose": "waving",
+    "motion": "sway",
+    "prop": "🎶",
+    "path": "rising"
+  },
+  {
+    "id": "chaoda-shenlanyao",
+    "group": "生活",
+    "title": "清晨舒展双臂",
+    "pose": "waving",
+    "motion": "stretch",
+    "prop": "☀️",
+    "path": "glow"
+  },
+  {
+    "id": "yuandi-qiaoji-zhuomian-hudong",
+    "group": "生活",
+    "title": "敲两下茶桌",
+    "pose": "review",
+    "motion": "tap",
+    "prop": "🫖",
+    "path": "table"
+  },
+  {
+    "id": "yuandi-zhongli-xiadun-yasuo",
+    "group": "生活",
+    "title": "蹲下系好鞋带",
+    "pose": "waiting",
+    "motion": "crouch",
+    "prop": "🎀",
+    "path": "hand"
+  },
+  {
+    "id": "haqian-liantian",
+    "group": "生活",
+    "title": "遮住一个哈欠",
+    "pose": "idle",
+    "motion": "bow",
+    "prop": "💭",
+    "path": "rising"
+  },
+  {
+    "id": "yuandi-xiaoqi-chenmian",
+    "group": "生活",
+    "title": "靠着围巾小睡",
+    "pose": "waiting",
+    "motion": "nap",
+    "prop": "💤",
+    "path": "rising"
+  },
+  {
+    "id": "nvpu-quxi-liyi",
+    "group": "生活",
+    "title": "提裙行骑士礼",
+    "pose": "review",
+    "motion": "bow",
+    "prop": "🌹",
+    "path": "hand"
+  },
+  {
+    "id": "beixiayitiao-zhamao",
+    "group": "生活",
+    "title": "被小鸟吓了一跳",
+    "pose": "jumping",
+    "motion": "leap",
+    "prop": "🐦",
+    "path": "fly"
+  },
+  {
+    "id": "xiaofudu-yuandi-360du-xuanzhuan-zhanshi",
+    "group": "生活",
+    "title": "转一圈给你看",
+    "pose": "waving",
+    "motion": "turn",
+    "prop": "✨",
+    "path": "ring"
+  },
+  {
+    "id": "touchi-lingshi-bei-zhuazhu",
+    "group": "生活",
+    "title": "偷吃一块饼干",
+    "pose": "review",
+    "motion": "peek",
+    "prop": "🍪",
+    "path": "bite"
+  },
+  {
+    "id": "yong-jingyu-weiba-paidadi",
+    "group": "生活",
+    "title": "用鞋跟点地",
+    "pose": "running-left",
+    "motion": "kick",
+    "prop": "🍁",
+    "path": "kick"
+  },
+  {
+    "id": "da-keshui-bei-jingxing",
+    "group": "生活",
+    "title": "睡眼惺忪地醒来",
+    "pose": "waiting",
+    "motion": "wake",
+    "prop": "⏰",
+    "path": "table"
+  },
+  {
+    "id": "zhao-jingzi",
+    "group": "生活",
+    "title": "看看贝雷帽戴正了吗",
+    "pose": "review",
+    "motion": "tilt",
+    "prop": "🪞",
+    "path": "hand"
+  },
+  {
+    "id": "zhengti-huanzhuang-shise",
+    "group": "生活",
+    "title": "在围巾边比对新丝带",
+    "pose": "waving",
+    "motion": "turn",
+    "prop": "🎀",
+    "path": "orbit"
+  },
+  {
+    "id": "qingkuai-jilu",
+    "group": "生活",
+    "title": "写下旅途一笔",
+    "pose": "review",
+    "motion": "tap",
+    "prop": "✏️",
+    "path": "write"
+  },
+  {
+    "id": "xie-daima",
+    "group": "生活",
+    "title": "帮你敲几行代码",
+    "pose": "running",
+    "motion": "tap",
+    "prop": "⌨️",
+    "path": "table"
+  },
+  {
+    "id": "yaoshan-naliang",
+    "group": "生活",
+    "title": "夏日摇扇",
+    "pose": "waiting",
+    "motion": "sway",
+    "prop": "🪭",
+    "path": "fan"
+  },
+  {
+    "id": "chenjian-shuaya",
+    "group": "生活",
+    "title": "饭后刷刷牙",
+    "pose": "waving",
+    "motion": "tilt",
+    "prop": "🪥",
+    "path": "scrub"
+  },
+  {
+    "id": "yuandi-zhuanxin-wan-mofang",
+    "group": "玩耍",
+    "title": "转动小魔方",
+    "pose": "review",
+    "motion": "tilt",
+    "prop": "🧩",
+    "path": "spin"
+  },
+  {
+    "id": "yuandi-dunxia-wan-wanju-qiche",
+    "group": "玩耍",
+    "title": "陪小车跑一段",
+    "pose": "running-right",
+    "motion": "crouch",
+    "prop": "🚙",
+    "path": "roll"
+  },
+  {
+    "id": "jingyu-tu-paopao-texiao",
+    "group": "玩耍",
+    "title": "吹出一串水泡",
+    "pose": "waiting",
+    "motion": "breathe",
+    "prop": "🫧",
+    "path": "rising"
+  },
+  {
+    "id": "yuandi-tiaoyue-zhuasui-touding-wupin",
+    "group": "玩耍",
+    "title": "跃起接住星片",
+    "pose": "jumping",
+    "motion": "leap",
+    "prop": "🌟",
+    "path": "catch"
+  },
+  {
+    "id": "wan-youxi-qijibaituai",
+    "group": "玩耍",
+    "title": "棋差一步皱眉",
+    "pose": "failed",
+    "motion": "shake",
+    "prop": "🎮",
+    "path": "table"
+  },
+  {
+    "id": "wan-shuiqiang",
+    "group": "玩耍",
+    "title": "向远处洒出水花",
+    "pose": "waving",
+    "motion": "tilt",
+    "prop": "💧",
+    "path": "spray"
+  },
+  {
+    "id": "xiaotiqin-yanzou",
+    "group": "玩耍",
+    "title": "拉一段小提琴",
+    "pose": "waving",
+    "motion": "sway",
+    "prop": "🎻",
+    "path": "bowstring"
+  },
+  {
+    "id": "lanjing-xianshi",
+    "group": "玩耍",
+    "title": "召来海潮的回声",
+    "pose": "jumping",
+    "motion": "float",
+    "prop": "🌊",
+    "path": "ring"
+  },
+  {
+    "id": "youya-nvpuwu",
+    "group": "玩耍",
+    "title": "城堡里的圆舞曲",
+    "pose": "waving",
+    "motion": "waltz",
+    "prop": "🌹",
+    "path": "orbit"
+  },
+  {
+    "id": "qingkuai-yaobaiwu",
+    "group": "玩耍",
+    "title": "踩着节拍摇摆",
+    "pose": "running",
+    "motion": "sway",
+    "prop": "🎵",
+    "path": "trail"
+  },
+  {
+    "id": "keai-zhaiwu",
+    "group": "玩耍",
+    "title": "困倦也要跳支舞",
+    "pose": "jumping",
+    "motion": "dance",
+    "prop": "⭐",
+    "path": "spark"
+  },
+  {
+    "id": "chui-qiqiu",
+    "group": "玩耍",
+    "title": "吹起淡紫色气球",
+    "pose": "waiting",
+    "motion": "breathe",
+    "prop": "🎈",
+    "path": "inflate"
+  },
+  {
+    "id": "dongwu-huanrao",
+    "group": "玩耍",
+    "title": "被小兔子围住",
+    "pose": "idle",
+    "motion": "peek",
+    "prop": "🐇",
+    "path": "orbit"
+  },
+  {
+    "id": "fang-fengzheng",
+    "group": "玩耍",
+    "title": "牵着线放风筝",
+    "pose": "running-right",
+    "motion": "step",
+    "prop": "🪁",
+    "path": "kite"
+  },
+  {
+    "id": "chai-liwu",
+    "group": "玩耍",
+    "title": "拆开丝带礼物",
+    "pose": "review",
+    "motion": "crouch",
+    "prop": "🎁",
+    "path": "unwrap"
+  },
+  {
+    "id": "bian-gezi",
+    "group": "玩耍",
+    "title": "从披风中变出白鸽",
+    "pose": "waving",
+    "motion": "stretch",
+    "prop": "🕊️",
+    "path": "fly"
+  },
+  {
+    "id": "puke-moshu",
+    "group": "玩耍",
+    "title": "翻出红心纸牌",
+    "pose": "review",
+    "motion": "tilt",
+    "prop": "🃏",
+    "path": "cards"
+  },
+  {
+    "id": "chou-tuoluo",
+    "group": "玩耍",
+    "title": "看木陀螺转呀转",
+    "pose": "review",
+    "motion": "crouch",
+    "prop": "🌀",
+    "path": "roll"
+  },
+  {
+    "id": "chui-dizi",
+    "group": "玩耍",
+    "title": "吹响旅人的短笛",
+    "pose": "waving",
+    "motion": "sway",
+    "prop": "🪈",
+    "path": "bowstring"
+  },
+  {
+    "id": "hudie-mifeng-huanrao-touding-kaihua",
+    "group": "玩耍",
+    "title": "让蝴蝶落在花上",
+    "pose": "waving",
+    "motion": "float",
+    "prop": "🦋",
+    "path": "orbit"
+  },
+  {
+    "id": "lu-mao",
+    "group": "玩耍",
+    "title": "蹲下来摸猫",
+    "pose": "waiting",
+    "motion": "crouch",
+    "prop": "🐈",
+    "path": "pet"
+  },
+  {
+    "id": "pingkong-shenghua",
+    "group": "玩耍",
+    "title": "掌心绽开一朵花",
+    "pose": "waving",
+    "motion": "stretch",
+    "prop": "🌷",
+    "path": "grow"
+  },
+  {
+    "id": "qi-muma",
+    "group": "玩耍",
+    "title": "骑一会小木马",
+    "pose": "jumping",
+    "motion": "rock",
+    "prop": "🐴",
+    "path": "swing"
+  },
+  {
+    "id": "sanqiu-paojie",
+    "group": "玩耍",
+    "title": "抛接三颗彩球",
+    "pose": "review",
+    "motion": "step",
+    "prop": "🔮",
+    "path": "juggle"
+  },
+  {
+    "id": "ti-jianzi",
+    "group": "玩耍",
+    "title": "踢起一支羽毽",
+    "pose": "running-left",
+    "motion": "kick",
+    "prop": "🪶",
+    "path": "kick"
+  },
+  {
+    "id": "xiawuziqi",
+    "group": "玩耍",
+    "title": "在棋盘上落子",
+    "pose": "review",
+    "motion": "tap",
+    "prop": "⚫",
+    "path": "board"
+  },
+  {
+    "id": "dangqiuqian",
+    "group": "玩耍",
+    "title": "坐上花藤秋千",
+    "pose": "waiting",
+    "motion": "rock",
+    "prop": "🌿",
+    "path": "swing"
+  },
+  {
+    "id": "chi-baifan",
+    "group": "餐桌",
+    "title": "午间捧起饭团",
+    "pose": "waiting",
+    "motion": "tilt",
+    "prop": "🍙",
+    "path": "bite"
+  },
+  {
+    "id": "dakou-chi-lingshi",
+    "group": "餐桌",
+    "title": "掰开一块曲奇",
+    "pose": "review",
+    "motion": "peek",
+    "prop": "🍪",
+    "path": "unwrap"
+  },
+  {
+    "id": "chi-token",
+    "group": "餐桌",
+    "title": "尝一颗字节糖",
+    "pose": "waving",
+    "motion": "leap",
+    "prop": "🍬",
+    "path": "catch"
+  },
+  {
+    "id": "chi-zaocan",
+    "group": "餐桌",
+    "title": "早餐可颂出炉",
+    "pose": "idle",
+    "motion": "stretch",
+    "prop": "🥐",
+    "path": "bite"
+  },
+  {
+    "id": "chi-wucan",
+    "group": "餐桌",
+    "title": "打开野餐便当",
+    "pose": "review",
+    "motion": "crouch",
+    "prop": "🍱",
+    "path": "table"
+  },
+  {
+    "id": "chi-wancan",
+    "group": "餐桌",
+    "title": "营地的热汤",
+    "pose": "waiting",
+    "motion": "breathe",
+    "prop": "🍲",
+    "path": "steam"
+  },
+  {
+    "id": "chi-bingqilin-ronghua",
+    "group": "餐桌",
+    "title": "接住融化的冰淇淋",
+    "pose": "failed",
+    "motion": "tilt",
+    "prop": "🍦",
+    "path": "melt"
+  },
+  {
+    "id": "chi-dazhaxie",
+    "group": "餐桌",
+    "title": "尝尝秋日螃蟹",
+    "pose": "review",
+    "motion": "peek",
+    "prop": "🦀",
+    "path": "bite"
+  },
+  {
+    "id": "chi-tanghulu",
+    "group": "餐桌",
+    "title": "拿起一串糖葫芦",
+    "pose": "waving",
+    "motion": "tilt",
+    "prop": "🍡",
+    "path": "bite"
+  },
+  {
+    "id": "chi-changshoumian",
+    "group": "餐桌",
+    "title": "吹一吹长寿面",
+    "pose": "waiting",
+    "motion": "bow",
+    "prop": "🍜",
+    "path": "steam"
+  },
+  {
+    "id": "chi-xigua",
+    "group": "餐桌",
+    "title": "切开清凉西瓜",
+    "pose": "jumping",
+    "motion": "sway",
+    "prop": "🍉",
+    "path": "bite"
+  },
+  {
+    "id": "shuan-huoguo",
+    "group": "餐桌",
+    "title": "在锅边涮菜",
+    "pose": "review",
+    "motion": "tap",
+    "prop": "🥬",
+    "path": "dip"
+  },
+  {
+    "id": "beiluoye-yanmo",
+    "group": "节令",
+    "title": "从落叶堆里探头",
+    "pose": "waiting",
+    "motion": "peek",
+    "prop": "🍁",
+    "path": "fall"
+  },
+  {
+    "id": "zhongqiu-shangyue-chi-yuebing",
+    "group": "节令",
+    "title": "月下分你一块月饼",
+    "pose": "waving",
+    "motion": "tilt",
+    "prop": "🥮",
+    "path": "moon"
+  },
+  {
+    "id": "duixueren",
+    "group": "节令",
+    "title": "堆出围巾雪人",
+    "pose": "review",
+    "motion": "crouch",
+    "prop": "⛄",
+    "path": "grow"
+  },
+  {
+    "id": "fang-yanhua",
+    "group": "节令",
+    "title": "夜空点起烟花",
+    "pose": "jumping",
+    "motion": "leap",
+    "prop": "✨",
+    "path": "burst"
+  },
+  {
+    "id": "chi-zongzi",
+    "group": "节令",
+    "title": "端午剥开粽叶",
+    "pose": "review",
+    "motion": "peek",
+    "prop": "🍃",
+    "path": "unwrap"
+  },
+  {
+    "id": "chi-niangao",
+    "group": "节令",
+    "title": "烤炉旁等年糕",
+    "pose": "waiting",
+    "motion": "breathe",
+    "prop": "🍘",
+    "path": "steam"
+  },
+  {
+    "id": "chi-qingtuan",
+    "group": "节令",
+    "title": "春日揉好青团",
+    "pose": "waiting",
+    "motion": "crouch",
+    "prop": "🟢",
+    "path": "bite"
+  },
+  {
+    "id": "chi-labazhou",
+    "group": "节令",
+    "title": "熬好一锅腊八粥",
+    "pose": "review",
+    "motion": "sway",
+    "prop": "🥣",
+    "path": "steam"
+  },
+  {
+    "id": "chi-chongyanggao",
+    "group": "节令",
+    "title": "登高分享重阳糕",
+    "pose": "waving",
+    "motion": "stretch",
+    "prop": "🍰",
+    "path": "hand"
+  },
+  {
+    "id": "shou-hongbao",
+    "group": "节令",
+    "title": "收下新年红包",
+    "pose": "jumping",
+    "motion": "leap",
+    "prop": "🧧",
+    "path": "catch"
+  },
+  {
+    "id": "xie-fuzi",
+    "group": "节令",
+    "title": "挥笔写下福字",
+    "pose": "review",
+    "motion": "tap",
+    "prop": "福",
+    "path": "write"
+  },
+  {
+    "id": "chuanzhenqiqiao",
+    "group": "节令",
+    "title": "灯下穿针乞巧",
+    "pose": "waiting",
+    "motion": "tilt",
+    "prop": "🪡",
+    "path": "thread"
+  },
+  {
+    "id": "wu-shitou",
+    "group": "节令",
+    "title": "举起小狮头",
+    "pose": "jumping",
+    "motion": "dance",
+    "prop": "🦁",
+    "path": "hand"
+  },
+  {
+    "id": "taotang-nanguadeng",
+    "group": "节令",
+    "title": "南瓜灯旁要颗糖",
+    "pose": "waving",
+    "motion": "peek",
+    "prop": "🎃",
+    "path": "lantern"
+  },
+  {
+    "id": "cha-zhuyu-shangju",
+    "group": "节令",
+    "title": "把菊花别在帽沿",
+    "pose": "review",
+    "motion": "bow",
+    "prop": "🌼",
+    "path": "grow"
+  },
+  {
+    "id": "fanghedeng",
+    "group": "节令",
+    "title": "让河灯顺流远去",
+    "pose": "waiting",
+    "motion": "crouch",
+    "prop": "🪷",
+    "path": "floatAway"
+  },
+  {
+    "id": "menghua-xiaoyouling",
+    "group": "节令",
+    "title": "学着小幽灵飘动",
+    "pose": "idle",
+    "motion": "float",
+    "prop": "👻",
+    "path": "drift"
+  },
+  {
+    "id": "zhuangdian-shengdanshu",
+    "group": "节令",
+    "title": "给圣诞树挂上星星",
+    "pose": "waving",
+    "motion": "stretch",
+    "prop": "🎄",
+    "path": "spark"
+  },
+  {
+    "id": "fang-kongmingdeng",
+    "group": "节令",
+    "title": "放手让天灯升起",
+    "pose": "waving",
+    "motion": "bow",
+    "prop": "🏮",
+    "path": "lift"
+  },
+  {
+    "id": "chitangyuan",
+    "group": "节令",
+    "title": "冬夜煮一碗汤圆",
+    "pose": "waiting",
+    "motion": "tilt",
+    "prop": "⚪",
+    "path": "dip"
+  },
+  {
+    "id": "chijiaozi",
+    "group": "节令",
+    "title": "把饺子送进汤里",
+    "pose": "review",
+    "motion": "tap",
+    "prop": "🥟",
+    "path": "dip"
+  },
+  {
+    "id": "shia-chishenme",
+    "group": "聊天",
+    "title": "今天一起吃什么",
+    "pose": "waving",
+    "motion": "peek",
+    "prop": "🍴",
+    "path": "hand"
+  },
+  {
+    "id": "shendu-sikao-suisuinian",
+    "group": "聊天",
+    "title": "让我再想一想",
+    "pose": "review",
+    "motion": "tilt",
+    "prop": "💭",
+    "path": "rising"
+  },
+  {
+    "id": "dianji-huiying-kaixin-yuedong",
+    "group": "触碰",
+    "title": "见到你开心一跳",
+    "pose": "jumping",
+    "motion": "leap",
+    "prop": "💛",
+    "path": "catch"
+  },
+  {
+    "id": "dianji-huiying-haixiu-jingya",
+    "group": "触碰",
+    "title": "被叫到名字红了脸",
+    "pose": "waiting",
+    "motion": "peek",
+    "prop": "🌸",
+    "path": "blush"
+  },
+  {
+    "id": "dianji-huiying-aojiao-shengqi-ceshen-zhanshi",
+    "group": "触碰",
+    "title": "轻轻别过脸",
+    "pose": "failed",
+    "motion": "turn",
+    "prop": "💢",
+    "path": "glow"
+  },
+  {
+    "id": "dianji-huiying-naoyang-gegexiao",
+    "group": "触碰",
+    "title": "没忍住笑出声",
+    "pose": "waving",
+    "motion": "shake",
+    "prop": "🎶",
+    "path": "rising"
+  },
+  {
+    "id": "dianji-huiying-yuanqi-huishou",
+    "group": "触碰",
+    "title": "举高小手问好",
+    "pose": "waving",
+    "motion": "stretch",
+    "prop": "👋",
+    "path": "fan"
+  },
+  {
+    "id": "beishubiao-tuozhuai-xuankong-fankui",
+    "group": "拖动",
+    "title": "被提起时护住贝雷帽",
+    "pose": "jumping",
+    "motion": "rock",
+    "prop": "🍃",
+    "path": "trail"
+  },
+  {
+    "id": "qian-dai-man-yi",
+    "group": "星囊",
+    "title": "满袋星砂溢出来",
+    "pose": "jumping",
+    "motion": "leap",
+    "prop": "🌟",
+    "path": "juggle"
+  },
+  {
+    "id": "jin-dai-ding-dang",
+    "group": "星囊",
+    "title": "晃响旅行钱袋",
+    "pose": "waving",
+    "motion": "shake",
+    "prop": "🪙",
+    "path": "orbit"
+  },
+  {
+    "id": "qian-dai-ru-chang",
+    "group": "星囊",
+    "title": "轻轻拍好钱袋",
+    "pose": "idle",
+    "motion": "tap",
+    "prop": "👝",
+    "path": "hand"
+  },
+  {
+    "id": "shu-jin-zhou-mei",
+    "group": "星囊",
+    "title": "逐枚数剩下的星币",
+    "pose": "review",
+    "motion": "tilt",
+    "prop": "🪙",
+    "path": "table"
+  },
+  {
+    "id": "dai-kong-ru-xi",
+    "group": "星囊",
+    "title": "翻开快空的钱袋",
+    "pose": "waiting",
+    "motion": "peek",
+    "prop": "👛",
+    "path": "unwrap"
+  },
+  {
+    "id": "fen-wen-bu-sheng",
+    "group": "星囊",
+    "title": "收起最后一枚星币",
+    "pose": "failed",
+    "motion": "bow",
+    "prop": "🪙",
+    "path": "fall"
+  },
+  {
+    "id": "suisuinian-cazhuo-suisuinian",
+    "group": "碎碎念",
+    "title": "擦着桌子和你说话",
+    "pose": "waving",
+    "motion": "tilt",
+    "prop": "🧽",
+    "path": "scrub"
+  },
+  {
+    "id": "suisuinian-fadai-suisuinian",
+    "group": "碎碎念",
+    "title": "托着腮想起一句话",
+    "pose": "waiting",
+    "motion": "sway",
+    "prop": "💭",
+    "path": "drift"
+  },
+  {
+    "id": "suisuinian-duiping-suisuinian",
+    "group": "碎碎念",
+    "title": "隔着屏幕轻声呼唤",
+    "pose": "waving",
+    "motion": "stretch",
+    "prop": "💬",
+    "path": "rising"
+  },
+  {
+    "id": "gongzuozhuangtai-sikao-maopao",
+    "group": "工作",
+    "title": "思考时冒出气泡",
+    "pose": "review",
+    "motion": "tilt",
+    "prop": "🫧",
+    "path": "rising"
+  },
+  {
+    "id": "gongzuozhuangtai-manglu-dianan",
+    "group": "工作",
+    "title": "认真敲动按键",
+    "pose": "running",
+    "motion": "tap",
+    "prop": "⌨️",
+    "path": "write"
+  },
+  {
+    "id": "gongzuozhuangtai-qingdian-guidang",
+    "group": "工作",
+    "title": "把完成的记录归档",
+    "pose": "review",
+    "motion": "bow",
+    "prop": "📑",
+    "path": "table"
+  },
+  {
+    "id": "gongzuozhuangtai-yuandi-duobu-zhangwang",
+    "group": "工作",
+    "title": "等你点头时踱步",
+    "pose": "waiting",
+    "motion": "step",
+    "prop": "⏳",
+    "path": "hand"
+  },
+  {
+    "id": "gongzuozhuangtai-queyue-qingzhu",
+    "group": "工作",
+    "title": "收好剑鞘庆祝",
+    "pose": "jumping",
+    "motion": "leap",
+    "prop": "🎉",
+    "path": "burst"
+  },
+  {
+    "id": "gongzuozhuangtai-chuitou-tanqi-maohan",
+    "group": "工作",
+    "title": "垂下眼睛轻轻叹气",
+    "pose": "failed",
+    "motion": "bow",
+    "prop": "💧",
+    "path": "fall"
+  },
+  {
+    "id": "shuijiao-kaishi",
+    "group": "睡觉",
+    "title": "抱着围巾合上眼",
+    "pose": "waiting",
+    "motion": "nap",
+    "prop": "🌙",
+    "path": "glow"
+  },
+  {
+    "id": "shuijiao-xunhuan",
+    "group": "睡觉",
+    "title": "风声里的梦",
+    "pose": "idle",
+    "motion": "nap",
+    "prop": "💤",
+    "path": "drift"
+  },
+  {
+    "id": "shuijiao-qilai",
+    "group": "睡觉",
+    "title": "揉揉眼睛伸懒腰",
+    "pose": "waving",
+    "motion": "wake",
+    "prop": "☀️",
+    "path": "lift"
+  }
+]

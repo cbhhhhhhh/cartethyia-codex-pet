@@ -1,0 +1,7 @@
+{
+  "disposable_registration_and_uninstall": true,
+  "fixture_config_byte_identical": true,
+  "owned_app_and_store_removed": true,
+  "owned_plugin_cache_removed": true,
+  "live_companion_unaffected": true
+}

@@ -1,0 +1,8 @@
+{
+  "method": "aggregate GUI + event broker CPU seconds / wall seconds, unchanged idle snapshot at both ends",
+  "observed_idle_seconds": 5291.47,
+  "weighted_mean_percent": 1.412,
+  "p95_30s_percent": 1.63,
+  "max_30s_percent": 1.697,
+  "intervals": 176
+}

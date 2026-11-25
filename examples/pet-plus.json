@@ -1,0 +1,11 @@
+{
+  "clips": {
+    "睡衣小憩": {"file": "nap-strip.png", "frames": 8, "fps": 6, "weight": 2},
+    "揉揉眼睛": {"file": "wake-strip.png", "frames": 6, "fps": 8},
+    "吹散花瓣": {"file": "petals-strip.png", "frames": 8, "fps": 8}
+  },
+  "idle": ["吹散花瓣"],
+  "sleep": ["睡衣小憩"],
+  "waking": ["揉揉眼睛"],
+  "bedtime": ["睡衣小憩"]
+}
