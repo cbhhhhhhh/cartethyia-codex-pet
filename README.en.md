@@ -48,11 +48,11 @@
 | Feature | What you can do |
 | --- | --- |
 | Desktop gestures | Drag slowly to leave Cartethyia in the middle of the screen. Draw a quick circle and release to send her bouncing off an edge. Click through the transparent space around her. |
-| Work updates | Her pose changes as Codex thinks, uses tools, waits for approval and finishes a task. Click a completion bubble to return to its chat. On macOS 0.2.0, a subagent can finish while the main task keeps running. Cartethyia celebrates when the main turn ends. |
-| Animations and illustrations | macOS 0.2.0 has 109 individually animated actions. Ask for a curtsy with “给我行个礼”. Right-click **配图** (Illustrations) to pick one of ten pictures. She writes a line to go with your choice. Ordinary replies are text by default. |
-| Chat and idle chatter | Click Cartethyia to start a chat. You can edit her persona, interrupt a reply or clear her memory. The default local text model is Qwen2.5-1.5B-Instruct. On macOS 0.2.0, chat and idle chatter can each use a local GGUF model, a compatible API or a model from your Codex account. |
+| Work updates | Her pose changes as Codex thinks, uses tools, waits for approval and finishes a task. Click a completion bubble to return to its chat. In 0.2.0, a subagent can finish while the main task keeps running. Cartethyia celebrates when the main turn ends. |
+| Animations and illustrations | Version 0.2.0 has 109 individually animated actions. Ask for a curtsy with “给我行个礼”. Right-click **配图** (Illustrations) to pick one of ten pictures. She writes a line to go with your choice. Ordinary replies are text by default. |
+| Chat and idle chatter | Click Cartethyia to start a chat. You can edit her persona, interrupt a reply or clear her memory. The default local text model is Qwen2.5-1.5B-Instruct. In 0.2.0, chat and idle chatter can each use a local GGUF model, a compatible API or a model from your Codex account. |
 | Quiet hours and profiles | Idle chatter is off by default. Set an interval and quiet hours when you enable it. Focus and mute pause it. Each pet profile keeps its own persona and conversation memory. |
-| Quotas and usage | On macOS 0.2.0, **Account quota** shows the remaining allowance and reset time. **Current task usage** breaks out tokens for the main task, its subagents and the companion. Credit and cost figures appear when the official service supplies them. |
+| Quotas and usage | In 0.2.0, **Account quota** shows the remaining allowance and reset time. **Current task usage** breaks out tokens for the main task, its subagents and the companion. Credit and cost figures appear when the official service supplies them. |
 
 ## 🔌 Codex plugin
 
@@ -71,11 +71,18 @@ The local **pet-plus** plugin listens for turn, tool and approval events through
 | Platform | Current release | OS and architecture | Tested configuration |
 | --- | --- | --- | --- |
 | macOS | **0.2.0** | macOS 27.2 or later on Apple Silicon (M-series) | Apple M4 running macOS 27.2.1 |
-| Windows | **0.1.0** | x64. The installer requires Windows 10 or later. | Windows 11 Pro, build 22631, x64 |
+| Windows | **0.2.0** | Windows 10 version 1809 (build 17763) or later, or Windows 11, on x64 | Windows 11 Pro, build 22631, x64 |
 
 Work updates and plugin tools require a local Codex installation with plugin support. Work notifications run without a language model. Local text chat works offline once its model is downloaded. Choosing an API or Codex model sends that channel’s messages and relevant context to the selected service.
 
 ## 📥 Installation
+
+| Platform | Version 0.2.0 download | SHA-256 |
+| --- | --- | --- |
+| Windows x64 | **[Download the installer (EXE, 68.0 MiB)](https://github.com/cbhhhhhhh/cartethyia-codex-pet/releases/download/v0.2.0/Cartethyia-0.2.0-Windows-x64-Setup.exe)** | [Windows checksums](https://github.com/cbhhhhhhh/cartethyia-codex-pet/releases/download/v0.2.0/SHA256SUMS-Windows.txt) |
+| macOS on Apple Silicon | **[Download the archive (ZIP, 61.3 MiB)](https://github.com/cbhhhhhhh/cartethyia-codex-pet/releases/download/v0.2.0/Cartethyia-Codex-Pet-macOS-arm64.zip)** | [macOS checksums](https://github.com/cbhhhhhhh/cartethyia-codex-pet/releases/download/v0.2.0/SHA256SUMS) |
+
+On Windows, double-click the EXE. On Mac, extract the archive and double-click `安装.command`. Upgrading from 0.1.0 keeps existing settings and chat history. [Windows installation and removal](docs/WINDOWS.md) · [Mac installation and removal](docs/INSTALL-macOS.md)
 
 **[Go to GitHub Releases](https://github.com/cbhhhhhhh/cartethyia-codex-pet/releases)**
 

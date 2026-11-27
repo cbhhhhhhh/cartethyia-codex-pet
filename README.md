@@ -48,11 +48,11 @@
 | 功能 | 在桌面上怎么玩 |
 | --- | --- |
 | 桌面互动 | 慢拖，把卡提放在屏幕中间；按住她快速画圈再松手，看她飞向屏幕边缘并反弹。角色周围的透明区域可以点穿。 |
-| 工作播报 | 思考、使用工具、等待审批和任务结束各有对应动作。点完成气泡可以回到关联的 Codex 会话。macOS 0.2.0 会等主回合结束再庆祝，子智能体完成时主任务仍可继续。 |
-| 动作与配图 | macOS 0.2.0 的 109 个点播动作各有独立动画。说「给我行个礼」就能点播；右键「配图」可以从 10 张插画里选一张，让她看着图说一句。普通聊天默认用文字。 |
-| 聊天与碎碎念 | 单击卡提开始对话，可编辑人设、中断回复或清空记忆。默认本地文字模型为 Qwen2.5-1.5B-Instruct。macOS 0.2.0 可分别为对话和碎碎念选择本地 GGUF、兼容 API 或 Codex 账户模型。 |
+| 工作播报 | 思考、使用工具、等待审批和任务结束各有对应动作。点完成气泡可以回到关联的 Codex 会话。0.2.0 会等主回合结束再庆祝，子智能体完成时主任务仍可继续。 |
+| 动作与配图 | 0.2.0 的 109 个点播动作各有独立动画。说「给我行个礼」就能点播；右键「配图」可以从 10 张插画里选一张，让她看着图说一句。普通聊天默认用文字。 |
+| 聊天与碎碎念 | 单击卡提开始对话，可编辑人设、中断回复或清空记忆。默认本地文字模型为 Qwen2.5-1.5B-Instruct。0.2.0 可分别为对话和碎碎念选择本地 GGUF、兼容 API 或 Codex 账户模型。 |
 | 安静陪伴 | 碎碎念默认关闭。开启后可以设定间隔和安静时段，专注或静音时会暂停。不同宠物档案各自保存人设和记忆。 |
-| 额度与用量 | macOS 0.2.0 的「账户额度」显示剩余比例和重置时间。「当前任务用量」可分别查看主任务、子会话及桌宠自己的 token，积分与金额以官方接口实际返回的数据为准。 |
+| 额度与用量 | 0.2.0 的「账户额度」显示剩余比例和重置时间。「当前任务用量」可分别查看主任务、子会话及桌宠自己的 token，积分与金额以官方接口实际返回的数据为准。 |
 
 ## 🔌 Codex 插件功能
 
@@ -71,11 +71,18 @@
 | 平台 | 当前发行版 | 系统与架构 | 已验证环境 |
 | --- | --- | --- | --- |
 | macOS | **0.2.0** | macOS 27.2 或更新版本，Apple Silicon（M 系列芯片） | Apple M4，macOS 27.2.1 |
-| Windows | **0.1.0** | x64，安装器最低系统版本为 Windows 10 | Windows 11 专业版，版本 22631，x64 |
+| Windows | **0.2.0** | Windows 10 1809（17763）及以上、Windows 11，x64 | Windows 11 专业版，版本 22631，x64 |
 
 工作播报和插件工具需要本机安装支持本地插件的 Codex。只使用工作提醒可以不下载语言模型。本地文字模型首次下载后可离线聊天；选择 API 或 Codex 模型时，该通道的消息和所需上下文会发给所选服务。
 
 ## 📥 安装
+
+| 系统 | 0.2.0 安装包 | SHA-256 |
+| --- | --- | --- |
+| Windows x64 | **[下载安装程序（EXE，68.0 MiB）](https://github.com/cbhhhhhhh/cartethyia-codex-pet/releases/download/v0.2.0/Cartethyia-0.2.0-Windows-x64-Setup.exe)** | [Windows 校验文件](https://github.com/cbhhhhhhh/cartethyia-codex-pet/releases/download/v0.2.0/SHA256SUMS-Windows.txt) |
+| macOS · Apple Silicon | **[下载压缩包（ZIP，61.3 MiB）](https://github.com/cbhhhhhhh/cartethyia-codex-pet/releases/download/v0.2.0/Cartethyia-Codex-Pet-macOS-arm64.zip)** | [macOS 校验文件](https://github.com/cbhhhhhhh/cartethyia-codex-pet/releases/download/v0.2.0/SHA256SUMS) |
+
+Windows 用户双击 EXE，Mac 用户解压后双击 `安装.command`。升级 0.1.0 会沿用已有设置和聊天。[Windows 安装与卸载](docs/WINDOWS.md) · [Mac 安装与卸载](docs/INSTALL-macOS.md)
 
 **[前往 GitHub Releases](https://github.com/cbhhhhhhh/cartethyia-codex-pet/releases)**
 

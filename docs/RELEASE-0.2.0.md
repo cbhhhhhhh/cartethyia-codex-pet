@@ -2,7 +2,7 @@
 
 本版于 2026 年 11 月 27 日首次发布，原版本号 2.3.0，现统一为 **0.2.0**。两个编号对应同一批功能，本页安装包使用新版本号。
 
-这次更新面向 Apple Silicon Mac。卡提学会了提裙行礼、在本子上落笔、解开礼盒，也能记得刚刚给你看的那张图。工作时，她会等你发起的主回合真正结束才庆祝。
+这次更新现已支持 Apple Silicon Mac 与 Windows x64。卡提学会了提裙行礼、在本子上落笔、解开礼盒，也能记得刚刚给你看的那张图。工作时，她会等你发起的主回合真正结束才庆祝。
 
 ![从安装包中取出的提裙行礼、写字、拆礼物动画](https://raw.githubusercontent.com/cbhhhhhhh/cartethyia-codex-pet/v0.2.0/docs/qa/0.2.0/actions.gif)
 
@@ -11,9 +11,9 @@
 | 平台 | 0.2.0 安装包 |
 | --- | --- |
 | Apple M 系列芯片，macOS 27.2 或更新版本 | **[下载 macOS arm64 ZIP（约 61.3 MiB）](https://github.com/cbhhhhhhh/cartethyia-codex-pet/releases/download/v0.2.0/Cartethyia-Codex-Pet-macOS-arm64.zip)** |
-| Windows | |
+| Windows 10 1809 起、Windows 11，x64 | **[下载 Windows 安装包（68.0 MiB）](https://github.com/cbhhhhhhh/cartethyia-codex-pet/releases/download/v0.2.0/Cartethyia-0.2.0-Windows-x64-Setup.exe)** · [SHA-256](https://github.com/cbhhhhhhh/cartethyia-codex-pet/releases/download/v0.2.0/SHA256SUMS-Windows.txt) |
 
-Windows 版这次尚未更新。每个版本的安装包都保留在各自的发布页。[全部版本](https://github.com/cbhhhhhhh/cartethyia-codex-pet/releases)
+每个版本的安装包都保留在各自的发布页。[全部版本](https://github.com/cbhhhhhhh/cartethyia-codex-pet/releases)
 
 ## 更新内容
 
@@ -30,3 +30,13 @@ Windows 版这次尚未更新。每个版本的安装包都保留在各自的发
 3. 在 Codex 的「设置 → Hooks」审阅 pet-plus 的 hooks。从应用列表打开 **Codex Pet Plus** 可调整设置。单击卡提聊天，右键打开动作、配图、账户额度或任务用量。
 
 如需校验下载文件，把 ZIP 与校验文件放在同一目录，运行 `shasum -a 256 -c SHA256SUMS`。应用使用本地临时签名。回退时退出桌宠，运行所需旧版本的 Mac 安装器。手册含 Gatekeeper、备份和完整卸载步骤。[下载 SHA256SUMS](https://github.com/cbhhhhhhh/cartethyia-codex-pet/releases/download/v0.2.0/SHA256SUMS) · [安装与卸载手册](https://github.com/cbhhhhhhh/cartethyia-codex-pet/blob/v0.2.0/docs/INSTALL-macOS.md) · [本版实测](https://github.com/cbhhhhhhh/cartethyia-codex-pet/blob/v0.2.0/docs/QA-0.2.0.md)
+
+## Windows x64 补发
+
+Windows 安装包为 `Cartethyia-0.2.0-Windows-x64-Setup.exe`，共 71,280,663 字节。其 SHA-256 为 `2b96f463f02fca3dc83751be0c5a843fad11e296f3de4e3295d2eb276f248f44`。Windows 11 专业版 23H2 x64 实测。应用、图标及运行时随包安装，文字和视觉模型可按需下载。
+
+1. 双击 EXE 为当前用户安装。完成后从开始菜单打开「卡提希娅」，再次打开会显示设置。插件命令可在 Codex 的 Hooks 页面审阅。
+2. 在已有 0.1.0 的账户直接运行新版，沿用角色、人设、模型、聊天、记忆和待办。回退时退出桌宠并运行 0.1.0 的 Windows 安装包。
+3. 在 Windows「设置 → 应用 → 安装的应用」卸载。卸载移除本项目的 Codex 注册，个人档案及后来添加的其他配置保留。
+
+两平台共用同一发行页。v0.2.0 标签保留在 Mac 发布提交，Windows 补发安装包对应提交 `08a276f18961296d5fee4bac81a07b3e8ec774df`。已从公开下载地址重新取得两平台安装包和校验文件，Windows 文件与本机通过一小时验收的文件逐字节校验一致。[Windows 构建源码](https://github.com/cbhhhhhhh/cartethyia-codex-pet/tree/08a276f18961296d5fee4bac81a07b3e8ec774df) · [公开下载复核](qa/windows-0.2.0/public-downloads.json) · [安装及使用手册](WINDOWS.md) · [Windows 实机验收与逐次采样](QA-WINDOWS-0.2.0.md)

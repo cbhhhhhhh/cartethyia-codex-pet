@@ -1,0 +1,37 @@
+{
+  "release": "v0.2.0",
+  "windows_source": {
+    "commit": "08a276f18961296d5fee4bac81a07b3e8ec774df",
+    "installed_files_with_direct_git_source": 156,
+    "all_matching": true
+  },
+  "public_manifest_matches_local": true,
+  "public_exe_bytewise_matches_tested_installer": true,
+  "verified_at": "2026-11-27T23:00:29+08:00",
+  "assets": [
+    {
+      "name": "Cartethyia-0.2.0-Windows-x64-Setup.exe",
+      "bytes": 71280663,
+      "sha256": "2b96f463f02fca3dc83751be0c5a843fad11e296f3de4e3295d2eb276f248f44",
+      "url": "https://github.com/cbhhhhhhh/cartethyia-codex-pet/releases/download/v0.2.0/Cartethyia-0.2.0-Windows-x64-Setup.exe"
+    },
+    {
+      "name": "SHA256SUMS-Windows.txt",
+      "bytes": 106,
+      "sha256": "c61ad32ad1b578dbafeb3012fcd1a91958d758ea015cefe0d7921ec7eeaec1d5",
+      "url": "https://github.com/cbhhhhhhh/cartethyia-codex-pet/releases/download/v0.2.0/SHA256SUMS-Windows.txt"
+    },
+    {
+      "name": "Cartethyia-Codex-Pet-macOS-arm64.zip",
+      "bytes": 64305981,
+      "sha256": "bda3a4231647f484128caf33585e7cf970baafcf0feee90c910abcb6a6b93944",
+      "url": "https://github.com/cbhhhhhhh/cartethyia-codex-pet/releases/download/v0.2.0/Cartethyia-Codex-Pet-macOS-arm64.zip"
+    },
+    {
+      "name": "SHA256SUMS",
+      "bytes": 103,
+      "sha256": "7eaa99465528164d7527abd4802af1592f6148949144aa87ba7382008eb69168",
+      "url": "https://github.com/cbhhhhhhh/cartethyia-codex-pet/releases/download/v0.2.0/SHA256SUMS"
+    }
+  ]
+}
