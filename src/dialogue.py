@@ -1,6 +1,7 @@
 """Persona constraints, the shared picture gallery, and explicit references to performed actions."""
 from functools import lru_cache
 import json
+import os
 import subprocess
 from pathlib import Path
 import random
@@ -25,8 +26,24 @@ def forbids(persona, topic):
                for clause in re.split(r"[。！？；\n;!]", persona))
 
 
+@lru_cache(maxsize=1)
+def windows_places():
+    source = HERE / "place-names-zh.txt"
+    if not source.is_file():
+        return {}
+    groups = {}
+    for name in source.read_text(encoding="utf8").splitlines():
+        groups.setdefault(len(name), set()).add(name)
+    return groups
+
+
 @lru_cache(maxsize=192)
 def local_place_name(sentence):
+    if os.name == "nt":
+        # Locally compiled jieba ns lexicon, plus proper names in Latin script.
+        return bool(re.search(r"\b[A-Z][a-z]{2,}(?:[ -][A-Z][a-z]+)*\b", sentence)) or any(
+            sentence[i:i+width] in words for width, words in windows_places().items()
+            for i in range(len(sentence)-width+1))
     tagger = HERE.parent / "MacOS/pet-place"
     if tagger.is_file():
         try:
@@ -68,7 +85,7 @@ class Rules:
 def gallery(folder, pack="cartethyia"):
     pictures = {}
     if pack == "cartethyia":
-        for item in json.loads((HERE / "web/gallery.json").read_text()):
+        for item in json.loads((HERE / "web/gallery.json").read_text(encoding="utf8")):
             file = HERE / "web/portraits" / (item["id"] + ".png")
             if file.is_file():
                 pictures[item["id"]] = dict(item, file=str(file))

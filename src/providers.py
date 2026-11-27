@@ -30,9 +30,9 @@ def server(cwd=None, isolate=False):
         conf = Path(os.environ.get("CODEX_HOME", Path.home() / ".codex")) / "config.toml"
         try:
             import tomllib
-            servers = tomllib.loads(conf.read_text()).get("mcp_servers", {})
+            servers = tomllib.loads(conf.read_text(encoding="utf-8-sig")).get("mcp_servers", {})
         except ImportError:
-            servers = re.findall(r'^\s*\[mcp_servers\."?([\w-]+)"?\]', conf.read_text(), re.M) if conf.exists() else []
+            servers = re.findall(r'^\s*\[mcp_servers\."?([\w-]+)"?\]', conf.read_text(encoding="utf-8-sig"), re.M) if conf.exists() else []
         except (ValueError, OSError):
             servers = []
         options += ["-c", "mcp_servers={}", "-c", "features.multi_agent_v2=false"]
@@ -85,7 +85,10 @@ def endpoint(cfg):
     if env_name and not re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*", env_name):
         raise ValueError("API Key 环境变量名无效")
     key = os.environ.get(env_name, "") if env_name else ""
-    if not key:
+    if not key and os.name == "nt":
+        from win_credentials import get_key
+        key = get_key(base.scheme + "://" + base.netloc)
+    elif not key:
         result = subprocess.run(["/usr/bin/security", "find-generic-password", "-s",
                                  "local.cartethyia.petplus.api", "-a", base.scheme + "://" + base.netloc,
                                  "-w"], capture_output=True, timeout=8)

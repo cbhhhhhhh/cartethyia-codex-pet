@@ -9,13 +9,13 @@ import sys
 import time
 
 repo=Path(__file__).resolve().parents[1]
-install=Path(os.environ["LOCALAPPDATA"])/"Programs/CartethyiaPet"
+install=Path(os.environ.get("CARTETHYIA_QA_INSTALL") or Path(os.environ["LOCALAPPDATA"])/"Programs/CartethyiaPet")
 sys.path.insert(0,str(install/"windows"))
 from common import CODEX
 from app import QApplication, Companion, QIcon, QLocalServer, Qt, STYLE
 from transport import name
 
-out=repo/".build/release-turns"
+out=Path(os.environ.get("CARTETHYIA_TURN_QA",repo/".build/windows-0.2.0/turns"))
 out.mkdir(parents=True,exist_ok=True)
 events=out/"events.jsonl"
 os.environ["CARTETHYIA_QA_LOG"]=str(events)
@@ -34,9 +34,9 @@ owner.pet.move(640,420)
 owner.tick.stop()
 note=out/"active-thread.txt"
 original=owner.work.accept
-def only_test(e):
+def only_test(e,*args):
     if note.is_file() and e.get("thread")==note.read_text(encoding="ascii"):
-        original(e)
+        original(e,*args)
 owner.work.accept=only_test
 def pump(seconds):
     end=time.monotonic()+seconds
@@ -66,6 +66,8 @@ try:
                 v=row.get("payload",{})
                 kind=v.get("type")
                 if row.get("type")=="event_msg" and kind in ("task_started","task_complete","turn_aborted","error"):
+                    if kind=="task_complete" and v.get("error"):
+                        kind="error"
                     stamps[kind]=datetime.datetime.fromisoformat(row["timestamp"].replace("Z","+00:00")).timestamp()
         observed=[e for l in events.read_text(encoding="utf8").splitlines() if (e:=json.loads(l))["at"]>=begin]
         paints=[e for e in observed if "painted" in e]

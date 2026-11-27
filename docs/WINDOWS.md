@@ -1,26 +1,30 @@
 # 卡提希娅 · Windows 桌宠
 
-下载 Windows x64 安装包，双击 `Cartethyia-0.1.0-Windows-x64-Setup.exe`，按提示为当前用户安装。安装包内含运行环境、基础图集、10 张对话插画和 109 段扩展动作。此版本未作 Authenticode 签名。可在 PowerShell 用 `Get-FileHash` 核对安装包的 SHA-256。[下载 Windows 安装包](https://github.com/cbhhhhhhh/cartethyia-codex-pet/releases/download/v0.1.0/Cartethyia-0.1.0-Windows-x64-Setup.exe) · [下载校验文件](https://github.com/cbhhhhhhh/cartethyia-codex-pet/releases/download/v0.1.0/SHA256SUMS-Windows.txt)
+下载 Windows x64 安装包，双击 `Cartethyia-0.2.0-Windows-x64-Setup.exe`，按提示为当前用户安装。安装包内含运行环境、基础图集、10 张对话插画和 109 段扩展动作。此版本未作 Authenticode 签名。可在 PowerShell 用 `Get-FileHash` 核对安装包的 SHA-256。[下载 Windows 安装包](https://github.com/cbhhhhhhh/cartethyia-codex-pet/releases/download/v0.2.0/Cartethyia-0.2.0-Windows-x64-Setup.exe) · [下载校验文件](https://github.com/cbhhhhhhh/cartethyia-codex-pet/releases/download/v0.2.0/SHA256SUMS-Windows.txt)
 
 ## 三步体验
 
-1. 安装完成后在 Codex 开一个本机任务，例如「用 PowerShell 显示当前日期，然后结束」。把鼠标停在卡提身体上看工具、耗时与计划。任务结束后她会短跳并回到待机。多个会话并行时会继续显示其他活动回合。
+1. 安装完成后在 Codex 开一个本机任务，例如「用 PowerShell 显示当前日期，然后结束」。右键「工作详情」看工具、耗时与计划。任务结束后她会短跳并回到待机。多个会话并行时会继续显示其他活动回合。
 2. 慢拖到桌面中间，停一下再松开。随后按住身体，快速画圈或左右摇两下，趁还在移动时松手。右键「点播动作」能找到角色包分类。
-3. 从开始菜单打开「卡提希娅」，到「聊天」下载并校验文字模型。单击身体，在头顶输入框送出一句话，回复逐字出现。气泡可以中断或继续回复。右键「聊天记录」可清空当前档案。图片聊天在同一页下载视觉模型，输入框旁点击「图片」即可发送本机 PNG/JPEG，最大 8 MiB。
+3. 从开始菜单打开「卡提希娅」，到「聊天」下载并校验文字模型。单击身体，在头顶输入框送出一句话，普通回复默认纯文字。右键「配图」选一张插画，或要求卡提「给我行个礼」「刚才那个再来一次」。气泡可以中断或继续回复。右键「聊天记录」可清空当前档案。图片聊天在同一页下载视觉模型，输入框旁点击「图片」即可发送本机 PNG/JPEG，最大 8 MiB。
 
 ## 工作事件与提醒
 
 安装程序会尝试把 pet-plus@cartethyia-windows-local 注册为当前用户的 Codex 插件。用 Codex 的设置 → Hooks 或 CLI 的 /hooks 审阅来自此插件的命令。新开的会话会加载插件。审批权限模式应允许提出请求，才能产生审批提醒。CLI 暂时不可用时从桌宠设置点「连接本机 Codex」重试。日常工作状态也可从本地会话增量读取。没有新信号时显示待机，工具与模型的无信号超时为 120 秒，等待审批为 300 秒。
 
-右键「待办事项」可以添加截止时间、完成、重开或删除。可以要求已连接插件的 Codex 使用 pet_remind / pet_complete。右键「查看额度」显示日志提供的最近用量快照。完成气泡的「回到会话」打开 Windows 注册的 codex: 链接。
+右键「待办事项」可以添加截止时间、完成、重开或删除。可以要求已连接插件的 Codex 使用 pet_remind / pet_complete。右键「账户额度」读取官方窗口与更新时间。「当前任务用量」按主回合显示已确认归属的主、子会话用量。缓存和推理 token 已含在输入和输出内。可在提醒设置打开会话费用基线，缺少官方数据时显示暂未提供。完成气泡的「回到会话」打开 Windows 注册的 codex: 链接。
 
 ## 设置与数据
 
 托盘可以唤醒、收起、静音、退出或找回设置。Ctrl+Alt+P 默认唤醒或收起，主档案的 Ctrl+Alt+Shift+M 切换静音，Ctrl+Alt+Shift+Q 退出。位置用桌面逻辑坐标保存；显示器拔出后可从设置选择「移到鼠标所在屏幕」。设置即时生效。「打开独立伙伴档案」为每个档案分别保存设置、记忆与图片；角色来自当前用户 .codex/pets。
 
-默认使用无需模型的工作提醒。可选文字模型约 1.1 GB，视觉模型与投影合计约 1.7 GB，另有本机推理引擎。auto 优先使用 Vulkan 版，CPU 可在设置中单选。视觉和文字都在 127.0.0.1 的临时受认证服务运行。默认上下文为最近十轮。启用天气后，Open-Meteo 收到城市及查询坐标。系统朗读使用 Windows 已安装的 SAPI 语音。
+默认使用无需模型的工作提醒。可选文字模型约 1.1 GB，视觉模型与投影合计约 1.7 GB，另有本机推理引擎。auto 优先使用 Vulkan 版，CPU 可在设置中单选。视觉和文字都在 127.0.0.1 的临时受认证服务运行。默认上下文为最近十轮。在设置的「模型线路」中，聊天和碎碎念可分别选择本地 GGUF、兼容 API 或 Codex 登录账户。测试连接会列出可用模型。API 密钥可使用指定环境变量或保存至对应服务地址的 Windows 凭据管理器。启用外部线路后，该线路接收当前问题和允许的上下文。明确禁谈的内容在显示、朗读、归档前检查。启用天气后，Open-Meteo 收到城市及查询坐标。系统朗读使用 Windows 已安装的 SAPI 语音。
 
 应用位于 %LOCALAPPDATA%/Programs/CartethyiaPet，用户档案位于 %LOCALAPPDATA%/CartethyiaPet/profiles，下载的模型位于同级 runtime。Codex 配置快照保存在 backup，连接诊断保存在 connection.json。聊天、人物设置和模型在重装与升级后继续使用。
+
+## 升级与回退
+
+Windows 安装器面向 Windows 10 1809 及以上版本和 Windows 11 x64，实测系统为 Windows 11 专业版 23H2。可在运行 0.1.0 的同一用户下直接双击新版 EXE，保留角色、人设、模型、聊天、记忆和待办。回退时退出桌宠，再运行原版本的 Windows 安装器。再次运行 0.2.0 安装包即可重新升级。
 
 ## 卸载
 

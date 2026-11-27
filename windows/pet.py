@@ -4,6 +4,7 @@ import os
 import random
 import time
 from collections import deque
+from pathlib import Path
 from PySide6.QtCore import QPoint, Qt, QTimer, Signal
 from PySide6.QtGui import QCursor, QGuiApplication, QPainter, QPixmap
 from PySide6.QtWidgets import QWidget
@@ -31,13 +32,15 @@ class Pet(QWidget):
         self.last_painted = ""
         self.action = ""
         self.until = 0
+        self.started = 0
+        self.travel = None
         self.samples = deque()
         self.drag = None
         self.velocity = None
         self.load_pack()
         self.set_size(config["size"])
         self.frame = QTimer(self, interval=125)
-        self.frame.timeout.connect(self.update)
+        self.frame.timeout.connect(self.advance)
         self.frame.start()
         self.physics = QTimer(self, interval=16, timerType=Qt.PreciseTimer)
         self.physics.timeout.connect(self.fly)
@@ -54,7 +57,9 @@ class Pet(QWidget):
             self.sheet = QPixmap(str(ART/"pets/cartethyia/spritesheet.webp"))
         self.cliproot = base if (base/"pet-plus.json").exists() else CLIPS
         self.clips = read(self.cliproot/"pet-plus.json",{}).get("clips",{}) if key=="cartethyia" or self.cliproot==base else {}
+        self.idle_clips = read(self.cliproot/"pet-plus.json", {}).get("idle", [])
         self.cached = ("", None)
+        self.action = ""
 
     def set_size(self, width):
         self.setFixedSize(width,round(width*208/192))
@@ -62,15 +67,17 @@ class Pet(QWidget):
 
     def image(self):
         mapped = self.config["mapping"].get(self.state,"idle")
-        action = self.action if self.state=="idle" and time.monotonic()<self.until else mapped
+        action = self.action if self.action and time.monotonic()<self.until else mapped
         if action in self.clips:
             spec = self.clips[action]
             if self.cached[0] != action:
-                self.cached = (action,QPixmap(str(self.cliproot/os.path.basename(spec["file"]))))
+                path = (self.cliproot/spec["file"]).resolve()
+                sheet = QPixmap(str(path)) if path.is_relative_to(self.cliproot.resolve()) else QPixmap()
+                self.cached = (action, sheet)
             sheet = self.cached[1]
             count = max(1,int(spec["frames"]))
             width = sheet.width()//count
-            index = int(time.monotonic()*spec.get("fps",8))%count
+            index = int(max(0, time.monotonic() - self.started)*spec.get("fps",8))%count
             if width:
                 return sheet.copy(index*width,0,width,sheet.height())
         row = ROWS.index(action) if action in ROWS else 0
@@ -88,7 +95,37 @@ class Pet(QWidget):
 
     def play(self, action):
         self.action = action
-        self.until = time.monotonic()+2
+        self.started = time.monotonic()
+        spec = self.clips.get(action, {})
+        duration = spec.get("frames", 16) / max(1, spec.get("fps", 8))
+        self.until = self.started + duration
+        self.travel = None
+        if spec.get("travel") and self.state == "idle" and self.drag is None and self.isVisible():
+            area = self.bounds()
+            left, right = self.x()-area.left(), area.right()+1-self.width()-self.x()
+            direction = -1 if right < 70 else 1 if left < 70 else random.choice((-1,1))
+            distance = min(70 if spec["travel"] == "float" else 126, right if direction > 0 else left)
+            self.physics.stop()
+            self.travel = (self.pos(), spec["travel"], direction*max(0,distance), min(44,self.y()-area.top()))
+        self.frame.setInterval(33 if self.travel else round(1000/max(1,spec.get("fps",8))))
+        self.update()
+
+    def advance(self):
+        now = time.monotonic()
+        if self.travel:
+            start, motion, span, rise = self.travel
+            if self.state == "idle" and self.drag is None:
+                t = min(1, (now-self.started)/(self.until-self.started))
+                offset = math.sin(math.pi*t) if motion == "return" else t*t*(3-2*t)
+                self.move(start + QPoint(round(span*offset), -round(rise*math.sin(math.pi*t)) if motion=="float" else 0))
+            else:
+                self.travel = None
+        if self.action and now >= self.until:
+            if self.travel:
+                self.settled.emit()
+            self.action = ""
+            self.travel = None
+            self.frame.setInterval(125)
         self.update()
 
     def bounds(self, point=None):
@@ -114,6 +151,7 @@ class Pet(QWidget):
             self.menuAt.emit(event.globalPosition().toPoint())
         elif event.button()==Qt.LeftButton:
             self.physics.stop()
+            self.travel = None
             self.drag = event.globalPosition().toPoint()-self.pos()
             self.origin = event.globalPosition().toPoint()
             self.samples.clear()

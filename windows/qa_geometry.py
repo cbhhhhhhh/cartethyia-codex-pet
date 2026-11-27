@@ -30,7 +30,7 @@ for area in [QRect(-1920,0,1920,1040),QRect(0,0,2048,1100),QRect(2048,-180,1707,
             assert pet.pos()==pt
         result["cases"].append([area.getRect(),(pt.x(),pt.y()),(pet.x(),pet.y())])
 if len(app.screens())>1:
-    primary=app.primaryScreen()
+    primary=next((s for s in app.screens() if s.name()=="Primary"), app.primaryScreen())
     other=next(screen for screen in app.screens() if screen!=primary)
     start=primary.availableGeometry().center()
     end=other.availableGeometry().center()

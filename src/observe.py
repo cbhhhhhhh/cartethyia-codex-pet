@@ -101,6 +101,8 @@ class Tail:
             tid = m.group(1)
             self.files[f] = [s.st_ino, offset, tid, "", False]
             self.paths[tid] = f
+            if not initial and self.origin(tid)["born"] >= self.began - 1:
+                self.files[f][1] = 0
 
     def origin(self, tid):
         if tid in self.origins:
@@ -284,7 +286,7 @@ class Tail:
                                 e,
                                 kind={
                                     "task_started": "start",
-                                    "task_complete": "end",
+                                    "task_complete": "error" if p.get("error") else "end",
                                     "turn_aborted": "abort",
                                     "error": "error",
                                 }[typ],

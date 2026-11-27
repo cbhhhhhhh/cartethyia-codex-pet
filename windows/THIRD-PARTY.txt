@@ -1,4 +1,4 @@
-卡提希娅 Windows 桌宠 0.1.0
+卡提希娅 Windows 桌宠 0.2.0
 角色、二创插画与动作的署名和使用说明见安装目录的 NOTICE。
 
 CPython 3.13.9 来自 Python Software Foundation 的 Windows x64 embeddable package，随附 runtime/LICENSE.txt。
@@ -9,3 +9,6 @@ https://code.qt.io/cgit/pyside/pyside-setup.git/tag/?h=v6.9.3
 上游 wheels 和元数据可从 https://pypi.org/project/PySide6-Essentials/6.9.3/ 和 https://pypi.org/project/shiboken6/6.9.3/ 获取。
 Inno Setup 版权归 Jordan Russell、Martijn Laan 及贡献者所有。https://jrsoftware.org/isinfo.php
 选装 llama.cpp 与 Qwen 模型的版本、来源及署名见 NOTICE。
+
+jieba 0.42.1 (Chinese geographical names derived from jieba/dict.txt), MIT, Copyright (c) 2013 Sun Junyi. https://github.com/fxsjy/jieba
+See windows/licenses/jieba-MIT.txt.

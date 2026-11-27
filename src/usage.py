@@ -13,9 +13,10 @@ def counts(value):
     return {k: value[k] if type(value.get(k)) is int and value[k] >= 0 else None for k in FIELDS}
 
 
-def money_line(summary, label):
-    if not summary:
+def money_line(summary, label, explicit_missing=False):
+    if not summary and not explicit_missing:
         return label + " · 暂未提供"
+    summary = summary or {}
     items = []
     for key, title, unit in (("estimatedUsageCreditsMicros", "估算积分", ""),
                              ("nativeUsageUsdMicros", "原生美元用量", "$"),
@@ -23,6 +24,8 @@ def money_line(summary, label):
         value = summary.get(key)
         if isinstance(value, int) and value >= 0:
             items.append(f"{title} {unit}{value / 1_000_000:,.6f}".rstrip("0").rstrip("."))
+        elif explicit_missing:
+            items.append(title + " 暂未提供")
     return label + " · " + (" / ".join(items) or "暂未提供")
 
 
@@ -30,7 +33,7 @@ class Ledger:
     def __init__(self, folder):
         self.file = Path(folder) / "usage.json"
         try:
-            saved = json.loads(self.file.read_text())
+            saved = json.loads(self.file.read_text(encoding="utf8"))
         except (OSError, ValueError):
             saved = {}
         self.turns = saved.get("turns", {})
@@ -56,7 +59,7 @@ class Ledger:
                 del mapping[next(iter(mapping))]
         payload = {k: getattr(self, k) for k in ("turns", "last", "stamps", "billing", "quota", "pet")}
         temp = self.file.with_suffix(".tmp")
-        temp.write_text(json.dumps(payload, ensure_ascii=False))
+        temp.write_text(json.dumps(payload, ensure_ascii=False), encoding="utf8")
         temp.replace(self.file)
         self.dirty = False
 
@@ -160,7 +163,7 @@ class Ledger:
                 return False
         return False
 
-    def view(self, selected=""):
+    def view(self, selected="", explicit_missing=False):
         roots = sorted((r for r in self.turns.values() if r["role"] == "root"),
                        key=lambda r: r["time"], reverse=True)
         row = self.turns.get(selected)
@@ -185,7 +188,7 @@ class Ledger:
             if valid:
                 def display(field):
                     if any(field in r.get("unreported", ()) for r in family):
-                        return "未提供"
+                        return "暂未提供" if explicit_missing else "未提供"
                     return f"{sum(r['counts'][field] for r in family):,}"
                 lines += [f"合计 {display('total_tokens')} tokens",
                           f"输入 {display('input_tokens')}（含缓存 {display('cached_input_tokens')}）",
@@ -201,13 +204,13 @@ class Ledger:
                     lines.append("本轮数据不完整，仅列出已观察到的用量。")
             else:
                 lines.append("等待可归属的 token 数据")
-            lines.append(money_line(row.get("cost"), "本轮主会话估算增量") if row.get("cost") else "本轮积分与金额 · 暂不可拆分")
+            lines.append(money_line(row.get("cost"), "本轮主会话估算增量", explicit_missing) if row.get("cost") else ("本轮积分与金额 · 暂未提供（缺少可靠起止基线）" if explicit_missing else "本轮积分与金额 · 暂不可拆分"))
             lines.append("账户周期百分比按全账户统计，单次请求占比未提供。")
             bill = self.billing.get(row["thread"], {})
             thread_counts = self.last.get(row["thread"])
             if thread_counts:
                 lines.append(f"主会话累计 · {thread_counts['total_tokens']:,} tokens")
-            lines.append(money_line(bill, "整条主会话累计"))
+            lines.append(money_line(bill, "整条主会话累计", explicit_missing))
             if bill.get("at"):
                 lines.append("账户接口更新于 " + datetime.fromtimestamp(bill["at"]).strftime("%m-%d %H:%M"))
         else:

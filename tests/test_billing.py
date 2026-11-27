@@ -13,6 +13,7 @@ import unittest
 import uuid
 
 
+@unittest.skipIf(os.name == "nt", "The macOS broker uses Unix datagrams; windows/qa_ownership.py covers the Windows client.")
 class TurnBilling(unittest.TestCase):
     def test_official_deltas_and_a_turn_without_a_baseline(self):
         source = Path(__file__).resolve().parents[1] / "src"

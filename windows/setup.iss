@@ -1,18 +1,18 @@
 [Setup]
 AppId={{4B5A08E3-1FB6-40AC-B847-3F96BDBA4CF2}
 AppName=卡提希娅 Codex 桌宠
-AppVersion=0.1.0
-VersionInfoVersion=0.1.0.0
-VersionInfoProductVersion=0.1.0.0
+AppVersion=0.2.0
 AppPublisher=Cartethyia Codex Pet
 DefaultDirName={localappdata}\Programs\CartethyiaPet
 DefaultGroupName=卡提希娅
 PrivilegesRequired=lowest
 ArchitecturesAllowed=x64compatible
 ArchitecturesInstallIn64BitMode=x64compatible
-MinVersion=10.0
+MinVersion=10.0.17763
+VersionInfoVersion=0.2.0.0
+VersionInfoProductVersion=0.2.0.0
 OutputDir=..\dist
-OutputBaseFilename=Cartethyia-0.1.0-Windows-x64-Setup
+OutputBaseFilename=Cartethyia-0.2.0-Windows-x64-Setup
 SetupIconFile=..\art\cartethyia.ico
 UninstallDisplayIcon={app}\Cartethyia.exe
 Compression=lzma2/fast
@@ -22,7 +22,7 @@ DisableProgramGroupPage=yes
 CloseApplications=no
 UninstallLogMode=append
 [Files]
-Source: "..\.build\windows-app\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs; Excludes: "runtime\*,__pycache__\*,*.pyc"
+Source: "..\.build\windows-app-0.2.0\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs; Excludes: "runtime\*,__pycache__\*,*.pyc"
 #include "..\.build\runtime-files.iss"
 [Icons]
 Name: "{group}\卡提希娅"; Filename: "{app}\Cartethyia.exe"; IconFilename: "{app}\art\cartethyia.ico"

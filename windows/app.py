@@ -13,14 +13,16 @@ import sys
 import threading
 import time
 from common import DATA, ROOT, read, write
-from PySide6.QtCore import QAbstractNativeEventFilter, QLockFile, QObject, QPoint, Qt, QTimer, QUrl, Signal
+from PySide6.QtCore import QAbstractNativeEventFilter, QLockFile, QObject, QPoint, QSize, Qt, QTimer, QUrl, Signal
 from PySide6.QtGui import QAction, QCursor, QDesktopServices, QIcon
 from PySide6.QtNetwork import QLocalServer, QLocalSocket
 from shiboken6 import isValid
 from PySide6.QtWidgets import (QApplication,QDialog,QInputDialog,QLabel,QMenu,QMessageBox,QSystemTrayIcon,
-                               QTextEdit,QVBoxLayout)
+                               QTextEdit,QVBoxLayout,QLineEdit)
 import archive
-import chat
+from dialogue import Rules, gallery, cue_line
+from pet_response import answer as generate_answer
+from providers import list_models, route
 import reminders
 from cards import Card, LABELS, Settings, STYLE, Tasks, button
 from core import Work
@@ -72,6 +74,7 @@ class Companion(QObject):
     progress=Signal(str)
     modelDone=Signal()
     registered=Signal()
+    modelList=Signal(str,object,str)
     def __init__(self,profile,server):
         super().__init__()
         self.profile=profile
@@ -102,12 +105,13 @@ class Companion(QObject):
         self.weather=Weather()
         self.last_whisper=time.monotonic()
         self.card=Card(self)
-        self.hover=QLabel(None,FLAGS | Qt.WindowTransparentForInput | Qt.WindowDoesNotAcceptFocus)
-        self.hover.setAttribute(Qt.WA_ShowWithoutActivating)
-        self.hover.setStyleSheet("background:#fff9e9;color:#433c36;border:1px solid #c8b99a;border-radius:9px;padding:8px")
-        self.hover_timer=QTimer(self,singleShot=True,interval=250)
-        self.hover_timer.timeout.connect(self.show_hover)
-        self.pet.hovered.connect(self.hovered)
+        self.interaction=read(self.folder/"interaction.json",{})
+        self.last_cue=0
+        self.next_action=time.monotonic()+random.uniform(25,55)
+        self.notices=[]
+        self.notice_key=None
+        self.usage_key=""
+        self.modelList.connect(self.models_loaded)
         self.pet.positioned.connect(self.position_cards)
         self.pet.settled.connect(self.save_position)
         self.pet.clicked.connect(self.compose)
@@ -122,6 +126,10 @@ class Companion(QObject):
         self.work=Work(self.folder)
         if self.work.audit:
             self.pet.painted.connect(lambda state:self.work.record(dict(painted=state,thread=self.work.last.get("thread",""))))
+        self.work.track_cost=bool(self.config["trackCost"])
+        self.work.started.connect(self.turn_started)
+        self.work.usageChanged.connect(self.refresh_usage)
+        self.work.quotaChanged.connect(lambda text:self.card.display("quota",text) if self.card.mode=="quota" else None)
         self.work.changed.connect(self.state)
         self.work.notice.connect(self.notice)
         self.keys=Hotkeys(self)
@@ -135,7 +143,7 @@ class Companion(QObject):
         self.tick.timeout.connect(self.periodic)
         self.tick.start()
         self.notice_timer=QTimer(self,singleShot=True,interval=5500)
-        self.notice_timer.timeout.connect(lambda:self.card.close_card() if self.card.mode=="notice" else None)
+        self.notice_timer.timeout.connect(self.end_notice)
         if not self.config["asleep"]:
             self.pet.show()
         QApplication.instance().aboutToQuit.connect(self.shutdown)
@@ -170,47 +178,65 @@ class Companion(QObject):
                 pass
 
     def state(self,status):
+        if self.pet.state!=status["state"] and status["state"]!="idle":
+            self.pet.action=""
+            self.pet.travel=None
+            self.pet.frame.setInterval(125)
         self.pet.state=status["state"]
         self.pet.update()
-        if self.hover.isVisible():
-            self.show_hover()
+        if self.card.mode == "work":
+            self.work_details()
 
-    def hovered(self,on):
-        if on:
-            self.hover_timer.start()
-        else:
-            self.hover_timer.stop()
-            self.hover.hide()
-
-    def show_hover(self):
-        if not self.pet.isVisible() or self.pet.drag is not None or self.card.isVisible():
-            return
+    def work_details(self):
         s=self.work.last
         seconds=max(0,int(time.monotonic()-s["since"])) if s.get("since") else 0
-        self.hover.setText(f"{LABELS.get(s.get('state'),'待机')}   ·   {seconds} 秒\n工具   {s.get('tool') or '—'}\n计划   {s.get('progress') or '—'}")
-        self.hover.adjustSize()
-        self.position_cards()
-        self.hover.show()
+        self.card.display("work",f"{LABELS.get(s.get('state'),'待机')} · {seconds} 秒\n工具　{s.get('tool') or '—'}\n计划　{s.get('progress') or '—'}")
 
     def position_cards(self):
         if self.card.isVisible():
             self.card.layout_at_pet()
-        a=self.pet.bounds()
-        x=max(a.left(),min(self.pet.x(),a.right()+1-self.hover.width()))
-        y=self.pet.y()-self.hover.height()
-        self.hover.move(x,y if y>=a.top() else self.pet.y()+self.pet.height())
 
-    def notice(self,kind,thread):
-        text={"success":"任务完成了。","error":"这次任务遇到了问题。","waiting-for-approval":"Codex 正在等待你的审批。","timeout":"暂时没有新的工作信号。"}.get(kind)
-        if text and self.config["notifications"]:
-            self.notify(text,thread,"voiceNotice")
+    def turn_started(self,thread,turn):
+        self.notices=[n for n in self.notices if n[1]!=thread or n[2]==turn]
+        if self.card.mode=="notice" and self.notice_key and self.notice_key[0]==thread and self.notice_key[1]!=turn:
+            self.end_notice()
+
+    def notice(self,kind,thread,turn):
+        if not self.config["notifications"] or self.config["muted"]:
+            return
+        if kind=="waiting-for-approval":
+            self.notices=[n for n in self.notices if n[1:3]!=(thread,turn)]
+        else:
+            self.notices=[n for n in self.notices if n[:3]!=("waiting-for-approval",thread,turn)]
+        self.notices.append((kind,thread,turn,time.monotonic()+30))
+        self.present_notice()
+
+    def end_notice(self):
+        if self.card.mode=="notice":
+            self.card.close_card()
+        self.notice_key=None
+        self.present_notice()
+
+    def present_notice(self):
+        if self.card.mode not in ("","cue") or self.config["muted"]:
+            return
+        texts={"success":"任务完成了。","error":"这次任务遇到了问题。","waiting-for-approval":"Codex 正在等待你的审批。","timeout":"暂时没有新的工作信号。"}
+        while self.notices:
+            kind,thread,turn,expires=self.notices.pop(0)
+            if time.monotonic()>expires or self.work.active.get(thread)!=turn:
+                continue
+            if kind=="waiting-for-approval" and (thread,turn) in self.work.reducer.closed:
+                continue
+            self.notice_key=(thread,turn)
+            self.notify(texts[kind],thread,"voiceNotice")
+            self.work.record(dict(bubble=kind,thread=thread,turn=turn))
+            break
 
     def notify(self,text,thread,voice):
         if self.config["muted"]:
             return
         self.last_thread=thread
         if self.pet.isVisible() and self.card.mode not in ("input","stream","reply"):
-            self.hover.hide()
             self.card.display("notice",text)
             self.notice_timer.start()
         else:
@@ -219,7 +245,7 @@ class Companion(QObject):
             self.speak(text)
 
     def speak(self,text):
-        if self.config["muted"]:
+        if self.config["muted"] or not Rules(self.config).allows(text):
             return
         script="[Console]::InputEncoding=[Text.Encoding]::UTF8; $v=New-Object -ComObject SAPI.SpVoice; [void]$v.Speak([Console]::In.ReadToEnd(),16)"
         def run():
@@ -230,42 +256,49 @@ class Companion(QObject):
         threading.Thread(target=run,daemon=True).start()
 
     def periodic(self):
-        if self.hover.isVisible():
-            self.show_hover()
+        self.present_notice()
+        if self.card.mode=="work":
+            self.work_details()
         for item in reminders.pending(DATA if self.profile=="main" else self.folder):
             self.notify(item["text"],item["thread"],"voiceTodo")
         cfg=self.config
         if allow_whisper(time.monotonic(),self.last_whisper,cfg["minutes"],datetime.datetime.now().hour,cfg["quietStart"],cfg["quietEnd"],
                          cfg["whispers"],cfg["muted"],cfg["focus"] or self.pet.state!="idle" or not self.pet.isVisible() or self.card.isVisible()):
             self.last_whisper=time.monotonic()
-            if (RUNTIME/cfg["model"]).is_file():
-                self.chat("说一句简短自然的旅途闲话。",None,True)
+            source,model=route(cfg,True)
+            if source!="local" or (RUNTIME/model).is_file():
+                self.chat("",None,True,mode="dream" if cfg["dreams"] and random.random()<.22 else "whisper")
             else:
-                self.notify(random.choice(["歇一会儿吧，我替你看着。","风停了，要一起走走吗？"]),None,"voiceWhisper")
+                self.notify(Rules(cfg).safe_line(), None, "voiceWhisper")
+        if time.monotonic()>=self.next_action:
+            self.next_action=time.monotonic()+random.uniform(25,55)
+            if cfg.get("randomActions") and self.pet.isVisible() and self.pet.state=="idle" and self.pet.drag is None and not self.card.isVisible():
+                idle=[k for k in self.pet.idle_clips if k in self.pet.clips]
+                if idle:
+                    self.pet.play(random.choice(idle))
 
     def compose(self):
-        self.hover.hide()
         self.card.compose()
 
-    def chat(self,prompt,image,whisper=False):
+    def chat(self,prompt,image,whisper=False,picture="",mode=""):
         self.cancel_chat(visible=False)
         self.serial+=1
         ident=self.serial
         cancel=self.cancel=threading.Event()
         cfg=dict(self.config)
         history=archive.context(self.history,cfg["rounds"])
-        self.pending=(prompt,image,whisper)
+        previous=dict(self.interaction)
+        self.pending=(prompt,image,whisper,picture)
         self.partial=""
         self.card.display("stream","正在思考…","focused")
         def run():
             try:
-                persona=cfg["persona"]
-                if cfg["localTime"]:
-                    persona+=" 当前本地时间 "+datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
-                if cfg["weatherEnabled"]:
-                    persona+=" "+self.weather.current(cfg["weatherCity"])
-                model=cfg["vision"] if image else cfg["model"]
-                result=chat.generate(RUNTIME,model,persona,history,prompt,cancel,lambda s:self.stream.emit(ident,s),image,cfg["projector"],cfg["backend"])
+                rules=Rules(cfg)
+                weather=self.weather.current(cfg["weatherCity"]) if cfg["weatherEnabled"] and not (rules.weather or rules.places) else ""
+                result=generate_answer(DATA,self.folder,cfg,history,prompt,whisper,mode,image,picture,
+                    previous.get("clip",""),previous.get("picture",""),cancel,lambda text:self.stream.emit(ident,text),
+                    retrieved_weather=weather,last_kind=previous.get("kind",""),recent_picture=previous.get("recent",""),
+                    audit=lambda phase,source,tokens:self.work.petMeter.emit(phase,("碎碎念" if whisper else "聊天")+" · "+source,tokens))
                 self.finished.emit(ident,result,"")
             except Exception as exc:
                 self.finished.emit(ident,None,str(exc))
@@ -273,7 +306,7 @@ class Companion(QObject):
         self.worker.start()
 
     def delta(self,ident,text):
-        if ident==self.serial:
+        if ident==self.serial and Rules(self.config).allows(text):
             self.partial=text
             if self.card.isVisible():
                 self.card.display("stream",text,"focused",False)
@@ -284,25 +317,54 @@ class Companion(QObject):
         self.cancel=None
         if not result:
             if error:
-                self.card.display("reply",error+"。可在右键 → 设置 → 聊天中检查模型。","sad")
+                message=error+"。可在设置的模型线路中检查连接。"
+                self.card.display("reply",message if Rules(self.config).allows(message) else "模型连接暂时不可用。","sad")
             return
-        prompt,image,whisper=self.pending
+        prompt,image,whisper,forced=self.pending
+        rules=Rules(self.config)
+        if not rules.allows(result["text"]):
+            result.update(text=rules.safe_line(),action="idle",emotion="calm")
+        picture=result.get("picture","")
+        clip=result.get("clip","")
         if not whisper:
-            record=dict(user=prompt,assistant=result["text"],emotion=result["emotion"],action=result["action"],time=time.time())
+            record=dict(user=prompt,assistant=result["text"],emotion=result["emotion"],action=result["action"],
+                        clip=clip,picture=picture,time=time.time())
             if image:
                 record["image"]=archive.keep_image(self.folder,image)
             self.history.extend(archive.normalize([record]))
             self.save_history()
-        emotion=result["emotion"]
-        groups={"happy":["jumping","waving"],"calm":["idle","waving","waiting"],"focused":["review","running"],"sad":["failed","waiting"],"curious":["review","waving"]}
-        choices=[result["action"]]+groups[emotion]
-        self.last_action=random.choice([x for x in choices if x!=self.last_action] or choices)
-        self.pet.play(self.last_action)
-        if whisper:
-            self.card.close_card()
-            self.notify(result["text"],None,"voiceWhisper")
-        elif self.card.isVisible():
-            self.card.display("reply",result["text"],emotion)
+        if clip:
+            self.perform(clip,False)
+        else:
+            self.pet.play(result["action"])
+        if picture:
+            self.interaction.update(picture=picture,kind="picture")
+        self.interaction["recent"]=picture
+        write(self.folder/"interaction.json",self.interaction)
+        if self.card.isVisible():
+            self.card.display("reply",result["text"],result["emotion"],art=next(iter(result.get("art",[])),None))
+        if self.config.get("voiceWhisper" if whisper else "voiceChat"):
+            self.speak(result["text"])
+        if whisper and not forced:
+            QTimer.singleShot(6500,lambda:self.card.close_card() if self.serial==ident and self.card.mode=="reply" else None)
+
+    def perform(self,title,with_cue=True):
+        self.pet.play(title)
+        self.interaction.update(clip=title,kind="action")
+        write(self.folder/"interaction.json",self.interaction)
+        started=self.pet.started
+        def cue():
+            if self.pet.started!=started or self.config["muted"] or self.card.mode not in ("","cue") or self.pet.state!="idle":
+                return
+            line=cue_line(title, Rules(self.config))
+            if line and time.monotonic()-self.last_cue>=6:
+                self.last_cue=time.monotonic()
+                self.card.display("cue",line)
+                if self.config.get("voiceWhisper"):
+                    self.speak(line)
+                QTimer.singleShot(2700,lambda:self.card.close_card() if self.card.mode=="cue" else None)
+        if with_cue:
+            QTimer.singleShot(660,cue)
 
     def cancel_chat(self,visible=True):
         if self.cancel is not None:
@@ -340,10 +402,11 @@ class Companion(QObject):
                 if p.parent==(self.folder/"images").resolve():
                     p.unlink(missing_ok=True)
             self.history=[]
+            self.interaction={}
+            write(self.folder/"interaction.json",{})
             self.save_history()
 
     def menu(self,pos):
-        self.hover.hide()
         menu=QMenu()
         self.fill_menu(menu)
         menu.exec(pos)
@@ -358,8 +421,11 @@ class Companion(QObject):
             group=spec.get("group","角色包")
             if group not in groups:
                 groups[group]=actions.addMenu(group)
-            groups[group].addAction(key,lambda checked=False,k=key:self.pet.play(k))
-        for title,fn in [("待办事项",self.todos),("聊天记录",self.history_window),("查看额度",self.show_quota),("设置",self.open_settings)]:
+            groups[group].addAction(key,lambda checked=False,k=key:self.perform(k))
+        pictures=menu.addMenu("配图")
+        for pic in gallery(self.folder,self.config["pack"]).values():
+            pictures.addAction(QIcon(pic["file"]),pic["title"],lambda checked=False,k=pic["id"]:self.chat("",None,True,picture=k))
+        for title,fn in [("工作详情",self.work_details),("当前任务用量",self.show_usage),("待办事项",self.todos),("聊天记录",self.history_window),("账户额度",self.show_quota),("设置",self.open_settings)]:
             menu.addAction(title,fn)
         menu.addSeparator()
         for title,fn in [("收起" if self.pet.isVisible() else "唤醒",self.toggle),("取消静音" if self.config["muted"] else "静音",self.mute),("退出",QApplication.quit)]:
@@ -370,7 +436,81 @@ class Companion(QObject):
             QDesktopServices.openUrl(QUrl("codex://threads/"+thread))
 
     def show_quota(self):
-        self.card.display("reply",self.work.quota or "当前会话尚未提供额度快照。")
+        self.card.display("quota",self.work.quota or "正在读取 Codex 账户额度…")
+        self.work.official("quota")
+
+    def show_usage(self):
+        self.card.display("usage","")
+        self.refresh_usage()
+        if self.usage_key:
+            self.work.official("billing",self.usage_key.split("/")[0])
+
+    def usage_selection(self,key):
+        if key:
+            self.usage_key=key
+            self.refresh_usage()
+
+    def refresh_usage(self):
+        if self.card.mode!="usage":
+            return
+        view=self.work.ledger.view(self.usage_key,explicit_missing=True)
+        self.usage_key=view["selected"]
+        field=self.card.turns
+        field.blockSignals(True)
+        field.clear()
+        for opt in view["options"]:
+            field.addItem(opt["label"],opt["key"])
+        field.setCurrentIndex(field.findData(self.usage_key))
+        field.blockSignals(False)
+        self.card.display("usage",view["text"])
+
+    def test_route(self,whisper):
+        cfg=dict(self.config)
+        source,model=route(cfg,whisper)
+        self.settings.model_status.setText("正在检查连接…")
+        def run():
+            try:
+                if source=="local":
+                    models=[p.name for p in RUNTIME.glob("*.gguf") if not p.name.startswith("mmproj")]
+                    if model not in models or not any(RUNTIME.glob("llama-*/llama-server.exe")):
+                        raise ValueError("请下载或选择已安装的本地模型")
+                else:
+                    models=list_models(source,cfg)
+                    if model and model not in models:
+                        raise ValueError("已连接，所选模型不在返回的列表中")
+                self.modelList.emit(source,models,"已连接。可用模型 "+str(len(models))+" 个。")
+            except Exception as exc:
+                self.modelList.emit(source,[],str(exc))
+        threading.Thread(target=run,daemon=True).start()
+
+    def models_loaded(self,source,models,message):
+        if not self.settings:
+            return
+        self.settings.model_status.setText(message)
+        keys={"api":("apiModel","whisperApiModel"),"codex":("codexModel","whisperCodexModel"),"local":("whisperModel",)}
+        for key in keys[source]:
+            field=self.settings.model_fields[key]
+            field.blockSignals(True)
+            for model in models:
+                if field.findText(model)<0:
+                    field.addItem(model)
+            field.blockSignals(False)
+
+    def edit_credential(self):
+        from urllib.parse import urlsplit
+        from providers import endpoint
+        from win_credentials import save_key
+        try:
+            conn,_,_=endpoint(self.config)
+            conn.close()
+            u=urlsplit(self.config["apiURL"])
+            origin=u.scheme+"://"+u.netloc
+            secret,ok=QInputDialog.getText(self.settings,"Windows 凭据管理器",origin+" 的 API 密钥（留空移除）",QLineEdit.Password)
+            if ok:
+                save_key(origin,secret)
+                self.settings.model_status.setText("已更新此服务的 Windows 凭据。")
+        except (OSError,ValueError) as exc:
+            self.settings.model_status.setText(str(exc))
 
     def todos(self):
         if not self.tasks:
@@ -411,6 +551,10 @@ class Companion(QObject):
     def setting(self,key,value):
         self.config[key]=value
         write(self.cfgfile,self.config)
+        if key=="trackCost":
+            self.work.track_cost=bool(value)
+        if key in ("persona","blockedWords","avoidWeather","avoidPlaces") and self.cancel:
+            self.cancel_chat()
         if key=="size":
             self.pet.set_size(value)
             self.pet.constrain()
@@ -445,7 +589,6 @@ class Companion(QObject):
             self.pet.frame.stop()
             self.pet.physics.stop()
             self.card.close_card()
-            self.hover.hide()
         else:
             self.pet.constrain()
             self.pet.show()
@@ -473,6 +616,7 @@ class Companion(QObject):
             self.worker.join(2)
         self.save_position()
         self.tray.hide()
+        self.work.close()
         self.server.close()
         write(self.folder/"status.json",{"state":"idle","online":False})
 
@@ -490,6 +634,7 @@ def main():
     sys.excepthook=lambda typ,value,tb:logging.error("GUI exception",exc_info=(typ,value,tb))
     app=QApplication(sys.argv)
     app.setApplicationName("Cartethyia")
+    app.setApplicationVersion("0.2.0")
     app.setQuitOnLastWindowClosed(False)
     app.setWindowIcon(QIcon(str(ROOT/"art/cartethyia.ico")))
     app.setStyleSheet(STYLE)

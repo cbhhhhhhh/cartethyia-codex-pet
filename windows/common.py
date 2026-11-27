@@ -10,9 +10,7 @@ sys.path.insert(0, str(ROOT / "src"))
 DATA = Path(os.environ["LOCALAPPDATA"]) / "CartethyiaPet"
 CODEX = Path(os.environ.get("CODEX_HOME") or Path.home() / ".codex")
 ART = ROOT / "art"
-CLIPS = ART / "pets/cartethyia"
-if not (CLIPS / "pet-plus.json").exists():
-    CLIPS = ROOT / ".build/clips"
+CLIPS = ART / "performances"
 
 
 def read(path, default):

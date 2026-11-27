@@ -1,0 +1,636 @@
+{
+  "release": "0.2.0",
+  "installer": {
+    "name": "Cartethyia-0.2.0-Windows-x64-Setup.exe",
+    "size_bytes": 71280663,
+    "sha256": "2b96f463f02fca3dc83751be0c5a843fad11e296f3de4e3295d2eb276f248f44",
+    "checksum_sha256": "c61ad32ad1b578dbafeb3012fcd1a91958d758ea015cefe0d7921ec7eeaec1d5"
+  },
+  "host": {
+    "inno_version": "6.7.3",
+    "resolution": [
+      2560,
+      1440
+    ],
+    "authenticated_signature": "NotSigned",
+    "cpu": "Intel(R) Core(TM) i5-14600KF",
+    "os": "Microsoft Windows 11 专业版",
+    "codex_cli": "codex-cli 0.171.0-alpha.13.2",
+    "os_version": "10.0.22631",
+    "physical_monitors": [
+      "G52E"
+    ],
+    "installed_application_version": "0.2.0",
+    "arch": "AMD64",
+    "build": "22631",
+    "installer_bytes": 71280663,
+    "gpu": [
+      "GameViewer Virtual Display Adapter",
+      "NVIDIA GeForce RTX 5060 Ti"
+    ],
+    "logical_cpus": 20,
+    "installer_version": "0.2.0.0",
+    "codex_desktop": "26.1120.6357.0",
+    "native_windows": true,
+    "qt_dpr": 1.25,
+    "observed_at": "2026-11-27T22:19:16+08:00",
+    "session": 1,
+    "wts_console_locked": true,
+    "hook_event_schema": [
+      "preModelRequest",
+      "postModelRequest",
+      "preToolUse",
+      "permissionRequest",
+      "postToolUse",
+      "preCompact",
+      "postCompact",
+      "sessionStart",
+      "sessionEnd",
+      "userPromptSubmit",
+      "subagentStart",
+      "subagentStop",
+      "stop",
+      "interrupt"
+    ],
+    "installed_plugin_version": "0.2.0-win.1",
+    "installed_hook_names": [
+      "Interrupt",
+      "PermissionRequest",
+      "PostToolUse",
+      "PreToolUse",
+      "Stop",
+      "SubagentStop",
+      "UserPromptSubmit"
+    ],
+    "resident_tcp_connections_at_check": 0,
+    "runtime": "3.13.9 6.9.3"
+  },
+  "console_at_end": {
+    "wts_locked": true,
+    "at": "2026-11-27T22:42:11+08:00"
+  },
+  "lifecycle": {
+    "fresh_0_2": true,
+    "04-upgrade": {
+      "version": "0.2.0",
+      "settings": true,
+      "history": true,
+      "memory": true,
+      "todos": true
+    },
+    "05-rollback": {
+      "version": "0.1.0",
+      "settings": true,
+      "history": true,
+      "memory": true,
+      "todos": true
+    },
+    "06-upgrade": {
+      "version": "0.2.0",
+      "settings": true,
+      "history": true,
+      "memory": true,
+      "todos": true
+    },
+    "uninstall_preserved_later_config": true,
+    "user_version": "0.2.0",
+    "retained_user_data": true,
+    "installed_files_verified": 272,
+    "gui_pid": 30292,
+    "installer_sha256": "2b96f463f02fca3dc83751be0c5a843fad11e296f3de4e3295d2eb276f248f44"
+  },
+  "family": {
+    "model": "gpt-6.2-sol",
+    "reasoning": "ultra",
+    "service_tier": "priority",
+    "roots_completed": 2,
+    "children_completed": 2,
+    "inherited_records_skipped": 39,
+    "root_shell_after_children": true,
+    "child_notices": 0,
+    "root_notices": 1,
+    "independent_notices": 1,
+    "child_bubbles": 0,
+    "root_bubbles": 1,
+    "independent_bubbles": 1,
+    "root_tokens": 79980,
+    "root_source": 79980,
+    "child_tokens": [
+      13917,
+      13988
+    ],
+    "child_source": [
+      13917,
+      13988
+    ],
+    "family_tokens": 107885,
+    "family_source": 107885,
+    "independent_tokens": 12999,
+    "independent_source": 12999,
+    "official_root_token_match": true,
+    "active_root_painted_during_overlap": true,
+    "displayed_roots": 2,
+    "event_sources": [
+      "history",
+      "jsonl"
+    ]
+  },
+  "painted_transitions": {
+    "success": {
+      "status": "completed",
+      "onset_ms": 78,
+      "terminal_ms": 61,
+      "idle_ms": 623,
+      "painted": [
+        "thinking",
+        "working",
+        "thinking",
+        "review",
+        "success",
+        "idle"
+      ],
+      "hook_events": [
+        "tool",
+        "result"
+      ],
+      "end_reference": "rollout"
+    },
+    "interrupt": {
+      "status": "interrupted",
+      "onset_ms": 80,
+      "terminal_ms": 27,
+      "idle_ms": 27,
+      "painted": [
+        "thinking",
+        "idle"
+      ],
+      "hook_events": [],
+      "end_reference": "rollout"
+    },
+    "failure": {
+      "status": "failed",
+      "onset_ms": 89,
+      "terminal_ms": 84,
+      "idle_ms": 733,
+      "painted": [
+        "thinking",
+        "error",
+        "idle"
+      ],
+      "hook_events": [
+        "start"
+      ],
+      "end_reference": "rollout"
+    },
+    "approval": {
+      "status": "completed",
+      "onset_ms": 88,
+      "terminal_ms": 27,
+      "idle_ms": 586,
+      "painted": [
+        "thinking",
+        "working",
+        "waiting-for-approval",
+        "success",
+        "idle"
+      ],
+      "hook_events": [
+        "start",
+        "tool",
+        "approval"
+      ],
+      "end_reference": "rollout",
+      "approval_ms": 198
+    }
+  },
+  "ownership_regressions": {
+    "real_named_pipe": true,
+    "rewritten_fork_timestamps": true,
+    "sqlite_inherited_rows_ignored": true,
+    "child_stop_ignored": true,
+    "completed_plan_no_notice": true,
+    "late_tool_and_duplicate_end_ignored": true,
+    "active_root_preferred": true,
+    "notifications_queued_and_drained": true,
+    "obsolete_notice_cancelled": true,
+    "selected_notice_routes_to_its_thread_uri": true,
+    "timeout_to_idle": true,
+    "quiet_mute_focus": true,
+    "quota_window_format": true,
+    "switchable_task_usage": true,
+    "official_shape_fixture_microcredit_delta": 0.3,
+    "true_zero_preserved": true,
+    "unknown_fields_marked": true
+  },
+  "chat_routes": {
+    "local": {
+      "real_work_active": true,
+      "guarded_bubble_history_voice": true,
+      "guarded_utterances": 5,
+      "blocked_stream_leaks": 0,
+      "plain_text_default": true,
+      "selected_picture": "happy-1",
+      "picture_replay": true,
+      "action_replay": true,
+      "interrupted_after_delta": true,
+      "model_connection": true
+    },
+    "api": {
+      "real_work_active": true,
+      "guarded_bubble_history_voice": true,
+      "guarded_utterances": 5,
+      "blocked_stream_leaks": 0,
+      "plain_text_default": true,
+      "selected_picture": "happy-1",
+      "picture_replay": true,
+      "action_replay": true,
+      "interrupted_after_delta": true,
+      "model_connection": true
+    },
+    "codex": {
+      "real_work_active": true,
+      "guarded_bubble_history_voice": true,
+      "guarded_utterances": 5,
+      "blocked_stream_leaks": 0,
+      "plain_text_default": true,
+      "selected_picture": "happy-1",
+      "picture_replay": true,
+      "action_replay": true,
+      "interrupted_after_delta": true,
+      "model_connection": true
+    },
+    "shared": {
+      "gallery_thumbnails": 10,
+      "independent_sources": true,
+      "cue_checked": true,
+      "credential_roundtrip": true,
+      "separate_pet_meters": 6,
+      "work_roots_excluding_all_pet_calls": 3,
+      "persisted_history_rounds": 13,
+      "isolated_profile": true,
+      "windows_gazetteer_terms": 17485
+    }
+  },
+  "chat_memory": {
+    "rate_limited_contextual_art": true,
+    "clicked_gallery_items_with_matching_description_and_whisper_model": 10,
+    "tray_icon_visible": true,
+    "process_restart": true,
+    "settings_and_last_action_reloaded": true,
+    "default_context_rounds": 10,
+    "exact_context_after_restart": true,
+    "history_dialog_confirmed": true,
+    "cleared_history_memory_and_replay": true,
+    "other_profile_preserved": true
+  },
+  "account_availability": {
+    "account_type": "chatgpt",
+    "model_count": 10,
+    "selected_model": "gpt-6.2-sol",
+    "ultra_available": true,
+    "quota_7days": true,
+    "quota_fields": true,
+    "hooks_list_available": true,
+    "opening": {
+      "response_fields": [
+        "dailyUsageBuckets",
+        "summary",
+        "threadUsage"
+      ],
+      "thread_matched": false,
+      "available": {
+        "estimatedUsageCreditsMicros": false,
+        "estimatedUsageUsdMicros": false,
+        "nativeUsageUsdMicros": false
+      }
+    },
+    "closing": {
+      "response_fields": [
+        "dailyUsageBuckets",
+        "summary",
+        "threadUsage"
+      ],
+      "thread_matched": false,
+      "available": {
+        "estimatedUsageCreditsMicros": false,
+        "estimatedUsageUsdMicros": false,
+        "nativeUsageUsdMicros": false
+      }
+    }
+  },
+  "animation": {
+    "clips": 109,
+    "frames": 2616,
+    "key_poses": 436,
+    "minimum_unique": 20,
+    "pixels_match_original_for_all_frames": true,
+    "matched_file_orientation": true,
+    "portraits": 10,
+    "travel": {
+      "骑士的横步": {
+        "motion": "side",
+        "max_dx": 126,
+        "max_dy": 0
+      },
+      "踏风悬浮": {
+        "motion": "float",
+        "max_dx": 70,
+        "max_dy": 44
+      },
+      "踏着月光折返": {
+        "motion": "return",
+        "max_dx": 126,
+        "max_dy": 0
+      },
+      "陪小车跑一段": {
+        "motion": "side",
+        "max_dx": 126,
+        "max_dy": 0
+      },
+      "牵着线放风筝": {
+        "motion": "side",
+        "max_dx": 126,
+        "max_dy": 0
+      },
+      "学着小幽灵飘动": {
+        "motion": "float",
+        "max_dx": 70,
+        "max_dy": 44
+      },
+      "等你点头时踱步": {
+        "motion": "return",
+        "max_dx": 126,
+        "max_dy": 0
+      }
+    }
+  },
+  "contact_sheet_sha256": {
+    "poses-1.jpg": "36f89e8f5bd53c249e445e01e8cf31ae374d7b07457968058802be73a4557616",
+    "poses-2.jpg": "770eebaf7586cad9f386d9f4c0e2eff121af7a6649a0502bcd4465301012cbf3",
+    "poses-3.jpg": "46132540612cc9aff1ef5fb35bdad73384f9616063c73c5d6ad4fdd8fe925c24",
+    "poses-4.jpg": "e712a65710db49aef54d13f5084b9e705a5bcc42276df8926f2395f70b9a9207",
+    "poses-5.jpg": "87f6d8ce105005ebf2fecacf9db5c12d816dd9546298e2fa300a8055a26199e3",
+    "poses-6.jpg": "b08b911cb6551fd0f101e1fb88e5b0496e471b7e561f8fbb87a62334820fddf4",
+    "poses-7.jpg": "fb66c98c3d1b322dc57bddffc35ba8d43290fac0c53f1f32eb9ab9f1bf238dce"
+  },
+  "desktop": {
+    "scale": 1.25,
+    "screen_count": 1,
+    "clips": 109,
+    "frames": 2616,
+    "portraits": 10,
+    "slow_drop": [
+      1003,
+      474
+    ],
+    "circle": {
+      "span": 1904,
+      "rebound": true
+    },
+    "shake": {
+      "span": 1874,
+      "rebound": true
+    },
+    "hover_quiet": true,
+    "menu": [
+      "点播动作",
+      "配图",
+      "工作详情",
+      "当前任务用量",
+      "待办事项",
+      "聊天记录",
+      "账户额度",
+      "设置",
+      "收起",
+      "静音",
+      "退出"
+    ],
+    "input_geometry": {
+      "card": [
+        881,
+        378,
+        285,
+        131
+      ],
+      "pet": [
+        952,
+        474,
+        144,
+        156
+      ],
+      "tip_down": true,
+      "work_area": [
+        0,
+        0,
+        2048,
+        1104
+      ]
+    },
+    "input_above": true,
+    "chat_cancel": {
+      "chunks_before_stop": 4,
+      "history_preserved": true
+    },
+    "todo_toggle": true,
+    "wake_hide": true
+  },
+  "text_stream_updates": 20,
+  "local_image_reply_saved": true,
+  "hit_test": {
+    "corner_hits_underlay": true,
+    "body_hits_pet": true,
+    "target_received_button_messages": true,
+    "layered": true,
+    "topmost": true,
+    "dpi": 120,
+    "pipe_current_user_only": true,
+    "backup_current_user_only": true
+  },
+  "native_mouse": {
+    "slow_drop_middle": [
+      1190,
+      593,
+      1370,
+      788
+    ],
+    "delivery": "SendMessageTimeoutW to installed layered HWND",
+    "circle": {
+      "physical_pixel_span": 2359,
+      "rebound": true
+    },
+    "shake": {
+      "physical_pixel_span": 2356,
+      "rebound": true
+    }
+  },
+  "dpi": [
+    {
+      "ratio": 1.0,
+      "tested_positions": 9
+    },
+    {
+      "ratio": 1.25,
+      "tested_positions": 9
+    },
+    {
+      "ratio": 1.5,
+      "tested_positions": 9
+    },
+    {
+      "ratio": 2.0,
+      "tested_positions": 9
+    }
+  ],
+  "simulated_displays": {
+    "from": "Primary",
+    "to": "Left 150%",
+    "restored_xy": [
+      -924,
+      302
+    ]
+  },
+  "shortcuts": {
+    "shortcut_rebind": true,
+    "old_chord_released": true,
+    "hide_wake_via_WM_HOTKEY": true,
+    "settings_saved": true
+  },
+  "shell": {
+    "start_menu_target": true,
+    "start_menu_icon": true,
+    "windows_codex_uri_registered": true,
+    "sapi_voice": "Microsoft Huihui Desktop - Chinese (Simplified)",
+    "sapi_wav_bytes": 115968,
+    "stdio_tools_tested": [
+      "pet_complete",
+      "pet_remind",
+      "pet_status"
+    ]
+  },
+  "quiet_profiles": {
+    "independent_histories": true,
+    "independent_personas": true,
+    "custom_pack_loaded": true,
+    "real_whisper_after_seconds": 311.09,
+    "muted_focus_quiet_suppression": true,
+    "due_notification": true
+  },
+  "model_download": {
+    "text_download_seconds": 163.74,
+    "vision_download_seconds": 323.14,
+    "qwen2.5-1.5b-instruct-q4_k_m.gguf": {
+      "sha256": "6a1a2eb6d15622bf3c96857206351ba97e1af16c30d7a74ee38970e434e9407e",
+      "bytes": 1117320736
+    },
+    "Qwen3VL-2B-Instruct-Q4_K_M.gguf": {
+      "sha256": "089d75c52f4b7ffc56ba998ffc50aae89fcafc755f9e7208aacca281dca6c2ae",
+      "bytes": 1107409952
+    },
+    "mmproj-Qwen3VL-2B-Instruct-Q8_0.gguf": {
+      "sha256": "f9a68fabba69c3b81e153367b2c7521030b0fa8bb0de400c9599c8e6725f9c82",
+      "bytes": 445053216
+    },
+    "cpu": {
+      "sha256": "bc362be03528651701e6218672bb0cbf48b55ba7acad0eb5006449567f4cf821",
+      "bytes": 25196352,
+      "extraction_matches_archive": true
+    },
+    "vulkan": {
+      "sha256": "b3285ef7e298fb292b971b79c3bad9a50ea79c470b1e83721dd0ebf4783d71a5",
+      "bytes": 39041944,
+      "extraction_matches_archive": true
+    }
+  },
+  "inference_children": {
+    "cpu": {
+      "engine": "llama-b12675-cpu",
+      "peak_wset_mib": 1804.98,
+      "stream_updates": 8,
+      "exited_after_reply": true
+    },
+    "auto": {
+      "engine": "llama-b12675-vulkan",
+      "peak_wset_mib": 1980.62,
+      "stream_updates": 8,
+      "exited_after_reply": true
+    }
+  },
+  "visible_idle": {
+    "default_visible": true,
+    "same_pid_after_three_launches": true,
+    "settings_window_opened": true,
+    "elapsed_s": 150.0,
+    "cpu_percent_one_core": 0.219,
+    "rss_peak_mib": 95.24,
+    "all_idle": true
+  },
+  "regression": {
+    "discovered": 37,
+    "passed": 33,
+    "platform_skips": 4
+  },
+  "soak": {
+    "start": "2026-11-27T21:40:57+08:00",
+    "end": "2026-11-27T22:40:57+08:00",
+    "pid": 30292,
+    "created": "2026-11-27T21:40:56.012712+08:00",
+    "gui_image": "runtime/pythonw.exe",
+    "gui_sha256": "960d4e036ac0d01a5a092ad0f7ac192b821e4e70ccecfe0cb443967bf8e22897",
+    "installer_sha256": "2b96f463f02fca3dc83751be0c5a843fad11e296f3de4e3295d2eb276f248f44",
+    "monitored_seconds": 3600.0,
+    "samples": 121,
+    "exceptions": [],
+    "gui_cpu_percent_one_core": 0.195,
+    "gui_cpu_interval_peak_percent": 0.573,
+    "idle_intervals": 1,
+    "idle_cpu_percent": 0.208,
+    "gui_rss_peak_mib": 86.21,
+    "gui_rss_median_mib": 83.5,
+    "gui_rss_initial_mib": 78.74,
+    "gui_rss_final_mib": 83.09,
+    "gui_rss_change_mib": 4.35,
+    "process_tree_rss_sampled_peak_mib": 86.21,
+    "probes": [
+      {
+        "minute": 0,
+        "elapsed_s": 0.0,
+        "latency_s": 10.5,
+        "ok": true
+      },
+      {
+        "minute": 15,
+        "elapsed_s": 900.01,
+        "latency_s": 9.19,
+        "ok": true
+      },
+      {
+        "minute": 30,
+        "elapsed_s": 1800.01,
+        "latency_s": 6.52,
+        "ok": true
+      },
+      {
+        "minute": 45,
+        "elapsed_s": 2700.01,
+        "latency_s": 5.86,
+        "ok": true
+      },
+      {
+        "minute": 60,
+        "elapsed_s": 3600.01,
+        "latency_s": 8.33,
+        "ok": true
+      }
+    ]
+  },
+  "crash_events": {
+    "log": "Windows Application",
+    "event_ids": [
+      1000,
+      1001,
+      1026
+    ],
+    "gui_fault_events": 0,
+    "pid": 30292
+  }
+}

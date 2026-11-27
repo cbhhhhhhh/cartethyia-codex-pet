@@ -58,7 +58,7 @@ def response(ident):
 
 
 def initialize():
-    response(call("initialize",{"clientInfo":{"name":"cartethyia_qa","version":"0.1.0"},"capabilities":{"experimentalApi":True}}))
+    response(call("initialize",{"clientInfo":{"name":"cartethyia_qa","version":"0.2.0"},"capabilities":{"experimentalApi":True}}))
     send({"method":"initialized","params":{}})
 
 try:
@@ -68,9 +68,9 @@ try:
         selected=[h for x in infos["data"] for h in x["hooks"] if h.get("pluginId")=="pet-plus@cartethyia-windows-local"]
         if len(selected)!=7:
             raise RuntimeError("Unexpected set of project hooks")
-        installed=Path(os.environ["LOCALAPPDATA"])/"Programs/CartethyiaPet"
+        installed=Path(os.environ.get("CARTETHYIA_QA_INSTALL") or Path(os.environ["LOCALAPPDATA"])/"Programs/CartethyiaPet")
         for f in ("service.py","transport.py","common.py"):
-            staged=Path(__file__).resolve().parents[1]/".build/windows-app/windows"/f
+            staged=Path(__file__).resolve().parents[1]/".build/windows-app-0.2.0/windows"/f
             assert (installed/"windows"/f).read_bytes()==staged.read_bytes()
         expected='"'+(installed/"runtime/python.exe").as_posix()+'" -B "'+(installed/"windows/service.py").as_posix()+'" hook'
         def quoted(path):

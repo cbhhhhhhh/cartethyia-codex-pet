@@ -81,6 +81,7 @@ class Card(QWidget):
         self.box=QVBoxLayout(self.panel)
         head=QHBoxLayout()
         self.portrait=Illustration()
+        self.portrait.picture=QPixmap()
         self.name=QLabel("Cartethyia",objectName="name")
         self.name.setStyleSheet("font-family:Georgia,serif;font-style:italic;font-weight:700;font-size:16px;color:#48635b")
         head.addWidget(self.name)
@@ -96,6 +97,9 @@ class Card(QWidget):
         self.body.setWordWrap(True)
         self.body.setStyleSheet("font-family:'幼圆','Microsoft YaHei UI';font-weight:600;font-size:16px;padding:8px 4px")
         self.box.addWidget(self.body)
+        self.turns=QComboBox()
+        self.turns.currentIndexChanged.connect(lambda i: owner.usage_selection(self.turns.itemData(i)))
+        self.box.addWidget(self.turns)
         self.input=QLineEdit(placeholderText="和卡提说句话…",maxLength=2000)
         self.input.returnPressed.connect(self.submit)
         self.box.addWidget(self.input)
@@ -144,19 +148,16 @@ class Card(QWidget):
         self.move(x,max(area.top(),y))
         self.update()
 
-    def display(self,mode,text="",emotion="calm",new=True):
+    def display(self,mode,text="",emotion="calm",new=True,art=None):
         self.mode=mode
         self.body.setText(text)
         self.body.setVisible(bool(text))
         if new:
             self.name.setText(self.owner.config["pack"].capitalize())
-            if self.owner.config["pack"]=="cartethyia":
-                pic=QPixmap(str(ART.parent/f"src/web/portraits/{emotion}-{random.randrange(2)}.png"))
-            else:
-                pic=self.owner.pet.image()
-            self.portrait.picture=pic
+            self.portrait.picture = QPixmap(str(art)) if art else QPixmap()
             self.portrait.update()
-        self.portrait.setVisible(mode in ("reply","stream","notice"))
+        self.portrait.setVisible(not self.portrait.picture.isNull())
+        self.turns.setVisible(mode == "usage")
         self.read_aloud.setVisible(mode=="reply")
         for widget,on in ((self.input,mode=="input"),(self.image,mode=="input"),(self.send,mode=="input"),
                           (self.stop,mode=="stream"),(self.reply,mode in ("reply","notice")),
@@ -212,7 +213,10 @@ class Settings(QDialog):
             w=QWidget()
             form=QFormLayout(w)
             form.setFieldGrowthPolicy(QFormLayout.AllNonFixedFieldsGrow)
-            tabs.addTab(w,name)
+            scroll=QScrollArea(widgetResizable=True)
+            scroll.setFrameShape(QFrame.NoFrame)
+            scroll.setWidget(w)
+            tabs.addTab(scroll,name)
             return form
         def spin(key,label,low,high):
             field=QSpinBox(minimum=low,maximum=high,value=cfg[key])
@@ -231,6 +235,7 @@ class Settings(QDialog):
             field.addItems(list(dict.fromkeys([str(cfg.get(key,""))]+values)))
             field.currentTextChanged.connect(lambda v:owner.setting(key,v))
             form.addRow(label,field)
+            return field
         form=page("角色")
         spin("size","角色宽度",64,350)
         form.addRow(button("移到鼠标所在屏幕",owner.recover))
@@ -255,7 +260,37 @@ class Settings(QDialog):
         self.download.setWordWrap(True)
         form.addRow(self.download)
         form.addRow(button("下载并校验文字模型",lambda:owner.download(False)),button("下载并校验视觉模型",lambda:owner.download(True)))
+        check("replyArt","聊天按内容配图（连续回复限频）")
+        check("voiceChat","朗读聊天回复")
+        check("dreams","允许偶尔说梦话")
+        check("avoidPlaces","禁谈地名")
+        check("avoidWeather","禁谈天气")
+        line("blockedWords","其他禁用词（逗号分隔）")
+        form=page("模型线路")
+        self.model_fields={}
+        sources={"local":"本地 GGUF","api":"兼容 Chat Completions API","codex":"当前 Codex 账户","inherit":"跟随聊天"}
+        for key,label,choices in (("chatSource","聊天线路",("local","api","codex")),
+                                  ("whisperSource","碎碎念线路",("inherit","local","api","codex"))):
+            pick=QComboBox()
+            for code in choices:
+                pick.addItem(sources[code],code)
+            pick.setCurrentIndex(max(0,pick.findData(cfg.get(key))))
+            pick.currentIndexChanged.connect(lambda i,p=pick,k=key:owner.setting(k,p.itemData(i)))
+            form.addRow(label,pick)
+        line("apiURL","兼容 API 基址（含 /v1）")
+        line("apiKeyEnv","API 密钥环境变量名")
+        form.addRow(button("管理此地址的 Windows 凭据",owner.edit_credential))
+        for key,label in (("apiModel","聊天 · API 模型"),("whisperApiModel","碎碎念 · API 模型"),
+                          ("codexModel","聊天 · Codex 模型"),("whisperCodexModel","碎碎念 · Codex 模型"),
+                          ("whisperModel","碎碎念 · 本地 GGUF")):
+            self.model_fields[key]=combo(key,label,[p.name for p in (DATA/"runtime").glob("*.gguf")] if key=="whisperModel" else [],True)
+        self.model_status=QLabel()
+        self.model_status.setWordWrap(True)
+        form.addRow(button("测试聊天连接并列出模型",lambda:owner.test_route(False)),
+                    button("测试碎碎念连接并列出模型",lambda:owner.test_route(True)))
+        form.addRow(self.model_status)
         form=page("提醒")
+        check("trackCost","向 Codex 查询每轮会话的积分和金额基线")
         for key,label in (("notifications","任务和审批气泡"),("focus","手动专注"),("whispers","空闲时碎碎念"),
                           ("voiceNotice","朗读任务通知"),("voiceTodo","朗读待办"),("voiceWhisper","朗读碎碎念"),("localTime","聊天附上本地时间")):
             check(key,label)

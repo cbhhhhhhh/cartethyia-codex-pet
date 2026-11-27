@@ -38,7 +38,7 @@ def fetch(key, report):
     if not valid(dest):
         with tempfile.TemporaryDirectory(dir=RUNTIME) as temp:
             part = Path(temp)/"download"
-            req = Request(url+"?download=true",headers={"User-Agent":"Cartethyia-Windows/0.1.0"})
+            req = Request(url+"?download=true",headers={"User-Agent":"Cartethyia-Windows/0.2.0"})
             with urlopen(req,timeout=45) as response, part.open("wb") as out:
                 received=0
                 while chunk:=response.read(1024*1024):

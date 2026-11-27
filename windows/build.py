@@ -6,19 +6,24 @@ from pathlib import Path
 import shutil
 import subprocess
 import sys
+import tarfile
 import tempfile
 import zipfile
 
 ROOT=Path(__file__).resolve().parents[1]
 CACHE=Path(tempfile.gettempdir())/"Cartethyia-build"
 BUILD=ROOT/".build"
-STAGE=BUILD/"windows-app"
+STAGE=BUILD/"windows-app-0.2.0"
+# Package only the manifest of this build; a removed source must never survive in staging.
+if STAGE.is_dir():
+    assert STAGE.resolve().parent == BUILD.resolve() and not STAGE.is_symlink()
+    shutil.rmtree(STAGE)
 RUNTIME=STAGE/"runtime"
 CACHE.mkdir(exist_ok=True)
 BUILD.mkdir(exist_ok=True)
 STAGE.mkdir(exist_ok=True)
 RUNTIME.mkdir(exist_ok=True)
-BASE="https://github.com/cbhhhhhhh/cartethyia-codex-pet/releases/download/v0.1.0/"
+
 
 
 def sha(p):
@@ -86,29 +91,39 @@ extract(py,lambda n:True,RUNTIME)
 wheel("PySide6-Essentials","21f98077c135864473089e59a6a0bd828e64c6644b3dd7267b102da4a2ee8f21",qt_member)
 wheel("shiboken6","f1498176d2d5bcade7d662e1fc5143980fb008b6c78b966289d29a4ae86cd0c6",
       lambda n:n.endswith((".py",".dll",".pyd","METADATA",".txt")))
-sums=checked("SHA256SUMS",BASE+"SHA256SUMS","17fd06aa22b029c65abd6224f75ea92d380e627a103900437c8971c1f641cd31")
-digest,filename=sums.read_text().split()
-archive=checked(filename,BASE+filename,digest)
-shutil.copytree(ROOT/"art/pets",STAGE/"art/pets",dirs_exist_ok=True)
-with zipfile.ZipFile(archive) as z:
-    prefix="Cartethyia-Codex-Pet/payload/Codex Pet Plus.app/Contents/Resources/pets/cartethyia/"
-    meta=z.read(prefix+"pet-plus.json")
-    clips=json.loads(meta)["clips"]
-    assert len(clips)==109 and sum(s["frames"] for s in clips.values())==1744
-    target=STAGE/"art/pets/cartethyia"
-    (target/"pet-plus.json").write_bytes(meta)
-    for s in clips.values():
-        file=s["file"]
-        assert Path(file).name==file
-        (target/file).write_bytes(z.read(prefix+file))
-for filename in ("chat","state","observe","watch","archive","reminders","weather","mcp"):
-    copy(ROOT/f"src/{filename}.py",STAGE/f"src/{filename}.py")
+shutil.copytree(ROOT/"art/pets", STAGE/"art/pets", dirs_exist_ok=True)
+performance = ROOT/"art/performances"
+clips = json.loads((performance/"pet-plus.json").read_bytes())["clips"]
+repertoire = json.loads((ROOT/"art/repertoire.json").read_bytes())
+if set(clips) != {item["title"] for item in repertoire} or len(clips) != 109:
+    raise RuntimeError("Action catalogue does not match the performance manifest")
+for title, spec in clips.items():
+    asset = (performance/spec["file"]).resolve()
+    if asset.parent != (performance/"clips").resolve() or spec["frames"] != 24:
+        raise ValueError("Invalid performance: " + title)
+    copy(asset, STAGE/"art/performances"/spec["file"])
+copy(performance/"pet-plus.json", STAGE/"art/performances/pet-plus.json")
+copy(ROOT/"art/repertoire.json", STAGE/"art/repertoire.json")
+copy(ROOT/"src/web/gallery.json", STAGE/"src/web/gallery.json")
+lexicon = checked("jieba-0.42.1.tar.gz",
+                  "https://files.pythonhosted.org/packages/c6/cb/18eeb235f833b726522d7ebed54f2278ce28ba9438e3135ab0278d9792a2/jieba-0.42.1.tar.gz",
+                  "055ca12f62674fafed09427f176506079bc135638a14e23e25be909131928db2")
+with tarfile.open(lexicon, "r:gz") as archive:
+    words = set()
+    for line in archive.extractfile("jieba-0.42.1/jieba/dict.txt"):
+        word, _, tag = line.decode("utf8").split()
+        if tag == "ns" and len(word) >= 2:
+            words.add(word)
+(STAGE/"src").mkdir(exist_ok=True)
+(STAGE/"src/place-names-zh.txt").write_text("\n".join(sorted(words)), encoding="utf8")
+for filename in ("chat","state","observe","watch","archive","reminders","weather","mcp","dialogue","pet_response","providers","preference","usage","win_credentials"):
+    copy(ROOT/f"src/{filename}.py", STAGE/f"src/{filename}.py")
 for filename in ("app","cards","common","core","events","model_store","pet","service","transport"):
-    copy(ROOT/f"windows/{filename}.py",STAGE/f"windows/{filename}.py")
+    copy(ROOT/f"windows/{filename}.py", STAGE/f"windows/{filename}.py")
 shutil.copytree(ROOT/"src/web/portraits",STAGE/"src/web/portraits",dirs_exist_ok=True)
 for f in ("LICENSE","NOTICE","windows/THIRD-PARTY.txt","examples/config.json","art/cartethyia.ico","docs/WINDOWS.md"):
     copy(ROOT/f,STAGE/f)
-for f in ("LGPL-3.0-only.txt","GPL-3.0-only.txt"):
+for f in ("LGPL-3.0-only.txt","GPL-3.0-only.txt","jieba-MIT.txt"):
     copy(ROOT/"windows/licenses"/f,STAGE/"windows/licenses"/f)
 csc=Path(os.environ["WINDIR"])/"Microsoft.NET/Framework64/v4.0.30319/csc.exe"
 subprocess.run([str(csc),"/nologo","/target:winexe","/platform:x64","/r:System.Windows.Forms.dll",
@@ -119,11 +134,11 @@ for file in sorted(RUNTIME.rglob("*")):
     if not file.is_file() or "__pycache__" in file.parts or file.suffix==".pyc":
         continue
     rel=file.relative_to(STAGE)
-    entries.append(f'Source: "..\\.build\\windows-app\\{rel}"; DestDir: "{{app}}\\{rel.parent}"; '
+    entries.append(f'Source: "..\\.build\\windows-app-0.2.0\\{rel}"; DestDir: "{{app}}\\{rel.parent}"; '
                    f'Flags: ignoreversion; Check: NeedsRuntimeFile(\'{rel}\', \'{sha(file)}\')')
 (BUILD/"runtime-files.iss").write_text("\n".join(entries),encoding="utf-8-sig")
 subprocess.run([iscc,"/Qp",str(ROOT/"windows/setup.iss")],check=True)
-out=ROOT/"dist/Cartethyia-0.1.0-Windows-x64-Setup.exe"
+out=ROOT/"dist/Cartethyia-0.2.0-Windows-x64-Setup.exe"
 (out.parent/"SHA256SUMS-Windows.txt").write_text(sha(out)+"  "+out.name+"\n",encoding="ascii")
 print(out)
 

@@ -32,12 +32,14 @@ def send(profile, payload):
 def hook():
     import sys
     print("{}",flush=True)
+    if os.environ.get("PET_PLUS_INTERNAL") == "1":
+        return
     raw = sys.stdin.buffer.read(1048577)
     if len(raw)>1048576:
         return
     data = json.loads(raw)
     event = data.get("hook_event_name")
-    kinds={"UserPromptSubmit":"start","PreToolUse":"tool","PostToolUse":"result","PermissionRequest":"approval","Stop":"stop-attempt","Interrupt":"abort","SubagentStop":"stop-attempt"}
+    kinds={"UserPromptSubmit":"start","PreToolUse":"tool","PostToolUse":"result","PermissionRequest":"approval","Stop":"stop-attempt","Interrupt":"abort","SubagentStop":"child-stop"}
     if event not in kinds:
         return
     fields={"thread":"agent_id" if event=="SubagentStop" else "session_id","turn":"turn_id","tool":"tool_name","call":"tool_use_id"}

@@ -11,7 +11,7 @@ def actions():
     resource = HERE / "repertoire.json"
     if not resource.exists():
         resource = HERE.parent / "art/repertoire.json"
-    return [x["title"] for x in json.loads(resource.read_text())]
+    return [x["title"] for x in json.loads(resource.read_text(encoding="utf8"))]
 
 
 def answer(base, folder, cfg, history, user, whisper, mode, image, forced, last_action,
@@ -55,14 +55,14 @@ def answer(base, folder, cfg, history, user, whisper, mode, image, forced, last_
         prompt += "\n本地时间 " + time.strftime("%H:%M")
     if retrieved_weather and not rules.weather and not rules.places:
         prompt += "\n" + retrieved_weather
-    if source == "local" and image and not cfg.get("projector"):
-        model = "Qwen3VL-2B-Instruct-Q4_K_M.gguf"
+    if source == "local" and image:
+        model = cfg.get("vision") or (model if cfg.get("projector") else "Qwen3VL-2B-Instruct-Q4_K_M.gguf")
     projector = cfg.get("projector") or "mmproj-Qwen3VL-2B-Instruct-Q8_0.gguf"
     def request(instruction):
         callback = (lambda _: None) if rules.strict or whisper else publish
         if source == "local":
             return generate(base / "runtime", model, persona, memory, instruction, cancel, callback,
-                            image=image, projector=projector)
+                            image=image, projector=projector, backend=cfg.get("backend", "auto"))
         messages = [{"role": "system", "content": persona +
                      '\n用简短中文交流。只返回 JSON，字段为 text、emotion（calm/happy/curious/sad/focused）、action（idle/waving/jumping/waiting/review/running/failed）。'}]
         for pair in memory:

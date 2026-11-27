@@ -116,8 +116,11 @@ try:
     pet.grab().save(str(args.out/"character.png"))
     QApplication.sendEvent(pet,QEvent(QEvent.Enter))
     pump(.33)
-    report["hover"]=owner.hover.text()
-    assert "工具" in report["hover"] and "计划" in report["hover"]
+    report["hover_quiet"]=not owner.card.isVisible()
+    assert report["hover_quiet"]
+    owner.work_details()
+    assert "工具" in owner.card.body.text() and "计划" in owner.card.body.text()
+    owner.card.close_card()
     from PySide6.QtWidgets import QMenu
     from PySide6.QtCore import QTimer
     def inspect_menu():
@@ -132,7 +135,10 @@ try:
     mouse(QEvent.MouseButtonPress,p,Qt.LeftButton,Qt.LeftButton)
     mouse(QEvent.MouseButtonRelease,p,Qt.LeftButton,Qt.NoButton)
     assert owner.card.mode=="input" and owner.card.input.isVisible()
-    report["input_above"]=owner.card.frameGeometry().bottom()<=pet.y()+8
+    report["input_geometry"]={"card":owner.card.frameGeometry().getRect(),"pet":pet.frameGeometry().getRect(),
+                              "tip_down":owner.card.point_down,"work_area":pet.bounds().getRect()}
+    report["input_above"]=owner.card.point_down and owner.card.frameGeometry().center().y()<pet.frameGeometry().top()
+    assert report["input_above"], report["input_geometry"]
     deltas=[]
     owner.stream.connect(lambda i,t:deltas.append(t))
     before=len(owner.history)

@@ -96,7 +96,7 @@ def lifecycle(remove=False):
     windows_command="& "+ps_literal(PY)+" -B "+ps_literal(ROOT/"windows/service.py")+" hook"
     events="UserPromptSubmit PreToolUse PostToolUse PermissionRequest Stop Interrupt SubagentStop".split()
     hooks={e:[{"hooks":[{"type":"command","command":command,"commandWindows":windows_command,"timeout":3,"async":True}]}] for e in events}
-    write(plugin/".codex-plugin/plugin.json",{"name":"pet-plus","version":"0.1.0-win.1","description":"卡提希娅 Windows 桌宠","hooks":{"hooks":hooks},"mcpServers":"./.mcp.json"})
+    write(plugin/".codex-plugin/plugin.json",{"name":"pet-plus","version":"0.2.0-win.1","description":"卡提希娅 Windows 桌宠","hooks":{"hooks":hooks},"mcpServers":"./.mcp.json"})
     write(plugin/".mcp.json",{"mcpServers":{"pet_plus":{"command":str(PY),"args":["-B",str(ROOT/"windows/service.py"),"mcp"]}}})
     write(marker,{"market":str(MARKET),"codex":str(CODEX)})
     if not entry:

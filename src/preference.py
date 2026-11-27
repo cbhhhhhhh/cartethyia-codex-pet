@@ -33,8 +33,12 @@ def codex_error(error):
 
 
 class Rpc:
-    def __init__(self, options=(), cwd=None):
+    def __init__(self, options=(), cwd=None, internal=True):
         exe = shutil.which("codex")
+        if not exe and os.name == "nt":
+            bins = Path(os.environ["LOCALAPPDATA"]) / "OpenAI/Codex/bin"
+            latest = max(bins.glob("*/codex.exe"), key=lambda p: p.stat().st_mtime, default=None)
+            exe = str(latest) if latest else None
         if not exe:
             candidates = (
                 folder / bundle / "Contents/Resources" / rel
@@ -47,11 +51,11 @@ class Rpc:
             raise RuntimeError("请先安装 Codex 桌面版或将 codex 加入 PATH。")
         self.proc = subprocess.Popen(
             [exe, "app-server", "--listen", "stdio://", *options],
-            env=dict(os.environ, PET_PLUS_INTERNAL="1"), cwd=cwd,
+            env=dict(os.environ, PET_PLUS_INTERNAL="1" if internal else "0"), cwd=cwd,
             stdin=subprocess.PIPE,
             stdout=subprocess.PIPE,
             stderr=subprocess.DEVNULL,
-            text=True,
+            text=True, encoding="utf8", creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0),
             bufsize=1,
         )
         self.responses = queue.Queue()

@@ -1,5 +1,7 @@
 # 卡提希娅 Windows 本机验收
 
+0.2.0 的重验覆盖重新绘制的 109 段动作、三条聊天线路、真实父子任务和新安装包的一小时监测。本页保留 0.1.0 基线的原始记录。[Windows 0.2.0 实机验收](QA-WINDOWS-0.2.0.md)
+
 本报告记录 Windows 0.1.0 这条产品线首次发布时的真机验收。当时的版本号是 2.2.0，以下文件名、SHA-256 和一小时采样均对应当时的安装包。重编号后的安装包有独立的校验清单。[0.1.0 发布页](https://github.com/cbhhhhhhh/cartethyia-codex-pet/releases/tag/v0.1.0)
 
 验收日期为 2026 年 11 月 25 日，机器使用北京时间。最终安装包为 **Cartethyia-2.2.0-Windows-x64-Setup.exe**，SHA-256 为 `d41c6ef07c4b7e475dc6bdf80121d8fcb83ae920a01ae194dc147728c32d3105`。验收结束时，主档案的桌宠留在登录用户会话 2 的桌面右下方。[测量原始摘要](windows-qa/results.json)

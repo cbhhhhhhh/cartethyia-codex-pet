@@ -4,6 +4,10 @@ using System.IO;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
+[assembly: System.Reflection.AssemblyVersion("0.2.0.0")]
+[assembly: System.Reflection.AssemblyFileVersion("0.2.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersion("0.2.0")]
+
 internal static class Launcher {
     [STAThread]
     private static void Main(string[] args) {
@@ -17,7 +21,7 @@ internal static class Launcher {
         }
         try {
             var info = new ProcessStartInfo(Path.Combine(root, @"runtime\pythonw.exe"));
-            info.Arguments = "-B " + "\"" + Path.Combine(root, @"windows\app.py") + "\" --profile " + profile + (quiet ? " --background" : "");
+            info.Arguments = "-X utf8 -B " + "\"" + Path.Combine(root, @"windows\app.py") + "\" --profile " + profile + (quiet ? " --background" : "");
             info.WorkingDirectory = root;
             info.UseShellExecute = false;
             Process.Start(info);
