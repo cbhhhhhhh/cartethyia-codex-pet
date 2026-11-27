@@ -4,12 +4,12 @@
 
 ## 下载安装
 
-| 选择你的系统 | v2.2.0 安装包 | 安装方法 |
+| 选择你的系统 | v0.1.0 安装包 | 安装方法 |
 | --- | --- | --- |
-| Windows x64（已在 Windows 11 验证） | **[下载 Windows 安装包（EXE）](https://github.com/cbhhhhhhh/cartethyia-codex-pet/releases/download/v2.2.0/Cartethyia-2.2.0-Windows-x64-Setup.exe)** | 双击安装，从开始菜单打开「卡提希娅」。[Windows 使用与卸载说明](docs/WINDOWS.md) |
-| macOS 27.2 或更新版本，Apple Silicon（M 系列） | **[下载 Mac 安装包（ZIP）](https://github.com/cbhhhhhhh/cartethyia-codex-pet/releases/download/v2.2.0/Cartethyia-Codex-Pet-macOS-arm64.zip)** | 解压后双击 `安装.command`。菜单栏 **♧** 可以找回卡提。 |
+| Windows x64（已在 Windows 11 验证） | **[下载 Windows 安装包（EXE）](https://github.com/cbhhhhhhh/cartethyia-codex-pet/releases/download/v0.1.0/Cartethyia-0.1.0-Windows-x64-Setup.exe)** | 双击安装，从开始菜单打开「卡提希娅」。[Windows 使用与卸载说明](docs/WINDOWS.md) |
+| macOS 27.2 或更新版本，Apple Silicon（M 系列） | **[下载 Mac 安装包（ZIP）](https://github.com/cbhhhhhhh/cartethyia-codex-pet/releases/download/v0.1.0/Cartethyia-Codex-Pet-macOS-arm64.zip)** | 解压后双击 `安装.command`。菜单栏 **♧** 可以找回卡提。 |
 
-两个安装包都随附角色图集和 109 段扩展动作。工作提醒可以直接使用，本地聊天模型按需下载。[发行说明与 SHA-256 校验文件](https://github.com/cbhhhhhhh/cartethyia-codex-pet/releases/tag/v2.2.0)
+两个安装包都随附角色图集和 109 段扩展动作。工作提醒可以直接使用，本地聊天模型按需下载。[发行说明与 SHA-256 校验文件](https://github.com/cbhhhhhhh/cartethyia-codex-pet/releases/tag/v0.1.0)
 
 ![卡提希娅的工作气泡](docs/v21-preview.png)
 

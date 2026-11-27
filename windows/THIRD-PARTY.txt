@@ -1,4 +1,4 @@
-卡提希娅 Windows 桌宠 2.2.0
+卡提希娅 Windows 桌宠 0.1.0
 角色、二创插画与动作的署名和使用说明见安装目录的 NOTICE。
 
 CPython 3.13.9 来自 Python Software Foundation 的 Windows x64 embeddable package，随附 runtime/LICENSE.txt。

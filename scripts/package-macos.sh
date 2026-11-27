@@ -14,7 +14,7 @@ folder="$stage/$package"
 mkdir -p "$folder"/{payload,scripts,src}
 ditto --norsrc --noextattr --noacl ".build/Codex Pet Plus.app" "$folder/payload/Codex Pet Plus.app"
 cp docs/INSTALL-macOS.md "$folder/README.md"
-cp '安装.command' install.sh uninstall.sh NOTICE "$folder/"
+cp '安装.command' install.sh uninstall.sh LICENSE NOTICE "$folder/"
 cp scripts/{macos-env.sh,plugin.py,stop-windows.py,get-engine.sh,get-model.sh,get-vision.sh,download.sh} "$folder/scripts/"
 cp .runtime/python-runtime.tar.gz "$folder/payload/"
 cp scripts/python-runtime.sh "$folder/scripts/"
