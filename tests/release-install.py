@@ -78,7 +78,7 @@ with tempfile.TemporaryDirectory(dir="/tmp", prefix="cpp-") as tmp:
 
         assert get("sprite")[:4] == b"RIFF"
         clips = json.loads(get("clips"))
-        assert len(clips) == 109 and sum(x["frames"] for x in clips.values()) == 1744
+        assert len(clips) == 109 and sum(x["frames"] for x in clips.values()) == 2616
         assert get("clip/" + quote(next(iter(clips)), safe=""))[:4] in (b"\x89PNG", b"RIFF")
         ids = dict(session_id=str(uuid.uuid4()), turn_id=str(uuid.uuid4()))
         for event, expected in (("UserPromptSubmit", "thinking"), ("PreToolUse", "working"),

@@ -177,6 +177,7 @@ def generate(
                 body = dict(
                     messages=messages,
                     stream=True,
+                    stream_options={"include_usage": True},
                     max_tokens=240,
                     temperature=0.65,
                     response_format={
@@ -190,6 +191,7 @@ def generate(
                     raise RuntimeError("模型拒绝当前请求")
                 raw = ""
                 last = ""
+                usage_tokens = None
                 for line in res:
                     if cancel.is_set():
                         return None
@@ -198,8 +200,13 @@ def generate(
                     payload = line[5:].strip()
                     if payload == b"[DONE]":
                         break
+                    payload = json.loads(payload)
+                    if (payload.get("usage") or {}).get("total_tokens") is not None:
+                        usage_tokens = payload["usage"]["total_tokens"]
+                    if not payload.get("choices"):
+                        continue
                     raw += (
-                        json.loads(payload)["choices"][0]["delta"].get("content", "")
+                        payload["choices"][0]["delta"].get("content", "")
                         or ""
                     )
                     visible = partial_text(raw)
@@ -223,6 +230,7 @@ def generate(
                 compatible = choices[result["emotion"]]
                 if result["action"] not in compatible:
                     result["action"] = compatible[0]
+                result["usageTokens"] = usage_tokens
                 return result
             finally:
                 conn.close()

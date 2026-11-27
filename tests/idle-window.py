@@ -1,5 +1,6 @@
 """Measure a visible companion with no Codex sessions or inference in its isolated profile."""
 
+import argparse
 import json
 import os
 import subprocess
@@ -9,7 +10,11 @@ from pathlib import Path
 
 root = Path(__file__).resolve().parents[1]
 actual = Path.home() / "Library/Application Support/CodexPetPlus"
-binary = Path.home() / "Applications/Codex Pet Plus.app/Contents/MacOS/Companion"
+parser = argparse.ArgumentParser()
+parser.add_argument("--binary", type=Path, default=Path.home()/"Applications/Codex Pet Plus.app/Contents/MacOS/Companion")
+parser.add_argument("--output", type=Path, default=root/".build/v23/isolated-idle.json")
+args = parser.parse_args()
+binary = args.binary.resolve()
 
 
 def cpu(text):
@@ -72,7 +77,8 @@ with tempfile.TemporaryDirectory(dir="/tmp") as d:
             automatic_character_animations=cfg["randomActions"],
             window_requested_visible=True,
         )
-        (root / "docs/v2-isolated-idle.json").write_text(json.dumps(result, indent=2))
+        args.output.parent.mkdir(parents=True, exist_ok=True)
+        args.output.write_text(json.dumps(result, indent=2))
         print(result)
     finally:
         p.terminate()

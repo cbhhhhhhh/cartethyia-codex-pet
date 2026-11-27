@@ -4,7 +4,7 @@ import SwiftUI
 struct ChatPair: Codable, Identifiable {
   let id: String, user: String, assistant: String
   var action: String?, emotion: String?, image: String?, art: [String]?, spriteArt: Bool?,
-    pack: String?
+    pack: String?, picture: String?, clip: String?
 }
 
 struct PairArt: View {

@@ -8,7 +8,10 @@ from pathlib import Path
 
 root = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(root / "src"))
+import local_api
 from local_api import LocalStage
+from dialogue import gallery
+local_api.SHIPPED_PETS = Path.home()/"Applications/Codex Pet Plus.app/Contents/Resources/pets"
 from reminders import add
 
 with tempfile.TemporaryDirectory() as d:
@@ -21,7 +24,10 @@ with tempfile.TemporaryDirectory() as d:
     )
     state = dict(pack="cartethyia", state="idle", action="idle", bubble="")
 
+    state["gallery"] = [{k:v for k,v in item.items() if k!="file"} for item in gallery(folder).values()]
     def send(m):
+        if m["op"]=="whisper":
+            state.update(bubble="和这张图一起向你问好。",picture=m.get("picture",""))
         if m["op"]=="play":state["action"]=m["action"]
         if m["op"] == "chat":
             state["bubble"] = "收到舞台消息 " + m["text"]
@@ -38,7 +44,9 @@ with tempfile.TemporaryDirectory() as d:
             raise RuntimeError(result.stderr[-900:])
         data = json.loads(result.stdout)
         assert all(data.values())
-        (root / "docs/v21-web-qa.json").write_text(json.dumps(data, indent=2))
+        output = root / ".build/v23/browser.json"
+        output.parent.mkdir(parents=True, exist_ok=True)
+        output.write_text(json.dumps(data, indent=2))
         print(data)
     finally:
         s.close()

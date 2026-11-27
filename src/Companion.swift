@@ -2,6 +2,7 @@ import AVFoundation
 import AppKit
 import Carbon
 import ImageIO
+import QuartzCore
 import SwiftUI
 import UserNotifications
 
@@ -48,6 +49,9 @@ struct Config: Codable {
     whisperModel: String?
   var gravity: Double?, rebound: Double?, friction: Double?, throwForce: Double?
   var lockScreen: Bool?, replyArt: Bool?, artLimit: Int?, automaticQuota: Bool?, dreams: Bool?
+  var chatSource: String?, whisperSource: String?, apiURL: String?, apiModel: String?, apiKeyEnv: String?
+  var codexModel: String?, whisperApiModel: String?, whisperCodexModel: String?, blockedWords: String?
+  var avoidWeather: Bool?, avoidPlaces: Bool?, trackCost: Bool?
   var mapping = standardMap
 }
 class CompanionState: ObservableObject {
@@ -64,9 +68,18 @@ class CompanionState: ObservableObject {
   @Published var since = 0.0
   @Published var health = ""
   @Published var quota = ""
+  @Published var pictures = [PetPicture]()
+  @Published var modelLists = [String:[String]]()
+  @Published var modelFeedback = ""
+  @Published var keyDraft = ""
+  @Published var keyFeedback = ""
+  @Published var usage = ""
+  @Published var usageChoices = [UsageChoice]()
+  @Published var usageSelected = ""
   @Published var emotion = ""
   @Published var weather = ""
   var visionAvailable: Bool {
+    if ["api","codex"].contains(config.chatSource ?? "") { return true }
     if !(config.projector ?? "").isEmpty { return true }
     let runtime = support.appendingPathComponent("runtime")
     return ["Qwen3VL-2B-Instruct-Q4_K_M.gguf", "mmproj-Qwen3VL-2B-Instruct-Q8_0.gguf"].allSatisfy {
@@ -92,8 +105,9 @@ class Sprite: NSView {
   var gazeImages = [NSImage](), gazeMasks = [NSBitmapImageRep](), gaze: Int?
   var gestureLean = 0.0, gestureStretch = 0.0
   var row = 0, index = 0
-  var clipRoot: URL?, clipLibrary: ClipLibrary?, clipTimer: Timer?
-  var activeClip: ClipPlayer? { didSet { refreshClipTimer() } }
+  var clipRoot: URL?, clipLibrary: ClipLibrary?
+  let clipLayer = CALayer()
+  var activeClip: ClipPlayer? { didSet { refreshClipLayer(visible: window?.isVisible == true) } }
   var lastPoseTransform = CGAffineTransform.identity
   var lastPoseRect: NSRect?
   var activeScene: PetScene?
@@ -166,7 +180,7 @@ class Sprite: NSView {
       let key = String(name.dropFirst(5))
       if activeClip?.key == key || playClip(key, loop: true) { return }
     }
-    activeClip = nil
+    if activeClip != nil { activeClip = nil }
     let next = names.firstIndex(of: name) ?? 0
     if next != row {
       row = next
@@ -175,12 +189,22 @@ class Sprite: NSView {
     }
   }
   func advance() {
-    guard frames.count > row else { return }
+    guard activeClip == nil, gaze == nil, frames.count > row else { return }
     index = (index + 1) % frames[row].count
     needsDisplay = true
   }
+  override func layout() {
+    super.layout()
+    if clipLayer.superlayer != nil {
+      CATransaction.begin()
+      CATransaction.setDisableActions(true)
+      clipLayer.frame = bounds
+      lastPoseRect = bounds
+      CATransaction.commit()
+    }
+  }
   override func draw(_ dirtyRect: NSRect) {
-    renderFrame()
+    if activeClip == nil || clipLayer.superlayer == nil { renderFrame() }
   }
   func hit(_ screen: CGPoint) -> Bool {
     guard let w = window, w.frame.contains(screen), masks.count > row else { return false }
@@ -189,12 +213,12 @@ class Sprite: NSView {
     guard rect.contains(p) else { return false }
 
     let mask =
-      activeClip.map { $0.masks[$0.frame] } ?? gaze.flatMap {
+      activeClip?.mask ?? gaze.flatMap {
         gazeMasks.indices.contains($0) ? gazeMasks[$0] : nil
       } ?? masks[row][index]
-    let width = mask.pixelsWide
+    let width = mask.pixelsWide / (activeClip?.frames.count ?? 1)
     let height = mask.pixelsHigh
-    let x = min(width - 1, max(0, Int((p.x - rect.minX) / rect.width * Double(width))))
+    let x = (activeClip?.frame ?? 0) * width + min(width - 1, max(0, Int((p.x - rect.minX) / rect.width * Double(width))))
     let y = min(
       height - 1, max(0, height - 1 - Int((p.y - rect.minY) / rect.height * Double(height))))
     return (mask.colorAt(x: x, y: y)?.alphaComponent ?? 0) > 0.12
@@ -288,6 +312,7 @@ struct Settings: View {
         }
         Toggle("屏幕边缘吸附", isOn: $state.config.snap)
         Toggle("额度跨档时提示", isOn: option(\.automaticQuota, false))
+        Toggle("在回合起止读取账户估算用量", isOn: option(\.trackCost, false))
         Toggle("工作通知", isOn: $state.config.notifications)
         Toggle("提示音", isOn: $state.config.sound)
         Button("启用系统通知") { host.requestNotifications() }
@@ -303,7 +328,6 @@ struct Settings: View {
       }.tabItem { Text("运动") }
       Form {
         Toggle("点击聊天", isOn: $state.config.chat)
-        TextField("本地 GGUF 文件名", text: $state.config.model)
         Text("人设")
         TextEditor(text: $state.config.persona).frame(height: 68)
         Stepper(
@@ -312,10 +336,13 @@ struct Settings: View {
           "可选视觉投影 GGUF",
           text: Binding(get: { state.config.projector ?? "" }, set: { state.config.projector = $0 })
         )
-        Toggle("回复附上角色表情", isOn: option(\.replyArt, false))
-        Stepper("最多 \(state.config.artLimit ?? 1) 张", value: option(\.artLimit, 1), in: 1...3)
+        Toggle("允许聊天和碎碎念按内容配图", isOn: option(\.replyArt, false))
+        Toggle("不提地名", isOn: option(\.avoidPlaces, false))
+        Toggle("不谈天气", isOn: option(\.avoidWeather, false))
+        TextField("额外禁用词（以逗号分隔）", text: option(\.blockedWords, ""))
         Toggle("允许使用本地时间", isOn: $state.config.localTime)
       }.tabItem { Text("聊天") }
+      ModelSettings(state: state, host: host).tabItem { Text("模型") }
       Form {
         TextField(
           "城市名称",
@@ -326,11 +353,10 @@ struct Settings: View {
           isOn: Binding(
             get: { state.config.weatherEnabled ?? false }, set: { state.config.weatherEnabled = $0 }
           ))
-        Text("启用后，仅在生成回复时按城市查询，结果缓存一小时。").font(.caption)
+        Text("手动查询或明确询问天气时按城市查询。人设限制优先，结果缓存一小时。").font(.caption)
 
       }.tabItem { Text("环境") }
       Form {
-        TextField("碎碎念模型（留空跟随聊天）", text: option(\.whisperModel, ""))
         Toggle("允许梦话", isOn: option(\.dreams, false))
         Toggle("空闲时碎碎念", isOn: $state.config.whispers)
         Stepper(
@@ -368,6 +394,6 @@ struct Settings: View {
           }
         }
       }.tabItem { Text("动作") }
-    }.padding().frame(width: 475, height: 460)
+    }.padding().frame(width: 555, height: 475)
   }
 }

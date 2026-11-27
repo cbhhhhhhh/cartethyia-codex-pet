@@ -49,6 +49,7 @@ class Reducer:
         self.turns = {}
         self.closed = OrderedDict()
         self.notice = None
+        self.notice_turn = ""
 
     def event(self, e, now):
         thread, turn, kind = (e.get(k, "") for k in ("thread", "turn", "kind"))
@@ -79,6 +80,7 @@ class Reducer:
                     origin=e.get("source", ""),
                 )
                 self.notice = (state, thread)
+                self.notice_turn = turn
             return
         if kind not in (
             "start",
@@ -135,6 +137,7 @@ class Reducer:
             )
             if t.state == "waiting-for-approval" and prior != t.state:
                 self.notice = (t.state, thread)
+                self.notice_turn = turn
         elif kind == "review" and not (t.tools or t.unnamed_approvals):
             t.state = "review"
         elif kind == "plan":
@@ -151,16 +154,18 @@ class Reducer:
             if t.expires <= now:
                 if not t.terminal and not t.stopping:
                     self.notice = ("timeout", t.thread)
+                    self.notice_turn = t.turn
                 del self.turns[key]
         if not self.turns:
             return dict(
                 v=1, state="idle", thread="", tool="", progress="", since=0, source=""
             )
-        t = max(self.turns.values(), key=lambda t: (RANK.index(t.state), t.changed))
+        t = max(self.turns.values(), key=lambda t: (not t.terminal, RANK.index(t.state), t.changed))
         return dict(
             v=1,
             state=t.state,
             thread=t.thread,
+            turn=t.turn,
             tool=next(iter(t.unnamed_approvals), next(reversed(t.tools.values()), "")),
             progress=t.progress,
             since=t.started,

@@ -113,9 +113,11 @@ try {
   await until(
     "document.querySelector('#card').textContent.includes('收到舞台消息')",
   );
-  await until("document.querySelector('#card .cameo i.illustration') && document.fonts.check('17px \"Wawati SC\"')");
-  const portrait = await evaluate(`(async()=>{const i=new Image();i.src=getComputedStyle(document.querySelector('#card .cameo i')).backgroundImage.slice(5,-2);await i.decode();return i.naturalHeight})()`);
-  if(portrait < 200) throw Error("角色插画未加载");
+  if (await evaluate("!!document.querySelector('#card .cameo')")) throw Error("普通聊天出现了配图");
+  await evaluate("document.querySelector('[data-op=gallery]').click()");
+  await until("document.querySelectorAll('#card button img').length===10");
+  await evaluate("[...document.querySelectorAll('#card button')].find(b=>b.textContent.includes('弯眼微笑')).click()");
+  await until("document.querySelector('#card .illustration img')?.naturalHeight > 100");
   await evaluate("document.querySelector('[data-op=todos]').click()");
   await until(
     "document.querySelector('#card').textContent.includes('测试待办')",
@@ -130,7 +132,7 @@ try {
     "(()=>{document.querySelector('#card select').value='牵着线放风筝';document.querySelector('#card button').click()})()",
   );
   await until(
-    "document.querySelector('#pet').style.backgroundSize.startsWith('1600%')",
+    "document.querySelector('#pet').style.backgroundSize.startsWith('2400%')",
   );
   await evaluate("document.querySelector('[data-op=home]').click()");
   const point = await evaluate("(()=>{const b=document.querySelector('#pet').getBoundingClientRect();return{x:b.x+b.width/2,y:b.y+b.height/2}})()");
@@ -156,7 +158,8 @@ try {
   if(!rebound) throw Error("浏览器舞台画圈后未观察到侧墙反弹");
   const checks = {
     sprite: true,
-    decoded_emotional_illustration: true,
+    ordinary_text_only: true,
+    selected_gallery_illustration: true,
     circle_rebounds: rebound,
     full_character_library: true,
     right_click: true,
@@ -174,5 +177,5 @@ try {
     if (run.exitCode !== null || run.signalCode) r();
     else run.once("exit", r);
   });
-  await rm(root, { recursive: true, force: true });
+  await rm(root, { recursive: true, force: true, maxRetries: 8, retryDelay: 150 });
 }

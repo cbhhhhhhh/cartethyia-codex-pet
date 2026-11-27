@@ -7,7 +7,9 @@ import UserNotifications
 
 final class Host: NSObject, NSApplicationDelegate, UNUserNotificationCenterDelegate {
   let s = CompanionState(), sprite = Sprite(), speech = AVSpeechSynthesizer()
-  var pendingNotices = [(text: String, thread: String, mood: CardMood)]()
+  var pendingNotices = [(text: String, thread: String, turn: String, mood: CardMood, picture: String, expires: Double)]()
+  var shownNotice: (thread: String, turn: String)?
+  var lastCue = -100.0
   var lastChatGesture = ""
   var browserActive = false
   var sequenceTimer: Timer?, sequenceID: String?
@@ -19,7 +21,7 @@ final class Host: NSObject, NSApplicationDelegate, UNUserNotificationCenterDeleg
   let historyEdits = HistoryEdits()
   let card = CardState(), dictation = LocalDictation()
   var hoverKeys: [EventHotKeyRef] = []
-  var hoverTimer: Timer?, overPet = false, nextIdleAction = 0.0
+  var overPet = false, nextIdleAction = 0.0
   var tempImages = Set<URL>()
   var outsideClicks: Any?, menuKeys: Any?
   let overlay = NSPanel(
@@ -35,6 +37,13 @@ final class Host: NSObject, NSApplicationDelegate, UNUserNotificationCenterDeleg
   var muteHot: EventHotKeyRef?, quitHot: EventHotKeyRef?, syncing = false
   var eventMode: Bool {
     FileManager.default.fileExists(atPath: support.appendingPathComponent("events-only").path)
+  }
+  var chatModelReady: Bool {
+    !eventMode || ["api", "codex"].contains(s.config.chatSource ?? "local")
+  }
+  var whisperModelReady: Bool {
+    let source = s.config.whisperSource ?? "inherit"
+    return !eventMode || (source == "inherit" ? chatModelReady : ["api", "codex"].contains(source))
   }
   var nativeMode: Bool {
     guard let data = try? Data(contentsOf: support.appendingPathComponent("native-account.json")),
@@ -107,8 +116,7 @@ final class Host: NSObject, NSApplicationDelegate, UNUserNotificationCenterDeleg
     return false
   }
   func timers(_ on: Bool) {
-    sprite.clipTimer?.invalidate()
-    if on { sprite.refreshClipTimer() }
+    sprite.refreshClipLayer(visible: on && overlay.isVisible)
     anim?.invalidate()
     hitTimer?.invalidate()
     if let m = globalMouse {
@@ -200,10 +208,9 @@ final class Host: NSObject, NSApplicationDelegate, UNUserNotificationCenterDeleg
     if let d = try? JSONEncoder().encode(s.config),
       var cfg = try? JSONSerialization.jsonObject(with: d) as? [String: Any]
     {
-      if eventMode {
-        cfg["chat"] = false
-        cfg["whispers"] = false
-      }
+      if !chatModelReady { cfg["chat"] = false }
+      if !whisperModelReady { cfg["whispers"] = false; cfg["dreams"] = false }
+      cfg["whisperReady"] = whisperModelReady
       cfg["hidden"] = !overlay.isVisible && !browserActive
       if sleeping {
         cfg["whispers"] = false
@@ -448,7 +455,7 @@ final class Host: NSObject, NSApplicationDelegate, UNUserNotificationCenterDeleg
     } else {
       act("waving")
     }
-    if s.config.chat && !eventMode { showChat() } else { sayBubble("我在这里。", thread: "") }
+    if s.config.chat && chatModelReady { showChat() } else { sayBubble("我在这里。", thread: "") }
   }
   func workPose() {
     let mapped = s.config.mapping[s.status] ?? "idle"
@@ -484,7 +491,7 @@ final class Host: NSObject, NSApplicationDelegate, UNUserNotificationCenterDeleg
     present(settingsWindow)
   }
   @objc func showChat() {
-    guard !sleeping, s.config.chat, !eventMode else { return }
+    guard !sleeping, s.config.chat, chatModelReady else { return }
     if !overlay.isVisible { toggle() }
     if s.talking {
       showSpoken(s.partial.isEmpty ? "…" : s.partial, duration: 0)
@@ -516,7 +523,7 @@ final class Host: NSObject, NSApplicationDelegate, UNUserNotificationCenterDeleg
     }
   }
   func ask(_ text: String) {
-    guard !s.talking, s.config.chat, !eventMode else { return }
+    guard !s.talking, s.config.chat, chatModelReady else { return }
     s.partial = "…"
     s.talking = true
     dictation.cancel()
@@ -602,8 +609,7 @@ final class Host: NSObject, NSApplicationDelegate, UNUserNotificationCenterDeleg
     s.progress = ""
     s.thread = ""
     s.since = 0
-    if card.mode == .work || card.mode == .hover || s.talking { bubble?.orderOut(nil) }
-    if overlay.isVisible && overPet && !sleeping { surface(.hover) }
+    if card.mode == .work || card.mode == .details || s.talking { bubble?.orderOut(nil) }
   }
   func receive(_ data: Data) {
     buffer.append(data)
@@ -652,23 +658,47 @@ final class Host: NSObject, NSApplicationDelegate, UNUserNotificationCenterDeleg
       if !sleeping && !leased {
         overrideUntil = 0
         workPose()
-        if hoverMayAppear && overlay.isVisible {
-          if overPet {
-            surface(.hover)
-          } else if s.status != "idle" {
-            surface(.work)
-          } else {
-            bubble?.orderOut(nil)
-          }
-        }
       }
+    case "turn-start":
+      let turn = m["turn"] as? String ?? ""
+      pendingNotices.removeAll { $0.thread == thread && $0.turn != turn }
+      if let n = shownNotice, n.thread == thread && n.turn != turn {
+        shownNotice = nil
+        if card.mode == .speech && card.target == thread { bubble?.orderOut(nil) }
+      }
+    case "gallery":
+      if let obj = m["items"], let raw = try? JSONSerialization.data(withJSONObject: obj),
+        let values = try? JSONDecoder().decode([PetPicture].self, from: raw) { s.pictures = values }
+    case "usage":
+      s.usage = text
+      if let obj = m["options"], let raw = try? JSONSerialization.data(withJSONObject: obj),
+        let values = try? JSONDecoder().decode([UsageChoice].self, from: raw) {
+        s.usageChoices = values
+        s.usageSelected = m["selected"] as? String ?? ""
+      }
+    case "quota-card": if !sleeping { showSpoken(text, title: "Codex 账户额度", duration: 23) }
+    case "read-aloud":
+      speech.stopSpeaking(at: .immediate)
+      speak(text, true, manual: true)
+    case "model-list":
+      if let source = m["source"] as? String, let models = m["models"] as? [String] {
+        s.modelLists[source] = models
+        s.modelFeedback = (m["error"] as? String).flatMap { $0.isEmpty ? nil : $0 } ?? "已读取 \(models.count) 个模型"
+      }
+    case "action-line":
+      if sprite.activeClip?.key == m["clip"] as? String, !s.talking, !sleeping, !s.config.muted,
+        (bubble?.isVisible != true || card.mode == .speech), s.status == "idle" { lastCue = uptime; showSpoken(text, duration: 4) }
+    case "interrupted":
+      s.partial = ""
+      s.talking = false
+      if card.mode == .speech { closeCard() }
     case "partial":
       s.partial = text
       if !sleeping { showSpoken(text, duration: 0, mood: .curious) }
     case "failure":
       s.partial = text
       s.talking = false
-      if !sleeping { showSpoken(text, title: "本地对话", duration: 12, mood: .sad) }
+      if !sleeping { showSpoken(text, title: "生成提示", duration: 12, mood: .sad) }
     case "reply", "whisper":
       let whisper = (m["type"] as? String == "whisper")
       if sleeping { return }
@@ -677,12 +707,13 @@ final class Host: NSObject, NSApplicationDelegate, UNUserNotificationCenterDeleg
       let mood = CardMood(emotion: s.emotion, action: action)
       if !leased && s.status == "idle" && (!whisper || !s.config.muted) {
         let choices = mood.gestures.filter { $0 != lastChatGesture && sprite.clipLibrary?.clips[$0] != nil }
-        if let key = choices.randomElement(), sprite.playClip(key) { lastChatGesture = key }
+        if let key = m["clip"] as? String, !key.isEmpty, performClip(key, speak: false) { lastChatGesture = key }
+        else if let key = choices.randomElement(), sprite.playClip(key) { lastChatGesture = key }
         else { act(action) }
       }
       if whisper {
-        if !s.config.muted && !leased {
-          sayBubble(text, thread: "", mood: mood)
+        if (!s.config.muted || m["manual"] as? Bool == true) && !leased {
+          sayBubble(text, thread: "", mood: mood, picture: m["picture"] as? String ?? "")
           speak(
             text, m["manual"] as? Bool == true ? s.config.voiceChat == true : s.config.voiceWhisper)
         }
@@ -691,7 +722,7 @@ final class Host: NSObject, NSApplicationDelegate, UNUserNotificationCenterDeleg
         s.talking = false
         showSpoken(
           text, duration: max(9, min(40, Double(text.count) * 0.22)),
-          art: s.config.replyArt == true ? s.pairs.last : nil, mood: mood)
+          mood: mood, picture: m["picture"] as? String ?? "")
         speak(text, s.config.voiceChat == true)
       }
     case "archive-entry":
@@ -702,9 +733,13 @@ final class Host: NSObject, NSApplicationDelegate, UNUserNotificationCenterDeleg
       }
     case "notice":
       let state = m["state"] as? String ?? ""
-      let message = titles[state] ?? state
+      var message = titles[state] ?? state
+      if ["success", "error"].contains(state) && !thread.isEmpty {
+        message += " · 会话 " + thread.suffix(6)
+        if m["otherActive"] as? Bool == true { message += "（其他回合仍在进行）" }
+      }
       if !sleeping && !leased && s.config.notifications && !s.config.muted {
-        sayBubble(message, thread: thread, mood: CardMood(status: state))
+        sayBubble(message, thread: thread, turn: m["turn"] as? String ?? "", mood: CardMood(status: state))
         notify(message, thread)
         speak(message, s.config.voiceNotice)
       }
@@ -751,14 +786,15 @@ final class Host: NSObject, NSApplicationDelegate, UNUserNotificationCenterDeleg
       speech.speak(u)
     }
   }
-  func sayBubble(_ text: String, thread: String, mood: CardMood = .calm) {
-    if s.talking || (bubble?.isVisible == true && (card.mode == .compose || card.mode == .todos)) {
+  func sayBubble(_ text: String, thread: String, turn: String = "", mood: CardMood = .calm, picture: String = "") {
+    if s.talking || (bubble?.isVisible == true && (card.mode == .compose || card.mode == .todos || card.mode == .usage)) {
       pendingNotices.removeAll { $0.text == text && $0.thread == thread }
       if pendingNotices.count >= 4 { pendingNotices.removeFirst() }
-      pendingNotices.append((text, thread, mood))
+      pendingNotices.append((text, thread, turn, mood, picture, uptime + 14))
       return
     }
-    showSpoken(text, target: thread, duration: 10, mood: mood)
+    shownNotice = thread.isEmpty ? nil : (thread, turn)
+    showSpoken(text, target: thread, duration: 10, mood: mood, picture: picture)
   }
   @objc func bubbleClick() {
     if bubbleThread.isEmpty { showChat() } else { openThread(bubbleThread) }

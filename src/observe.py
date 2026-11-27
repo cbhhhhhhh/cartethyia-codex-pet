@@ -7,10 +7,51 @@ from datetime import datetime, timedelta
 from state import VALID_ID
 
 
+
+def quota_view(data, stamp=None):
+    rows = []
+    updated = stamp if stamp is not None else time.time()
+    buckets = data.get("rateLimitsByLimitId") or {"": data.get("rateLimits", data)}
+    for bucket, detail in buckets.items():
+        if not isinstance(detail, dict):
+            continue
+        for name in ("primary", "secondary"):
+            window = detail.get(name) or {}
+            used = window.get("usedPercent", window.get("used_percent"))
+            if not isinstance(used, (float, int)):
+                continue
+            used = min(100, max(0, used))
+            minutes = window.get("windowDurationMins", window.get("window_minutes"))
+            period = "额度周期"
+            if isinstance(minutes, int) and minutes > 0:
+                if minutes % 1440 == 0:
+                    period = f"{minutes // 1440} 天额度"
+                elif minutes % 60 == 0:
+                    period = f"{minutes // 60} 小时额度"
+                else:
+                    period = f"{minutes} 分钟额度"
+            label = detail.get("limitName") or detail.get("limit_name") or bucket
+            title = (str(label) + " · " if label and label != "codex" else "") + period
+            text = f"{title} · 剩余 {100-used:g}%（已用 {used:g}%）"
+            reset = window.get("resetsAt", window.get("resets_at"))
+            if isinstance(reset, (int, float)) and 0 < reset < 4102444800:
+                text += "\n下次重置 " + datetime.fromtimestamp(reset).strftime("%m-%d %H:%M")
+            rows.append((text, used))
+    if not rows:
+        return None
+    return {"text": "\n\n".join(t for t, _ in rows) + "\n\n更新于 " +
+            datetime.fromtimestamp(updated).strftime("%m-%d %H:%M"), "used": max(n for _, n in rows)}
+
+
 class Tail:
     def __init__(self, base):
         self.base = base
         self.files = {}
+        self.paths = {}
+        self.origins = {}
+        self.prefixes = {}
+        self.attributes = {}
+        self.baselines = {}
         self.began = time.time()
         self.next_scan = 0
         self.watcher = None
@@ -57,31 +98,86 @@ class Tail:
         )
         m = re.search(r"([0-9a-fA-F-]{36})\.jsonl$", f.name)
         if m:
-            self.files[f] = [s.st_ino, offset, m.group(1), "", False]
+            tid = m.group(1)
+            self.files[f] = [s.st_ino, offset, tid, "", False]
+            self.paths[tid] = f
 
-    @staticmethod
-    def prior_turn(f, end):
+    def origin(self, tid):
+        if tid in self.origins:
+            return self.origins[tid]
+        path = self.paths.get(tid)
+        if path:
+            try:
+                with path.open("rb") as stream:
+                    header = json.loads(stream.readline(4 * 1024 * 1024))
+                meta = header["payload"]
+                if header["type"] == "session_meta" and meta.get("id", meta.get("session_id")) == tid:
+                    source = meta.get("source")
+                    role, parent = "unknown", ""
+                    if isinstance(source, str) and source:
+                        role = "root"
+                    elif isinstance(source, dict) and "subagent" in source:
+                        role = "child"
+                        sub = source["subagent"]
+                        if isinstance(sub, dict):
+                            parent = (sub.get("thread_spawn") or {}).get("parent_thread_id", "")
+                    if meta.get("thread_source") == "subagent":
+                        role = "child"
+                    if meta.get("thread_source") == "cartethyia_companion":
+                        role = "pet"
+                    born = datetime.fromisoformat(meta["timestamp"].replace("Z", "+00:00")).timestamp()
+                    ordinal = meta.get("subagent_history_start_ordinal")
+                    self.origins[tid] = dict(role=role, parent_thread=parent or meta.get("parent_thread_id", ""),
+                                             born=born, inherited=ordinal if isinstance(ordinal, int) and ordinal >= 0 else None)
+                    return self.origins[tid]
+            except (OSError, ValueError, KeyError, AttributeError, TypeError):
+                pass
+        return {"role": "unknown", "born": 0}
+
+    def live_offset(self, fp, tid, origin):
+        # Codex rewrites inherited event timestamps at fork time. Its persisted
+        # ordinal is the number of copied records after the new session header.
+        ordinal = origin.get("inherited")
+        if ordinal is None:
+            return 0
+        lines, offset = self.prefixes.get(tid, (0, 0))
+        fp.seek(offset)
+        while lines < ordinal + 1:
+            part = fp.readline(65536)
+            if not part:
+                self.prefixes[tid] = (lines, fp.tell())
+                return None
+            lines += int(part.endswith(b"\n"))
+        self.prefixes[tid] = (lines, fp.tell())
+        return fp.tell()
+
+    def prior_turn(self, f, end, floor=0):
         # Existing files start at EOF. Recover only the turn identity when a new
         # live tool record arrives without one. Historical events never play.
         with f.open("rb") as fp:
-            lo = max(0, end - 8 * 1024 * 1024)
+            lo = max(floor, end - 8 * 1024 * 1024)
             fp.seek(lo)
             lines = fp.read(end - lo).splitlines()
+        turn = ""
         for line in reversed(lines):
-            if b'"turn_context"' not in line and b'"task_started"' not in line:
+            if b'"total_token_usage"' not in line and b'"turn_context"' not in line and b'"task_started"' not in line:
                 continue
             try:
                 r = json.loads(line)
                 p = r["payload"]
-                if r["type"] == "turn_context" or (
-                    r["type"] == "event_msg" and p.get("type") == "task_started"
-                ):
-                    turn = p.get("turn_id", "")
-                    if VALID_ID.fullmatch(turn):
-                        return turn
+                if p.get("type") == "token_count" and f not in self.baselines:
+                    self.baselines[f] = p["info"]["total_token_usage"]
+                elif r["type"] == "turn_context" or p.get("type") == "task_started":
+                    value = p.get("turn_id", "")
+                    if not turn and VALID_ID.fullmatch(value):
+                        turn = value
+                    if turn == value and p.get("turn_attribution"):
+                        self.attributes[(self.files[f][2], turn)] = p["turn_attribution"]
+                if turn and (self.files[f][2], turn) in self.attributes and f in self.baselines:
+                    break
             except (KeyError, ValueError, TypeError, AttributeError):
                 pass
-        return ""
+        return turn
 
     def poll(self):
         if self.watcher is not None:
@@ -106,12 +202,19 @@ class Tail:
                 del self.files[f]
                 continue
             if s.st_ino != cur[0] or s.st_size < cur[1]:
-                cur[:2] = [s.st_ino, 0]
+                cur[:] = [s.st_ino, 0, cur[2], "", False]
+                self.origins.pop(cur[2], None)
+                self.prefixes.pop(cur[2], None)
             if s.st_size == cur[1]:
                 continue
             with f.open("rb") as fp:
-                if not cur[3] and cur[1]:
-                    cur[3] = self.prior_turn(f, cur[1])
+                origin = self.origin(cur[2])
+                floor = self.live_offset(fp, cur[2], origin)
+                if floor is None:
+                    continue
+                cur[1] = max(cur[1], floor)
+                if not cur[3] and cur[1] > floor:
+                    cur[3] = self.prior_turn(f, cur[1], floor)
                 fp.seek(cur[1])
                 budget = 4 * 1024 * 1024
                 while budget > 0:
@@ -141,6 +244,16 @@ class Tail:
                         stamp = datetime.fromisoformat(
                             r["timestamp"].replace("Z", "+00:00")
                         ).timestamp()
+                        origin = self.origin(cur[2])
+                        if stamp < origin["born"] or origin["role"] == "pet":
+                            continue
+                        turn = p.get("turn_id") or cur[3]
+                        if (group == "turn_context" or typ == "task_started") and turn:
+                            attr = p.get("turn_attribution") or {}
+                            if attr or p.get("root_turn_id"):
+                                self.attributes[(cur[2], turn)] = {
+                                "root_turn_id": attr.get("root_turn_id") or p.get("root_turn_id"),
+                                "parent_turn_id": attr.get("parent_turn_id")}
                         if stamp < self.began or time.time() - stamp > 120:
                             continue
                         e = dict(
@@ -149,30 +262,18 @@ class Tail:
                             turn=p.get("turn_id") or cur[3],
                             source="jsonl",
                         )
-                        if (
-                            group == "event_msg"
-                            and typ == "token_count"
-                            and p.get("rate_limits")
-                        ):
-                            windows = p["rate_limits"]
-                            parts = []
-                            percents = []
-                            for name in ["primary", "secondary"]:
-                                win = windows.get(name) or {}
-                                if isinstance(win.get("used_percent"), (float, int)):
-                                    percents.append(
-                                        max(0, min(100, win["used_percent"]))
-                                    )
-                                    parts.append(
-                                        f"{win.get('window_minutes', '?')} 分钟窗已用 {win['used_percent']:g}%"
-                                    )
-                            if parts:
-                                yield dict(
-                                    e,
-                                    kind="quota",
-                                    used=max(percents),
-                                    text=" · ".join(parts),
-                                )
+                        attr = self.attributes.get((cur[2], turn), {})
+                        e.update(role=origin["role"], parent_thread=origin.get("parent_thread", ""),
+                                 root_turn=attr.get("root_turn_id"), parent_turn=attr.get("parent_turn_id"),
+                                 stamp=stamp)
+                        if group == "event_msg" and typ == "token_count":
+                            snapshot = quota_view(p.get("rate_limits") or {}, stamp)
+                            if snapshot:
+                                yield dict(e, kind="quota", **snapshot)
+                            info = p.get("info") or {}
+                            if info.get("total_token_usage") and turn:
+                                yield dict(e, kind="usage", total=info["total_token_usage"],
+                                           last=info.get("last_token_usage"), baseline=self.baselines.pop(f, None))
                         elif group == "event_msg" and typ in (
                             "task_started",
                             "task_complete",

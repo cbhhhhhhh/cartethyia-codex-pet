@@ -40,9 +40,6 @@ else
   source_app=".build/Codex Pet Plus.app"
 fi
 codesign --verify --deep --strict "$source_app"
-if [[ -f "${CODEX_HOME:-$HOME/.codex}/pets/cartethyia/pet.json" && -f scripts/install-art.sh && -f scripts/render-repertoire.swift ]]; then
-  scripts/install-art.sh "$base"
-fi
 stage_dir=$(mktemp -d "$HOME/Applications/.pet-plus-install.XXXXXX")
 trap 'rm -rf "$stage_dir"' EXIT
 ditto "$source_app" "$stage_dir/new.app"

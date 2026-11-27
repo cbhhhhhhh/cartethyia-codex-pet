@@ -1,0 +1,346 @@
+{
+  "version": "2.3.0",
+  "build": "6",
+  "date": "2026-11-27",
+  "hardware": "Apple M4",
+  "macOS": "27.2.1",
+  "codex_desktop": "26.1120.50957",
+  "codex_cli": "0.171.0-alpha.13.2",
+  "platform": "arm64",
+  "minimum_macos": "27.2",
+  "release_zip_bytes": 64301104,
+  "sha256": "5c2f1f6d1923f27956f6519ecaf5e6791e1581c003ad0cbb31285a167dd01c7b",
+  "unit_tests": 37,
+  "package_install": {
+    "fresh_events": true,
+    "arm64_signature": true,
+    "signed_binary_and_zip_assets_match": true,
+    "local_text_inference": true,
+    "local_vision_inference": true,
+    "upgrade_downgrade_2_2_0": true,
+    "profile_bytes_preserved": true,
+    "uninstall_restored_codex_configuration": true
+  },
+  "ultra_fast": {
+    "model": "gpt-6.2-sol",
+    "effort": "ultra",
+    "service_tier": "priority",
+    "completed_root_threads": 2,
+    "verified_children": 2,
+    "children_finished": 2,
+    "root_executed_tool_after_children": true,
+    "child_success_notices": 0,
+    "root_success_notices": 1,
+    "independent_success_notices": 1,
+    "selectable_root_turns": 2,
+    "official_token_updates": 9,
+    "inherited_records_skipped": 37,
+    "expected_family_tokens": 125749,
+    "actual_family_tokens": 125749,
+    "main_turn_tokens": 93368,
+    "child_turn_tokens": [
+      16158,
+      16223
+    ],
+    "child_breakdown_matches_source": true,
+    "root_thread_usage_matches_official": true
+  },
+  "earlier_ultra_fast": {
+    "model": "gpt-6.2-sol",
+    "effort": "ultra",
+    "service_tier": "priority",
+    "completed_root_threads": 2,
+    "verified_children": 2,
+    "children_finished": 2,
+    "root_executed_tool_after_children": true,
+    "child_success_notices": 0,
+    "root_success_notices": 1,
+    "independent_success_notices": 1,
+    "selectable_root_turns": 2,
+    "official_token_updates": 10,
+    "inherited_records_skipped": 37,
+    "expected_family_tokens": 141623,
+    "actual_family_tokens": 141623,
+    "root_thread_usage_matches_official": true
+  },
+  "official_account_availability": {
+    "official_quota_call_succeeded": true,
+    "seven_day_window_visible": true,
+    "reset_visible": true,
+    "official_thread_usage_call_succeeded": true,
+    "thread_usage_supplied": false,
+    "estimated_credits_available": false,
+    "estimated_usd_available": false,
+    "native_usd_available": false
+  },
+  "native": {
+    "Interrupt-idle": true,
+    "Interrupt_ms": 17,
+    "PermissionRequest-waiting-for-approval": true,
+    "PermissionRequest_ms": 32,
+    "PostToolUse-thinking": true,
+    "PostToolUse_ms": 31,
+    "PreToolUse-working": true,
+    "PreToolUse_ms": 56,
+    "Stop-review": true,
+    "Stop_ms": 22,
+    "UserPromptSubmit-thinking": true,
+    "UserPromptSubmit_ms": 49,
+    "alpha_hit_test": true,
+    "back_and_forth_shake_launches": true,
+    "busy_chat_queues_real_notice": true,
+    "cartethyia_tide_scene": true,
+    "chat_remembers_manually_selected_picture": true,
+    "click_opens_attached_composer": true,
+    "click_wakes_sleeping_pet": true,
+    "closed_circle_hits_side_wall_and_rebounds": true,
+    "closed_circle_release_starts_flight": true,
+    "composer_has_system_key_focus": false,
+    "compositor_advances_individual_transparent_frames": true,
+    "connected_display_seam_and_gap_geometry": true,
+    "consecutive_chat_gestures_vary": true,
+    "context_menu_opens_todo_card": true,
+    "custom_clip_uses_its_frame_rate": true,
+    "double_drag_launches_opposite": true,
+    "drag_pause_places_in_midair_via_window_events": true,
+    "edge_and_floor_rebound": true,
+    "end_to_idle": true,
+    "error_expires": true,
+    "explicit_attached_details": true,
+    "floor_friction_settles": true,
+    "full_109_action_library_plays_native_clip": true,
+    "hidden_clip_stops_compositor": true,
+    "hidden_timers_stopped": true,
+    "horizontal_swipe_starts_flight_via_window_events": true,
+    "intermediate_text_observed": true,
+    "isolated_broker_ready": true,
+    "jsonl_error_ms": 198,
+    "jsonl_error_to_failed": true,
+    "local_reply_selects_emotional_portrait_and_character_gesture": true,
+    "lock_to_display_geometry": true,
+    "manual_live_tool_elapsed_and_plan": true,
+    "named_side_step_moves_desktop_position": true,
+    "new_turn_expires_old_queued_notice": true,
+    "ordinary_chat_is_text_only": true,
+    "pause_after_fast_gesture_still_parks": true,
+    "physical_displays": 1,
+    "pointer_keeps_desktop_clear": true,
+    "real_cli_completed_locally": true,
+    "real_cli_under_1s": true,
+    "real_context_menu_began_tracking": true,
+    "real_end_to_idle_sprite_ms": 844,
+    "real_start_to_sprite_ms": 95,
+    "restart_restores_settings": true,
+    "return_key_produces_actual_model_response_over_pet": true,
+    "right_click_gallery_has_real_thumbnails": true,
+    "right_click_opens_identified_turn_usage": true,
+    "screen_locked_during_test": true,
+    "selected_picture_kept_with_live_whisper": true,
+    "settings_apply_immediately": true,
+    "settings_window_opens": true,
+    "sleep_from_context_menu": true,
+    "timed_action_line": true,
+    "unconfirmed_stop_to_idle_ms": 722,
+    "v2_character_tracks_pointer_to_right": true,
+    "visible_transparent_floating_window": true,
+    "window_accepts_character_pixel": true,
+    "window_passes_transparent_pixel": true
+  },
+  "recovery": {
+    "broker_death_resets_sprite": true,
+    "broker_restarted": true,
+    "PreToolUse_ms": 15,
+    "PreToolUse-working": true,
+    "UserPromptSubmit_ms": 28,
+    "UserPromptSubmit-thinking": true
+  },
+  "routes": {
+    "local": {
+      "guarded_reply": true,
+      "text_only": true,
+      "protected_stream": true,
+      "chosen_picture_retained": true,
+      "interrupt_after_visible_delta": true,
+      "cancelled_turn_excluded_from_history": true,
+      "work_continued": true
+    },
+    "api": {
+      "guarded_reply": true,
+      "text_only": true,
+      "protected_stream": true,
+      "chosen_picture_retained": true,
+      "interrupt_after_visible_delta": true,
+      "cancelled_turn_excluded_from_history": true,
+      "work_continued": true
+    },
+    "codex": {
+      "guarded_reply": true,
+      "text_only": true,
+      "protected_stream": true,
+      "chosen_picture_retained": true,
+      "interrupt_after_visible_delta": true,
+      "cancelled_turn_excluded_from_history": true,
+      "work_continued": true
+    },
+    "companion_calls_separate": true
+  },
+  "companion_memory": {
+    "persona": true,
+    "stream": true,
+    "multi_turn": true,
+    "memory_after_restart": true,
+    "profile_isolation": true,
+    "cancel_during_stream": true,
+    "cancelled_turn_excluded": true,
+    "cleared_memory": true
+  },
+  "whisper": {
+    "seconds": 338.6,
+    "muted_at_due": true,
+    "focus_at_due": true,
+    "delivered": 1,
+    "immediate_repeat": false
+  },
+  "two_profiles": {
+    "separate_app_processes": true,
+    "real_second_window_displacement_points": 21,
+    "selectable_baked_clips": 109,
+    "leased_two_step_sequence": true,
+    "authenticated_bubble": true,
+    "production_gguf_to_visible_bubble": true,
+    "response_characters": 11,
+    "separate_histories": true
+  },
+  "browser": {
+    "sprite": true,
+    "ordinary_text_only": true,
+    "selected_gallery_illustration": true,
+    "circle_rebounds": true,
+    "full_character_library": true,
+    "right_click": true,
+    "focused_composer": true,
+    "enter_to_bubble": true,
+    "todo_list": true,
+    "history": true,
+    "fragment_removed": true
+  },
+  "artwork": {
+    "reference_commit": "fb38ce620576f5ed3735a99536d2b1a4a9eb313f",
+    "listed_reference_actions": 109,
+    "cartethyia_clips": 109,
+    "rgba_frames": 2616,
+    "distinct_keyframes_per_clip": 4,
+    "distinct_clips": 109,
+    "min_distinct_frames_per_clip": 20,
+    "transparent_backgrounds": true,
+    "disk_MiB": 31.45
+  },
+  "wire_latency_ms": {
+    "start": 0.31,
+    "tool": 0.34,
+    "approval": 0.35,
+    "result": 0.27,
+    "review": 0.24,
+    "end": 0.33,
+    "success_to_idle": 715,
+    "abort": 0.4,
+    "error": 0.29
+  },
+  "local_stream_cancel_ms": 11,
+  "installed_hook": {
+    "executable": "installed",
+    "first_ms": 8.137,
+    "samples": 62,
+    "median_ms": 5.531,
+    "p95_ms": 9.102,
+    "max_ms": 27.258
+  },
+  "isolated_visible_idle": {
+    "seconds": 144.59,
+    "gui_and_broker_mean_cpu_percent": 1.529,
+    "peak_12s_cpu_percent": 3.566,
+    "RSS_max_MiB": 115.33,
+    "automatic_character_animations": true,
+    "window_requested_visible": true
+  },
+  "one_hour": {
+    "initial_leaks": {
+      "gui": {
+        "returncode": 0,
+        "count": 0,
+        "bytes": 0
+      },
+      "broker": {
+        "returncode": 0,
+        "count": 0,
+        "bytes": 0
+      }
+    },
+    "final": {
+      "seconds": 3600.06,
+      "samples": 121,
+      "same_gui_and_broker": true,
+      "idle_sample_count": 0,
+      "idle_cpu": null,
+      "warm_resident_MiB": {
+        "median": 105.92,
+        "p95": 111.16,
+        "max": 131.64
+      },
+      "first_10m_median_rss": 109.94,
+      "last_10m_median_rss": 103.98,
+      "codex_probe_count": 5,
+      "codex_probes_passed": 5,
+      "cli_seconds": {
+        "median": 1.7,
+        "p95": 1.71,
+        "max": 2.041
+      },
+      "final_leaks": {
+        "gui": {
+          "returncode": 0,
+          "count": 0,
+          "bytes": 0
+        },
+        "broker": {
+          "returncode": 0,
+          "count": 0,
+          "bytes": 0
+        }
+      }
+    },
+    "cli_probes": [
+      {
+        "t": 0.0,
+        "ok": true,
+        "wall_seconds": 2.041
+      },
+      {
+        "t": 901.7,
+        "ok": true,
+        "wall_seconds": 1.691
+      },
+      {
+        "t": 1803.41,
+        "ok": true,
+        "wall_seconds": 1.712
+      },
+      {
+        "t": 2705.13,
+        "ok": true,
+        "wall_seconds": 1.693
+      },
+      {
+        "t": 3600.06,
+        "ok": true,
+        "wall_seconds": 1.698
+      }
+    ],
+    "observed_workload": {
+      "observed_seconds": 3035.92,
+      "aggregate_mean_percent": 0.868,
+      "p95_30s_percent": 1.763,
+      "samples": 101
+    }
+  }
+}

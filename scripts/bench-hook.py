@@ -1,5 +1,6 @@
-"""Measure a native hook in a temporary, isolated home. Leaves the user's pet alone."""
+"""Measure the installed or freshly compiled hook against an isolated Unix socket."""
 
+import argparse
 import json
 import os
 from pathlib import Path
@@ -11,24 +12,21 @@ import time
 import uuid
 
 root = Path(__file__).resolve().parents[1]
+parser = argparse.ArgumentParser(description=__doc__)
+parser.add_argument("--installed", action="store_true", help="benchmark the prewarmed release executable")
+parser.add_argument("--output", type=Path, default=root / ".build/hook-benchmark.json")
+args = parser.parse_args()
 with tempfile.TemporaryDirectory(dir="/tmp") as td:
     base = Path(td)
-    exe = base / "pet-hook"
-    subprocess.run(
-        [
-            "clang",
-            "-Os",
-            "-DPET_PLUS_TEST",
-            "-fobjc-arc",
-            "-Wno-incompatible-pointer-types",
-            "-framework",
-            "Foundation",
-            str(root / "src/hook.m"),
-            "-o",
-            str(exe),
-        ],
-        check=True,
-    )
+    if args.installed:
+        exe = Path.home() / "Applications/Codex Pet Plus.app/Contents/MacOS/pet-hook"
+    else:
+        exe = base / "pet-hook"
+        subprocess.run(
+            ["clang", "-Os", "-fobjc-arc", "-Wno-incompatible-pointer-types",
+             "-framework", "Foundation", str(root / "src/hook.m"), "-o", str(exe)],
+            check=True,
+        )
     (base / "token").write_text("isolated-fixture")
     with socket.socket(socket.AF_UNIX, socket.SOCK_DGRAM) as receiver:
         receiver.bind(str(base / "events.sock"))
@@ -61,11 +59,13 @@ with tempfile.TemporaryDirectory(dir="/tmp") as td:
             )
     warm = timings[1:]
     output = dict(
-        cold_ms=timings[0],
+        executable="installed" if args.installed else "newly_compiled",
+        first_ms=round(timings[0], 3),
         samples=len(warm),
-        median_ms=statistics.median(warm),
-        p95_ms=sorted(warm)[int(0.95 * (len(warm) - 1))],
-        max_ms=max(warm),
+        median_ms=round(statistics.median(warm), 3),
+        p95_ms=round(sorted(warm)[int(0.95 * (len(warm) - 1))], 3),
+        max_ms=round(max(warm), 3),
     )
     print(json.dumps(output))
-    (root / "docs/hook-benchmark.json").write_text(json.dumps(output, indent=2))
+    args.output.parent.mkdir(parents=True, exist_ok=True)
+    args.output.write_text(json.dumps(output, indent=2) + "\n")

@@ -9,6 +9,7 @@ int main(void) {
   @autoreleasepool {
     // The Stop family expects JSON. An empty object makes no decision.
     puts("{}");
+    if (getenv("PET_PLUS_INTERNAL")) return 0;
     NSString *base =
         [NSHomeDirectory() stringByAppendingPathComponent:
                                @"Library/Application Support/CodexPetPlus"];
@@ -44,7 +45,7 @@ int main(void) {
       @"SubagentStop" : @"stop-attempt"
     };
     NSString *event = j[@"hook_event_name"];
-    if (![event isKindOfClass:NSString.class] || !map[event])
+    if (![event isKindOfClass:NSString.class] || !map[event] || [event isEqual:@"SubagentStop"])
       return 0;
     NSMutableDictionary *m = [@{
       @"v" : @1,

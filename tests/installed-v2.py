@@ -1,5 +1,6 @@
 """Exercise two real packaged macOS companions with isolated stores and the installed GGUF."""
 
+import argparse
 import http.client
 import json
 import os
@@ -10,7 +11,11 @@ import time
 from urllib.parse import urlsplit
 
 root = Path(__file__).resolve().parents[1]
-app = Path.home() / "Applications/Codex Pet Plus.app/Contents/MacOS/Companion"
+parser = argparse.ArgumentParser(description=__doc__)
+parser.add_argument("--binary", type=Path, default=Path.home() / "Applications/Codex Pet Plus.app/Contents/MacOS/Companion")
+parser.add_argument("--output", type=Path, default=root / ".build/v23/two-pets.json")
+args = parser.parse_args()
+app = args.binary.resolve()
 runtime = Path.home() / "Library/Application Support/CodexPetPlus/runtime"
 out = {}
 
@@ -94,7 +99,7 @@ with tempfile.TemporaryDirectory(dir="/tmp") as temp:
 
         library = request(first, path="/v1/clips")
         assert len(library) == 109
-        assert library["牵着线放风筝"]["frames"] == 16
+        assert library["牵着线放风筝"]["frames"] == 24
         request(first, dict(op="play", action="clip:牵着线放风筝"))
         wait(lambda: request(first).get("action") == "clip:牵着线放风筝")
         out["selectable_baked_clips"] = len(library)
@@ -133,5 +138,6 @@ with tempfile.TemporaryDirectory(dir="/tmp") as temp:
                 p.terminate()
         for p in processes:
             p.wait(timeout=6)
-(root / "docs/v2-installed-qa.json").write_text(json.dumps(out, indent=2))
+args.output.parent.mkdir(parents=True, exist_ok=True)
+args.output.write_text(json.dumps(out, indent=2) + "\n")
 print(out)

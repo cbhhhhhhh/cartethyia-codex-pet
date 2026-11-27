@@ -1,5 +1,6 @@
 """Use public app-server stdio + the Pets MCP connector for one account preference."""
 
+from collections import deque
 import json
 from pathlib import Path
 import os
@@ -14,8 +15,25 @@ import time
 BASE = Path.home() / "Library/Application Support/CodexPetPlus"
 
 
+def codex_error(error):
+    obj = error if isinstance(error, dict) else {}
+    details = json.dumps(obj, ensure_ascii=False).lower()
+    families = (
+        (("usagelimitexceeded", "insufficient_quota", "usage limit", "quota exceeded"), "账户额度已用尽，请查看重置时间。"),
+        (("unauthorized", "not logged", "authentication", "401"), "账户登录已失效，请在 Codex 重新登录。"),
+        (("modelnotfound", "model_not_found", "does not exist", "not supported", "unknown model", "unavailable model"), "所选模型当前不可用，请刷新模型列表或跟随 Codex 默认模型。"),
+        (("serveroverloaded", "rate limit", "ratelimit", "429"), "服务繁忙或触发频率限制，请稍后重试。"),
+        (("contextwindowexceeded", "context_length"), "对话超过模型上下文长度，可减少记忆轮数。"),
+        (("httpconnectionfailed", "disconnected", "connection refused"), "无法连接模型服务，请检查网络。"),
+    )
+    for terms, message in families:
+        if any(term in details for term in terms):
+            return message
+    return "服务返回错误" + ("（" + str(obj["code"]) + "）" if isinstance(obj.get("code"), int) else "。")
+
+
 class Rpc:
-    def __init__(self):
+    def __init__(self, options=(), cwd=None):
         exe = shutil.which("codex")
         if not exe:
             candidates = (
@@ -28,7 +46,8 @@ class Rpc:
         if not exe:
             raise RuntimeError("请先安装 Codex 桌面版或将 codex 加入 PATH。")
         self.proc = subprocess.Popen(
-            [exe, "app-server", "--listen", "stdio://"],
+            [exe, "app-server", "--listen", "stdio://", *options],
+            env=dict(os.environ, PET_PLUS_INTERNAL="1"), cwd=cwd,
             stdin=subprocess.PIPE,
             stdout=subprocess.PIPE,
             stderr=subprocess.DEVNULL,
@@ -36,6 +55,7 @@ class Rpc:
             bufsize=1,
         )
         self.responses = queue.Queue()
+        self.pending = deque(maxlen=4096)
 
         def read():
             for line in self.proc.stdout:
@@ -64,20 +84,32 @@ class Rpc:
             if msg is None:
                 raise RuntimeError("本地 Codex 服务不可用")
             if msg.get("id") != self.count or "method" in msg:
+                if "method" in msg:
+                    self.pending.append(msg)
                 continue
             if "error" in msg:
                 raise RuntimeError(
-                    method + " 返回错误 " + str(msg["error"].get("code", ""))
+                    method + " · " + codex_error(msg["error"])
                 )
             return msg["result"]
 
+    def next_event(self, timeout):
+        return self.pending.popleft() if self.pending else self.responses.get(timeout=timeout)
+
     def close(self):
-        self.proc.stdin.close()
+        try:
+            self.proc.stdin.close()
+        except BrokenPipeError:
+            pass
         try:
             self.proc.wait(timeout=3)
         except subprocess.TimeoutExpired:
             self.proc.terminate()
-            self.proc.wait(timeout=3)
+            try:
+                self.proc.wait(timeout=3)
+            except subprocess.TimeoutExpired:
+                self.proc.kill()
+                self.proc.wait()
 
 
 def run(action):

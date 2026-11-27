@@ -61,7 +61,7 @@ function show(kind, txt) {
   card.hidden = !kind;
   card.replaceChildren();
   card.dataset.kind = kind;
-  if (kind === "detail" || kind === "speech") {
+  if (kind === "detail" || kind === "speech" && state.picture) {
     const mood = kind === "detail"
       ? ({working: "focused", review: "focused", thinking: "curious", error: "sad", success: "happy",
           "waiting-for-approval": "curious"}[state.state] || "calm")
@@ -70,7 +70,18 @@ function show(kind, txt) {
     face.className = "cameo";
     face.setAttribute("aria-hidden", "true");
     const figure = document.createElement("i");
-    if (pack === "cartethyia" && ["calm","happy","curious","focused","sad"].includes(mood)) {
+    if (kind === "speech" && state.picture) {
+      fetch("/v1/picture/" + encodeURIComponent(state.picture), {headers:{Authorization:"Bearer "+token}})
+        .then(r => r.ok ? r.blob() : Promise.reject()).then(blob => {
+          if (!figure.isConnected) return;
+          const image = new Image(), url = URL.createObjectURL(blob);
+          image.onload = image.onerror = () => URL.revokeObjectURL(url);
+          image.src = url;
+          image.style.cssText = "width:100%;height:100%;object-fit:contain";
+          figure.append(image);
+        }).catch(() => {});
+      figure.className = "illustration";
+    } else if (pack === "cartethyia" && ["calm","happy","curious","focused","sad"].includes(mood)) {
       figure.style.backgroundImage = "url(/portraits/" + mood + "-" + ((Number(state.variant)||0)%2) + ".png)";
       figure.className = "illustration";
     } else if (atlas) {
@@ -242,6 +253,49 @@ let clips = {},
   clipName = "",
   clipURL = "",
   clipStarted = 0;
+function galleryCard() {
+  show("gallery", "");
+  for (const p of state.gallery || []) {
+    const button = document.createElement("button");
+    button.textContent = p.title;
+    button.title = p.description;
+    if (/^(calm|curious|happy|sad|focused)-[01]$/.test(p.id)) {
+      const img = document.createElement("img");
+      img.src = "/portraits/" + p.id + ".png";
+      img.width = 36;
+      img.height = 36;
+      img.style.objectFit = "contain";
+      button.prepend(img);
+    } else {
+      fetch("/v1/picture/" + encodeURIComponent(p.id), {headers:{Authorization:"Bearer "+token}})
+        .then(r => r.ok ? r.blob() : Promise.reject()).then(blob => {
+          if (!button.isConnected) return;
+          const img = new Image(36,36), url = URL.createObjectURL(blob);
+          img.onload = img.onerror = () => URL.revokeObjectURL(url);
+          img.style.objectFit = "contain"; img.src = url; button.prepend(img);
+        }).catch(() => {});
+    }
+    button.onclick = () => { show(""); cmd("whisper",{picture:p.id}); };
+    card.append(button);
+  }
+  position();
+}
+function usageCard(data = state.usage) {
+  show("usage","");
+  const select = document.createElement("select");
+  for (const option of data?.options || []) select.add(new Option(option.label, option.key));
+  if (data?.selected) select.value = data.selected;
+  select.onchange = () => cmd("usage",{selected:select.value});
+  if (select.length) card.append(select);
+  const text = document.createElement("p");
+  text.style.whiteSpace = "pre-line";
+  text.textContent = data?.text || "正在读取本机回合记录…";
+  const close = document.createElement("button");
+  close.textContent = "收起";
+  close.onclick = () => { cmd("usage-close"); show(""); };
+  card.append(text,close);
+  position();
+}
 function libraryCard() {
   show("library");
   const select = document.createElement("select"),
@@ -296,7 +350,9 @@ function act(op) {
     return;
   }
   menu.hidden = true;
-  if (op === "todos" || op === "history") listCard(op);
+  if (op === "gallery") galleryCard();
+  else if (op === "usage") { usageCard(); cmd("usage"); }
+  else if (op === "todos" || op === "history") listCard(op);
   else if (op === "home") home();
   else if (op === "detail") detail();
   else if (op === "compose") compose();
@@ -313,12 +369,6 @@ pet.oncontextmenu = (e) => {
   menu.hidden = false;
   menu.style.left = clamp(e.clientX, 0, innerWidth - menu.offsetWidth) + "px";
   menu.style.top = clamp(e.clientY, 0, innerHeight - menu.offsetHeight) + "px";
-};
-pet.onpointerenter = () => {
-  if (!mode && !grab) detail();
-};
-pet.onpointerleave = () => {
-  if (mode === "detail") show("");
 };
 pet.onkeydown = (e) => {
   if (e.key === "Enter" || e.key.toLowerCase() === "t") compose();
@@ -459,11 +509,12 @@ async function poll() {
     await selectArt(state.action);
     row = Math.max(0, rows.indexOf(state.action || "idle"));
     if (mode === "detail") detail();
+    if (mode === "usage" && document.activeElement?.tagName !== "SELECT") usageCard();
     const version = state.bubbleId ?? state.bubble;
     if (version !== lastBubble) {
       lastBubble = version;
       clearTimeout(bubbleTimer);
-      if (!["compose", "history", "todos", "library"].includes(mode)) {
+      if (!["compose", "history", "todos", "library", "usage", "gallery", "detail"].includes(mode)) {
         show(state.bubble ? "speech" : "", state.bubble);
         if (state.bubble && state.duration > 0)
           bubbleTimer = setTimeout(() => {

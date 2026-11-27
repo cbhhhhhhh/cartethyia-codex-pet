@@ -55,7 +55,7 @@ func snapshot(_ label: String) {
   {
     try? png.write(
       to: URL(fileURLWithPath: env["PET_PLUS_PREVIEW"]!).deletingLastPathComponent()
-        .appendingPathComponent("v21-" + label + ".png"))
+        .appendingPathComponent("v23-" + label + ".png"))
   }
 }
 let thread = UUID().uuidString.lowercased()
@@ -261,7 +261,10 @@ _ = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: false) { _ in
       "timestamp": stamp.string(from: Date()), "type": "event_msg",
       "payload": ["type": "error", "turn_id": UUID().uuidString.lowercased()],
     ]
-    try! (JSONSerialization.data(withJSONObject: errorRecord) + Data([10])).write(to: f)
+    let header: [String: Any] = ["type": "session_meta","timestamp":stamp.string(from: Date()),
+      "payload":["id":thread,"timestamp":stamp.string(from: Date(timeIntervalSinceNow: -1)),"source":"vscode"]]
+    try! (JSONSerialization.data(withJSONObject: header) + Data([10]) +
+          JSONSerialization.data(withJSONObject: errorRecord) + Data([10])).write(to: f)
     let errTime = wait { host.s.status == "error" && names[host.sprite.row] == "failed" }
     check(errTime < 1000 && host.s.status == "error", "jsonl_error_to_failed")
     report["jsonl_error_ms"] = Int(errTime.rounded())
@@ -287,10 +290,12 @@ _ = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: false) { _ in
     }
     func center() -> CGPoint { CGPoint(x: host.overlay.frame.midX, y: host.overlay.frame.midY) }
     movePointer(mid)
-    _ = wait { host.bubble?.isVisible == true && host.card.mode == .hover }
-    check(
-      host.bubble?.parent === host.overlay && host.card.mode == .hover,
-      "pointer_opens_anchored_detail_panel")
+    spin(0.45)
+    check(host.bubble?.isVisible != true, "pointer_keeps_desktop_clear")
+    let details = NSMenuItem()
+    details.representedObject = "details"
+    host.petCommand(details)
+    check(host.bubble?.parent === host.overlay && host.card.mode == .details, "explicit_attached_details")
     turn = UUID().uuidString.lowercased()
     hook("UserPromptSubmit")
     _ = wait { host.s.status == "thinking" }
@@ -316,10 +321,11 @@ _ = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: false) { _ in
     hook("PreToolUse")
     _ = wait { host.s.tool == "demo" }
     check(
-      host.card.mode == .hover && host.s.since > 0 && host.s.tool == "demo"
-        && host.s.progress.contains("1/2"), "hover_live_tool_elapsed_and_plan")
+      host.card.mode == .details && host.s.since > 0 && host.s.tool == "demo"
+        && host.s.progress.contains("1/2"), "manual_live_tool_elapsed_and_plan")
     spin(0.12)
-    snapshot("hover")
+    snapshot("details")
+    host.closeCard()
     hook("Interrupt")
     _ = wait { host.s.status == "idle" }
     let reference = CGPoint(x: screen.midX - 140, y: screen.midY)
@@ -392,6 +398,12 @@ _ = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: false) { _ in
     check(
       host.card.mode == .todos && host.bubble?.parent === host.overlay,
       "context_menu_opens_todo_card")
+    host.closeCard()
+    menuAction("usage")
+    _ = wait { !host.s.usageChoices.isEmpty && !host.s.usageSelected.isEmpty }
+    check(host.card.mode == .usage && host.bubble?.parent === host.overlay
+      && host.s.usageChoices.contains { $0.key == host.s.usageSelected }
+      && host.s.usage.contains("本次请求"), "right_click_opens_identified_turn_usage")
     host.closeCard()
     menuAction("sleep")
     check(host.sleeping && host.bubble?.isVisible != true, "sleep_from_context_menu")
@@ -510,7 +522,7 @@ _ = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: false) { _ in
     var partialSeen = false
     while Date() < until && !(host.s.pairs.count > originalPairCount && !host.s.talking) {
       spin(0.02)
-      if host.card.speaker == "本地对话"
+      if host.card.speaker == "生成提示"
         || (host.s.pairs.count == originalPairCount && !host.s.talking && host.card.mode == .speech)
       {
         break
@@ -531,18 +543,63 @@ _ = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: false) { _ in
       "return_key_produces_actual_model_response_over_pet")
     check(host.card.mood == CardMood(emotion: host.s.emotion) && !host.lastChatGesture.isEmpty,
           "local_reply_selects_emotional_portrait_and_character_gesture")
+    check(host.card.picture.isEmpty, "ordinary_chat_is_text_only")
     let previous = host.lastChatGesture
     host.handle(["type":"reply","text":host.card.message,"emotion":host.s.emotion,"action":"idle"])
     check(!host.lastChatGesture.isEmpty && host.lastChatGesture != previous, "consecutive_chat_gestures_vary")
     report["intermediate_text_observed"] = partialSeen
     snapshot("reply")
+    host.closeCard()
+    let gallery = host.petMenu().items.first(where: { $0.title == "配图" })?.submenu
+    let illustrated = gallery?.items.filter { $0.image != nil } ?? []
+    check(illustrated.count >= 10, "right_click_gallery_has_real_thumbnails")
+    let favorite = illustrated.first { $0.representedObject as? String == "picture:happy-1" }!
+    host.petCommand(favorite)
+    let pictureDeadline = Date().addingTimeInterval(50)
+    while Date() < pictureDeadline && host.card.picture != "happy-1" { spin(0.05) }
+    check(host.card.picture == "happy-1" && !host.card.message.isEmpty, "selected_picture_kept_with_live_whisper")
+    snapshot("selected-picture")
+    host.closeCard()
+    host.ask("刚才那张图再给我看看。")
+    let replayDeadline = Date().addingTimeInterval(50)
+    while Date() < replayDeadline && host.s.talking { spin(0.05) }
+    check(host.s.pairs.last?.picture == "happy-1", "chat_remembers_manually_selected_picture")
+    host.closeCard()
+    host.s.status = "idle"
+    let manual = NSMenuItem()
+    manual.representedObject = "clip:提裙行骑士礼"
+    host.petCommand(manual)
+    _ = wait { host.bubble?.isVisible == true && host.card.mode == .speech }
+    check(host.bubble?.isVisible == true && !host.card.message.isEmpty, "timed_action_line")
+    snapshot("action-cue")
+    host.closeCard()
+    let startX = host.overlay.frame.minX
+    _ = host.performClip("骑士的横步", speak: false)
+    spin(0.65)
+    check(abs(host.overlay.frame.minX - startX) > 6, "named_side_step_moves_desktop_position")
+    host.stopFlight()
+    host.s.talking = true
+    let testNotice = UUID().uuidString.lowercased()
+    host.sayBubble("这个回合完成了", thread: thread, turn: testNotice, mood: .happy)
+    check(host.pendingNotices.contains { $0.turn == testNotice }, "busy_chat_queues_real_notice")
+    host.handle(["type":"turn-start","thread":thread,"turn":UUID().uuidString.lowercased()])
+    check(!host.pendingNotices.contains { $0.turn == testNotice }, "new_turn_expires_old_queued_notice")
+    host.s.talking = false
     movePointer(oldPointer)
     if let library = host.sprite.clipLibrary, library.clips["牵着线放风筝"] != nil {
       check(
         library.clips.count == 109 && host.sprite.playClip("牵着线放风筝")
-          && host.sprite.activeClip?.frames.count == 16, "full_109_action_library_plays_native_clip"
+          && host.sprite.activeClip?.frames.count == 24, "full_109_action_library_plays_native_clip"
       )
-      check(host.sprite.clipTimer?.isValid == true, "custom_clip_uses_its_frame_rate")
+      check(host.sprite.clipLayer.animation(forKey: "frames") != nil, "custom_clip_uses_its_frame_rate")
+      let firstRect = host.sprite.clipLayer.presentation()?.contentsRect
+      spin(0.36)
+      let nextRect = host.sprite.clipLayer.presentation()?.contentsRect
+      check(nextRect != nil && firstRect != nextRect && (nextRect?.width ?? 1) < 0.05,
+            "compositor_advances_individual_transparent_frames")
+      host.timers(false)
+      check(host.sprite.clipLayer.animation(forKey: "frames") == nil, "hidden_clip_stops_compositor")
+      host.timers(true)
     }
     host.stopFlight()
     host.s.status = "idle"

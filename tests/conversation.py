@@ -148,5 +148,7 @@ if __name__ == "__main__":
         else:
             name = "conversation"
             result = chat(base)
-        (ROOT / "docs" / f"{name}-qa.json").write_text(json.dumps(result, indent=2))
+        output = ROOT / ".build/v23" / f"{name}.json"
+        output.parent.mkdir(parents=True, exist_ok=True)
+        output.write_text(json.dumps(result, indent=2))
         print(result)

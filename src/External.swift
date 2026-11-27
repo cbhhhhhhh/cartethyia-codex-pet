@@ -82,7 +82,7 @@ extension Host {
     case "cancel":
       cancel()
       closeCard()
-    case "history-delete", "whisper", "weather", "todo-add", "todo-toggle", "todo-delete":
+    case "usage", "usage-close", "history-delete", "whisper", "weather", "todo-add", "todo-toggle", "todo-delete":
       send(cmd)
     case "todos": showTodos()
     case "quota":
@@ -105,7 +105,7 @@ extension Host {
       act(key)
     } else {
       let clip = String(key.hasPrefix("clip:") ? key.dropFirst(5) : key[...])
-      guard sprite.playClip(clip) else { return false }
+      guard performClip(clip, speak: false) else { return false }
     }
     if stageReady {
       let action = sprite.activeClip.map { "clip:" + $0.key } ?? names[sprite.row]

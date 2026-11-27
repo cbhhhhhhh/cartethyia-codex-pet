@@ -71,6 +71,13 @@ def wire():
         base = Path(d)
         events = queue.Queue()
         env = dict(os.environ, PET_PLUS_HOME=d, CODEX_HOME=str(base / "codex"))
+        thread = str(uuid.uuid4())
+        from datetime import datetime, timezone
+        bucket = base/"codex/sessions"/datetime.now().strftime("%Y/%m/%d")
+        bucket.mkdir(parents=True)
+        stamp = datetime.now(timezone.utc).isoformat()
+        (bucket/("rollout-"+thread+".jsonl")).write_text(json.dumps(dict(timestamp=stamp,type="session_meta",
+              payload=dict(id=thread,source="cli",timestamp=stamp)))+"\n")
         p = subprocess.Popen(
             ["/usr/bin/python3", "-B", "-u", str(src / "broker.py")],
             env=env,
@@ -82,7 +89,6 @@ def wire():
         threading.Thread(
             target=lambda: [events.put(json.loads(l)) for l in p.stdout], daemon=True
         ).start()
-        thread = str(uuid.uuid4())
         turn = str(uuid.uuid4())
 
         def wait(state):
@@ -144,6 +150,8 @@ def wire():
 if __name__ == "__main__":
     r = dict(wire_ms=wire(), chat=offline_chat())
     print(json.dumps(r, ensure_ascii=False, indent=2))
-    (P / "docs/integration.json").write_text(
+    output = P / ".build/v23/integration.json"
+    output.parent.mkdir(parents=True, exist_ok=True)
+    output.write_text(
         json.dumps(r, ensure_ascii=False, indent=2)
     )

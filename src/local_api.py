@@ -35,6 +35,8 @@ CONTROL = {
     "todos",
     "weather",
     "quota",
+    "usage",
+    "usage-close",
     "clear",
     "todo-add",
     "todo-toggle",
@@ -128,6 +130,17 @@ class LocalStage:
                                 leased=bool(stage.lock_id()),
                             ),
                         )
+                    if path.startswith("/v1/picture/"):
+                        from dialogue import gallery
+                        pic = gallery(folder, snapshot.get("pack", "cartethyia")).get(unquote(path[len("/v1/picture/"):]))
+                        if pic:
+                            img = Path(pic["file"])
+                            try:
+                                if img.stat().st_size <= 16 * 1024 * 1024:
+                                    return self.answer(200, img.read_bytes(), "image/png" if img.suffix.lower() == ".png" else "image/jpeg")
+                            except OSError:
+                                pass
+                        return self.answer(404, {})
                     if path == "/v1/clips" or path.startswith("/v1/clip/"):
                         pack = snapshot.get("pack", "cartethyia")
                         if (
@@ -138,7 +151,7 @@ class LocalStage:
                             return self.answer(404, {})
                         local, shipped = pet_roots(pack)
                         private = folder.parent.parent / "appearance" / pack / "current"
-                        pool = next((p for p in (local, private, shipped)
+                        pool = next((p for p in (local, shipped, private)
                                      if (p / "pet-plus.json").is_file()), local).resolve()
                         try:
                             clips = json.loads((pool / "pet-plus.json").read_text())[

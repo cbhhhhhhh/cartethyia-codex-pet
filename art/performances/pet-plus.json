@@ -1,0 +1,852 @@
+{
+  "version": 2,
+  "clips": {
+    "发梢随呼吸": {
+      "file": "clips/daiji-huxi-xiuxian.webp",
+      "group": "待机",
+      "frames": 24,
+      "fps": 10,
+      "weight": 1
+    },
+    "侧耳听风": {
+      "file": "clips/dongzhangxiwang.webp",
+      "group": "待机",
+      "frames": 24,
+      "fps": 10,
+      "weight": 1
+    },
+    "骑士的横步": {
+      "file": "clips/pangxie-zoulu.webp",
+      "group": "移动",
+      "frames": 24,
+      "fps": 10,
+      "weight": 1,
+      "travel": "side"
+    },
+    "踏风悬浮": {
+      "file": "clips/yuandi-piaofu-tabu.webp",
+      "group": "移动",
+      "frames": 24,
+      "fps": 10,
+      "weight": 1,
+      "travel": "float"
+    },
+    "踏着月光折返": {
+      "file": "clips/yuandi-zuozhuan-benpao.webp",
+      "group": "移动",
+      "frames": 24,
+      "fps": 10,
+      "weight": 1,
+      "travel": "return"
+    },
+    "小声哼一支歌": {
+      "file": "clips/youxian-hengga.webp",
+      "group": "生活",
+      "frames": 24,
+      "fps": 10,
+      "weight": 1
+    },
+    "清晨舒展双臂": {
+      "file": "clips/chaoda-shenlanyao.webp",
+      "group": "生活",
+      "frames": 24,
+      "fps": 10,
+      "weight": 1
+    },
+    "敲两下茶桌": {
+      "file": "clips/yuandi-qiaoji-zhuomian-hudong.webp",
+      "group": "生活",
+      "frames": 24,
+      "fps": 10,
+      "weight": 1
+    },
+    "蹲下系好鞋带": {
+      "file": "clips/yuandi-zhongli-xiadun-yasuo.webp",
+      "group": "生活",
+      "frames": 24,
+      "fps": 10,
+      "weight": 1
+    },
+    "遮住一个哈欠": {
+      "file": "clips/haqian-liantian.webp",
+      "group": "生活",
+      "frames": 24,
+      "fps": 10,
+      "weight": 1
+    },
+    "靠着围巾小睡": {
+      "file": "clips/yuandi-xiaoqi-chenmian.webp",
+      "group": "生活",
+      "frames": 24,
+      "fps": 10,
+      "weight": 1
+    },
+    "提裙行骑士礼": {
+      "file": "clips/nvpu-quxi-liyi.webp",
+      "group": "生活",
+      "frames": 24,
+      "fps": 10,
+      "weight": 1
+    },
+    "被小鸟吓了一跳": {
+      "file": "clips/beixiayitiao-zhamao.webp",
+      "group": "生活",
+      "frames": 24,
+      "fps": 10,
+      "weight": 1
+    },
+    "转一圈给你看": {
+      "file": "clips/xiaofudu-yuandi-360du-xuanzhuan-zhanshi.webp",
+      "group": "生活",
+      "frames": 24,
+      "fps": 10,
+      "weight": 1
+    },
+    "偷吃一块饼干": {
+      "file": "clips/touchi-lingshi-bei-zhuazhu.webp",
+      "group": "生活",
+      "frames": 24,
+      "fps": 10,
+      "weight": 1
+    },
+    "用鞋跟点地": {
+      "file": "clips/yong-jingyu-weiba-paidadi.webp",
+      "group": "生活",
+      "frames": 24,
+      "fps": 10,
+      "weight": 1
+    },
+    "睡眼惺忪地醒来": {
+      "file": "clips/da-keshui-bei-jingxing.webp",
+      "group": "生活",
+      "frames": 24,
+      "fps": 10,
+      "weight": 1
+    },
+    "看看贝雷帽戴正了吗": {
+      "file": "clips/zhao-jingzi.webp",
+      "group": "生活",
+      "frames": 24,
+      "fps": 10,
+      "weight": 1
+    },
+    "在围巾边比对新丝带": {
+      "file": "clips/zhengti-huanzhuang-shise.webp",
+      "group": "生活",
+      "frames": 24,
+      "fps": 10,
+      "weight": 1
+    },
+    "写下旅途一笔": {
+      "file": "clips/qingkuai-jilu.webp",
+      "group": "生活",
+      "frames": 24,
+      "fps": 10,
+      "weight": 1
+    },
+    "帮你敲几行代码": {
+      "file": "clips/xie-daima.webp",
+      "group": "生活",
+      "frames": 24,
+      "fps": 10,
+      "weight": 1
+    },
+    "夏日摇扇": {
+      "file": "clips/yaoshan-naliang.webp",
+      "group": "生活",
+      "frames": 24,
+      "fps": 10,
+      "weight": 1
+    },
+    "饭后刷刷牙": {
+      "file": "clips/chenjian-shuaya.webp",
+      "group": "生活",
+      "frames": 24,
+      "fps": 10,
+      "weight": 1
+    },
+    "转动小魔方": {
+      "file": "clips/yuandi-zhuanxin-wan-mofang.webp",
+      "group": "玩耍",
+      "frames": 24,
+      "fps": 10,
+      "weight": 1
+    },
+    "陪小车跑一段": {
+      "file": "clips/yuandi-dunxia-wan-wanju-qiche.webp",
+      "group": "玩耍",
+      "frames": 24,
+      "fps": 10,
+      "weight": 1,
+      "travel": "side"
+    },
+    "吹出一串水泡": {
+      "file": "clips/jingyu-tu-paopao-texiao.webp",
+      "group": "玩耍",
+      "frames": 24,
+      "fps": 10,
+      "weight": 1
+    },
+    "跃起接住星片": {
+      "file": "clips/yuandi-tiaoyue-zhuasui-touding-wupin.webp",
+      "group": "玩耍",
+      "frames": 24,
+      "fps": 10,
+      "weight": 1
+    },
+    "棋差一步皱眉": {
+      "file": "clips/wan-youxi-qijibaituai.webp",
+      "group": "玩耍",
+      "frames": 24,
+      "fps": 10,
+      "weight": 1
+    },
+    "向远处洒出水花": {
+      "file": "clips/wan-shuiqiang.webp",
+      "group": "玩耍",
+      "frames": 24,
+      "fps": 10,
+      "weight": 1
+    },
+    "拉一段小提琴": {
+      "file": "clips/xiaotiqin-yanzou.webp",
+      "group": "玩耍",
+      "frames": 24,
+      "fps": 10,
+      "weight": 1
+    },
+    "召来海潮的回声": {
+      "file": "clips/lanjing-xianshi.webp",
+      "group": "玩耍",
+      "frames": 24,
+      "fps": 10,
+      "weight": 1
+    },
+    "城堡里的圆舞曲": {
+      "file": "clips/youya-nvpuwu.webp",
+      "group": "玩耍",
+      "frames": 24,
+      "fps": 10,
+      "weight": 1
+    },
+    "踩着节拍摇摆": {
+      "file": "clips/qingkuai-yaobaiwu.webp",
+      "group": "玩耍",
+      "frames": 24,
+      "fps": 10,
+      "weight": 1
+    },
+    "困倦也要跳支舞": {
+      "file": "clips/keai-zhaiwu.webp",
+      "group": "玩耍",
+      "frames": 24,
+      "fps": 10,
+      "weight": 1
+    },
+    "吹起淡紫色气球": {
+      "file": "clips/chui-qiqiu.webp",
+      "group": "玩耍",
+      "frames": 24,
+      "fps": 10,
+      "weight": 1
+    },
+    "被小兔子围住": {
+      "file": "clips/dongwu-huanrao.webp",
+      "group": "玩耍",
+      "frames": 24,
+      "fps": 10,
+      "weight": 1
+    },
+    "牵着线放风筝": {
+      "file": "clips/fang-fengzheng.webp",
+      "group": "玩耍",
+      "frames": 24,
+      "fps": 10,
+      "weight": 1,
+      "travel": "side"
+    },
+    "拆开丝带礼物": {
+      "file": "clips/chai-liwu.webp",
+      "group": "玩耍",
+      "frames": 24,
+      "fps": 10,
+      "weight": 1
+    },
+    "从披风中变出白鸽": {
+      "file": "clips/bian-gezi.webp",
+      "group": "玩耍",
+      "frames": 24,
+      "fps": 10,
+      "weight": 1
+    },
+    "翻出红心纸牌": {
+      "file": "clips/puke-moshu.webp",
+      "group": "玩耍",
+      "frames": 24,
+      "fps": 10,
+      "weight": 1
+    },
+    "看木陀螺转呀转": {
+      "file": "clips/chou-tuoluo.webp",
+      "group": "玩耍",
+      "frames": 24,
+      "fps": 10,
+      "weight": 1
+    },
+    "吹响旅人的短笛": {
+      "file": "clips/chui-dizi.webp",
+      "group": "玩耍",
+      "frames": 24,
+      "fps": 10,
+      "weight": 1
+    },
+    "让蝴蝶落在花上": {
+      "file": "clips/hudie-mifeng-huanrao-touding-kaihua.webp",
+      "group": "玩耍",
+      "frames": 24,
+      "fps": 10,
+      "weight": 1
+    },
+    "蹲下来摸猫": {
+      "file": "clips/lu-mao.webp",
+      "group": "玩耍",
+      "frames": 24,
+      "fps": 10,
+      "weight": 1
+    },
+    "掌心绽开一朵花": {
+      "file": "clips/pingkong-shenghua.webp",
+      "group": "玩耍",
+      "frames": 24,
+      "fps": 10,
+      "weight": 1
+    },
+    "骑一会小木马": {
+      "file": "clips/qi-muma.webp",
+      "group": "玩耍",
+      "frames": 24,
+      "fps": 10,
+      "weight": 1
+    },
+    "抛接三颗彩球": {
+      "file": "clips/sanqiu-paojie.webp",
+      "group": "玩耍",
+      "frames": 24,
+      "fps": 10,
+      "weight": 1
+    },
+    "踢起一支羽毽": {
+      "file": "clips/ti-jianzi.webp",
+      "group": "玩耍",
+      "frames": 24,
+      "fps": 10,
+      "weight": 1
+    },
+    "在棋盘上落子": {
+      "file": "clips/xiawuziqi.webp",
+      "group": "玩耍",
+      "frames": 24,
+      "fps": 10,
+      "weight": 1
+    },
+    "坐上花藤秋千": {
+      "file": "clips/dangqiuqian.webp",
+      "group": "玩耍",
+      "frames": 24,
+      "fps": 10,
+      "weight": 1
+    },
+    "午间捧起饭团": {
+      "file": "clips/chi-baifan.webp",
+      "group": "餐桌",
+      "frames": 24,
+      "fps": 10,
+      "weight": 1
+    },
+    "掰开一块曲奇": {
+      "file": "clips/dakou-chi-lingshi.webp",
+      "group": "餐桌",
+      "frames": 24,
+      "fps": 10,
+      "weight": 1
+    },
+    "尝一颗字节糖": {
+      "file": "clips/chi-token.webp",
+      "group": "餐桌",
+      "frames": 24,
+      "fps": 10,
+      "weight": 1
+    },
+    "早餐可颂出炉": {
+      "file": "clips/chi-zaocan.webp",
+      "group": "餐桌",
+      "frames": 24,
+      "fps": 10,
+      "weight": 1
+    },
+    "打开野餐便当": {
+      "file": "clips/chi-wucan.webp",
+      "group": "餐桌",
+      "frames": 24,
+      "fps": 10,
+      "weight": 1
+    },
+    "营地的热汤": {
+      "file": "clips/chi-wancan.webp",
+      "group": "餐桌",
+      "frames": 24,
+      "fps": 10,
+      "weight": 1
+    },
+    "接住融化的冰淇淋": {
+      "file": "clips/chi-bingqilin-ronghua.webp",
+      "group": "餐桌",
+      "frames": 24,
+      "fps": 10,
+      "weight": 1
+    },
+    "尝尝秋日螃蟹": {
+      "file": "clips/chi-dazhaxie.webp",
+      "group": "餐桌",
+      "frames": 24,
+      "fps": 10,
+      "weight": 1
+    },
+    "拿起一串糖葫芦": {
+      "file": "clips/chi-tanghulu.webp",
+      "group": "餐桌",
+      "frames": 24,
+      "fps": 10,
+      "weight": 1
+    },
+    "吹一吹长寿面": {
+      "file": "clips/chi-changshoumian.webp",
+      "group": "餐桌",
+      "frames": 24,
+      "fps": 10,
+      "weight": 1
+    },
+    "切开清凉西瓜": {
+      "file": "clips/chi-xigua.webp",
+      "group": "餐桌",
+      "frames": 24,
+      "fps": 10,
+      "weight": 1
+    },
+    "在锅边涮菜": {
+      "file": "clips/shuan-huoguo.webp",
+      "group": "餐桌",
+      "frames": 24,
+      "fps": 10,
+      "weight": 1
+    },
+    "从落叶堆里探头": {
+      "file": "clips/beiluoye-yanmo.webp",
+      "group": "节令",
+      "frames": 24,
+      "fps": 10,
+      "weight": 1
+    },
+    "月下分你一块月饼": {
+      "file": "clips/zhongqiu-shangyue-chi-yuebing.webp",
+      "group": "节令",
+      "frames": 24,
+      "fps": 10,
+      "weight": 1
+    },
+    "堆出围巾雪人": {
+      "file": "clips/duixueren.webp",
+      "group": "节令",
+      "frames": 24,
+      "fps": 10,
+      "weight": 1
+    },
+    "夜空点起烟花": {
+      "file": "clips/fang-yanhua.webp",
+      "group": "节令",
+      "frames": 24,
+      "fps": 10,
+      "weight": 1
+    },
+    "端午剥开粽叶": {
+      "file": "clips/chi-zongzi.webp",
+      "group": "节令",
+      "frames": 24,
+      "fps": 10,
+      "weight": 1
+    },
+    "烤炉旁等年糕": {
+      "file": "clips/chi-niangao.webp",
+      "group": "节令",
+      "frames": 24,
+      "fps": 10,
+      "weight": 1
+    },
+    "春日揉好青团": {
+      "file": "clips/chi-qingtuan.webp",
+      "group": "节令",
+      "frames": 24,
+      "fps": 10,
+      "weight": 1
+    },
+    "熬好一锅腊八粥": {
+      "file": "clips/chi-labazhou.webp",
+      "group": "节令",
+      "frames": 24,
+      "fps": 10,
+      "weight": 1
+    },
+    "登高分享重阳糕": {
+      "file": "clips/chi-chongyanggao.webp",
+      "group": "节令",
+      "frames": 24,
+      "fps": 10,
+      "weight": 1
+    },
+    "收下新年红包": {
+      "file": "clips/shou-hongbao.webp",
+      "group": "节令",
+      "frames": 24,
+      "fps": 10,
+      "weight": 1
+    },
+    "挥笔写下福字": {
+      "file": "clips/xie-fuzi.webp",
+      "group": "节令",
+      "frames": 24,
+      "fps": 10,
+      "weight": 1
+    },
+    "灯下穿针乞巧": {
+      "file": "clips/chuanzhenqiqiao.webp",
+      "group": "节令",
+      "frames": 24,
+      "fps": 10,
+      "weight": 1
+    },
+    "举起小狮头": {
+      "file": "clips/wu-shitou.webp",
+      "group": "节令",
+      "frames": 24,
+      "fps": 10,
+      "weight": 1
+    },
+    "南瓜灯旁要颗糖": {
+      "file": "clips/taotang-nanguadeng.webp",
+      "group": "节令",
+      "frames": 24,
+      "fps": 10,
+      "weight": 1
+    },
+    "把菊花别在帽沿": {
+      "file": "clips/cha-zhuyu-shangju.webp",
+      "group": "节令",
+      "frames": 24,
+      "fps": 10,
+      "weight": 1
+    },
+    "让河灯顺流远去": {
+      "file": "clips/fanghedeng.webp",
+      "group": "节令",
+      "frames": 24,
+      "fps": 10,
+      "weight": 1
+    },
+    "学着小幽灵飘动": {
+      "file": "clips/menghua-xiaoyouling.webp",
+      "group": "节令",
+      "frames": 24,
+      "fps": 10,
+      "weight": 1,
+      "travel": "float"
+    },
+    "给圣诞树挂上星星": {
+      "file": "clips/zhuangdian-shengdanshu.webp",
+      "group": "节令",
+      "frames": 24,
+      "fps": 10,
+      "weight": 1
+    },
+    "放手让天灯升起": {
+      "file": "clips/fang-kongmingdeng.webp",
+      "group": "节令",
+      "frames": 24,
+      "fps": 10,
+      "weight": 1
+    },
+    "冬夜煮一碗汤圆": {
+      "file": "clips/chitangyuan.webp",
+      "group": "节令",
+      "frames": 24,
+      "fps": 10,
+      "weight": 1
+    },
+    "把饺子送进汤里": {
+      "file": "clips/chijiaozi.webp",
+      "group": "节令",
+      "frames": 24,
+      "fps": 10,
+      "weight": 1
+    },
+    "今天一起吃什么": {
+      "file": "clips/shia-chishenme.webp",
+      "group": "聊天",
+      "frames": 24,
+      "fps": 10,
+      "weight": 1
+    },
+    "让我再想一想": {
+      "file": "clips/shendu-sikao-suisuinian.webp",
+      "group": "聊天",
+      "frames": 24,
+      "fps": 10,
+      "weight": 1
+    },
+    "见到你开心一跳": {
+      "file": "clips/dianji-huiying-kaixin-yuedong.webp",
+      "group": "触碰",
+      "frames": 24,
+      "fps": 10,
+      "weight": 1
+    },
+    "被叫到名字红了脸": {
+      "file": "clips/dianji-huiying-haixiu-jingya.webp",
+      "group": "触碰",
+      "frames": 24,
+      "fps": 10,
+      "weight": 1
+    },
+    "轻轻别过脸": {
+      "file": "clips/dianji-huiying-aojiao-shengqi-ceshen-zhanshi.webp",
+      "group": "触碰",
+      "frames": 24,
+      "fps": 10,
+      "weight": 1
+    },
+    "没忍住笑出声": {
+      "file": "clips/dianji-huiying-naoyang-gegexiao.webp",
+      "group": "触碰",
+      "frames": 24,
+      "fps": 10,
+      "weight": 1
+    },
+    "举高小手问好": {
+      "file": "clips/dianji-huiying-yuanqi-huishou.webp",
+      "group": "触碰",
+      "frames": 24,
+      "fps": 10,
+      "weight": 1
+    },
+    "被提起时护住贝雷帽": {
+      "file": "clips/beishubiao-tuozhuai-xuankong-fankui.webp",
+      "group": "拖动",
+      "frames": 24,
+      "fps": 10,
+      "weight": 1
+    },
+    "满袋星砂溢出来": {
+      "file": "clips/qian-dai-man-yi.webp",
+      "group": "星囊",
+      "frames": 24,
+      "fps": 10,
+      "weight": 1
+    },
+    "晃响旅行钱袋": {
+      "file": "clips/jin-dai-ding-dang.webp",
+      "group": "星囊",
+      "frames": 24,
+      "fps": 10,
+      "weight": 1
+    },
+    "轻轻拍好钱袋": {
+      "file": "clips/qian-dai-ru-chang.webp",
+      "group": "星囊",
+      "frames": 24,
+      "fps": 10,
+      "weight": 1
+    },
+    "逐枚数剩下的星币": {
+      "file": "clips/shu-jin-zhou-mei.webp",
+      "group": "星囊",
+      "frames": 24,
+      "fps": 10,
+      "weight": 1
+    },
+    "翻开快空的钱袋": {
+      "file": "clips/dai-kong-ru-xi.webp",
+      "group": "星囊",
+      "frames": 24,
+      "fps": 10,
+      "weight": 1
+    },
+    "收起最后一枚星币": {
+      "file": "clips/fen-wen-bu-sheng.webp",
+      "group": "星囊",
+      "frames": 24,
+      "fps": 10,
+      "weight": 1
+    },
+    "擦着桌子和你说话": {
+      "file": "clips/suisuinian-cazhuo-suisuinian.webp",
+      "group": "碎碎念",
+      "frames": 24,
+      "fps": 10,
+      "weight": 1
+    },
+    "托着腮想起一句话": {
+      "file": "clips/suisuinian-fadai-suisuinian.webp",
+      "group": "碎碎念",
+      "frames": 24,
+      "fps": 10,
+      "weight": 1
+    },
+    "隔着屏幕轻声呼唤": {
+      "file": "clips/suisuinian-duiping-suisuinian.webp",
+      "group": "碎碎念",
+      "frames": 24,
+      "fps": 10,
+      "weight": 1
+    },
+    "思考时冒出气泡": {
+      "file": "clips/gongzuozhuangtai-sikao-maopao.webp",
+      "group": "工作",
+      "frames": 24,
+      "fps": 10,
+      "weight": 1
+    },
+    "认真敲动按键": {
+      "file": "clips/gongzuozhuangtai-manglu-dianan.webp",
+      "group": "工作",
+      "frames": 24,
+      "fps": 10,
+      "weight": 1
+    },
+    "把完成的记录归档": {
+      "file": "clips/gongzuozhuangtai-qingdian-guidang.webp",
+      "group": "工作",
+      "frames": 24,
+      "fps": 10,
+      "weight": 1
+    },
+    "等你点头时踱步": {
+      "file": "clips/gongzuozhuangtai-yuandi-duobu-zhangwang.webp",
+      "group": "工作",
+      "frames": 24,
+      "fps": 10,
+      "weight": 1,
+      "travel": "return"
+    },
+    "收好剑鞘庆祝": {
+      "file": "clips/gongzuozhuangtai-queyue-qingzhu.webp",
+      "group": "工作",
+      "frames": 24,
+      "fps": 10,
+      "weight": 1
+    },
+    "垂下眼睛轻轻叹气": {
+      "file": "clips/gongzuozhuangtai-chuitou-tanqi-maohan.webp",
+      "group": "工作",
+      "frames": 24,
+      "fps": 10,
+      "weight": 1
+    },
+    "抱着围巾合上眼": {
+      "file": "clips/shuijiao-kaishi.webp",
+      "group": "睡觉",
+      "frames": 24,
+      "fps": 10,
+      "weight": 1
+    },
+    "风声里的梦": {
+      "file": "clips/shuijiao-xunhuan.webp",
+      "group": "睡觉",
+      "frames": 24,
+      "fps": 10,
+      "weight": 1
+    },
+    "揉揉眼睛伸懒腰": {
+      "file": "clips/shuijiao-qilai.webp",
+      "group": "睡觉",
+      "frames": 24,
+      "fps": 10,
+      "weight": 1
+    }
+  },
+  "idle": [
+    "小声哼一支歌",
+    "清晨舒展双臂",
+    "敲两下茶桌",
+    "蹲下系好鞋带",
+    "遮住一个哈欠",
+    "靠着围巾小睡",
+    "提裙行骑士礼",
+    "被小鸟吓了一跳",
+    "转一圈给你看",
+    "偷吃一块饼干",
+    "用鞋跟点地",
+    "睡眼惺忪地醒来",
+    "看看贝雷帽戴正了吗",
+    "在围巾边比对新丝带",
+    "写下旅途一笔",
+    "帮你敲几行代码",
+    "夏日摇扇",
+    "饭后刷刷牙",
+    "转动小魔方",
+    "陪小车跑一段",
+    "吹出一串水泡",
+    "跃起接住星片",
+    "棋差一步皱眉",
+    "向远处洒出水花",
+    "拉一段小提琴",
+    "召来海潮的回声",
+    "城堡里的圆舞曲",
+    "踩着节拍摇摆",
+    "困倦也要跳支舞",
+    "吹起淡紫色气球",
+    "被小兔子围住",
+    "牵着线放风筝",
+    "拆开丝带礼物",
+    "从披风中变出白鸽",
+    "翻出红心纸牌",
+    "看木陀螺转呀转",
+    "吹响旅人的短笛",
+    "让蝴蝶落在花上",
+    "蹲下来摸猫",
+    "掌心绽开一朵花",
+    "骑一会小木马",
+    "抛接三颗彩球",
+    "踢起一支羽毽",
+    "在棋盘上落子",
+    "坐上花藤秋千",
+    "从落叶堆里探头",
+    "月下分你一块月饼",
+    "堆出围巾雪人",
+    "夜空点起烟花",
+    "端午剥开粽叶",
+    "烤炉旁等年糕",
+    "春日揉好青团",
+    "熬好一锅腊八粥",
+    "登高分享重阳糕",
+    "收下新年红包",
+    "挥笔写下福字",
+    "灯下穿针乞巧",
+    "举起小狮头",
+    "南瓜灯旁要颗糖",
+    "把菊花别在帽沿",
+    "让河灯顺流远去",
+    "学着小幽灵飘动",
+    "给圣诞树挂上星星",
+    "放手让天灯升起",
+    "冬夜煮一碗汤圆",
+    "把饺子送进汤里"
+  ],
+  "sleep": [
+    "风声里的梦"
+  ],
+  "waking": [
+    "揉揉眼睛伸懒腰"
+  ],
+  "bedtime": [
+    "抱着围巾合上眼"
+  ]
+}

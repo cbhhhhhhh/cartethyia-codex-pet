@@ -1,5 +1,6 @@
 import AppKit
 import ImageIO
+import QuartzCore
 
 // Optional per-pack image sequences. Resolve every file under the selected pet's directory.
 struct ClipSpec: Decodable {
@@ -7,6 +8,7 @@ struct ClipSpec: Decodable {
   let fps: Double?
   let weight: Int?
   let group: String?
+  let travel: String?
 }
 struct ClipLibrary: Decodable {
   let clips: [String: ClipSpec]
@@ -16,23 +18,47 @@ struct ClipLibrary: Decodable {
   let bedtime: [String]?
 }
 struct ClipPlayer {
-  let key: String, frames: [NSImage], masks: [NSBitmapImageRep], fps: Double, start: Double
+  let key: String, frames: [NSImage], atlas: CGImage, mask: NSBitmapImageRep, fps: Double, start: Double
   var frame: Int { Int(max(0, ProcessInfo.processInfo.systemUptime - start) * fps) % frames.count }
 }
 extension Sprite {
-  func refreshClipTimer() {
-    clipTimer?.invalidate()
-    clipTimer = nil
-    guard let clip = activeClip, let window = window, window.isVisible else { return }
-    clipTimer = Timer.scheduledTimer(withTimeInterval: 1 / clip.fps, repeats: true) {
-      [weak self] _ in self?.needsDisplay = true
+  func refreshClipLayer(visible: Bool) {
+    CATransaction.begin()
+    CATransaction.setDisableActions(true)
+    defer { CATransaction.commit() }
+    clipLayer.removeAnimation(forKey: "frames")
+    guard visible, let clip = activeClip else {
+      clipLayer.contents = nil
+      clipLayer.removeFromSuperlayer()
+      needsDisplay = true
+      return
     }
+    wantsLayer = true
+    guard let backing = layer else { return }
+    if clipLayer.superlayer !== backing { backing.addSublayer(clipLayer) }
+    clipLayer.frame = bounds
+    clipLayer.contents = clip.atlas
+    clipLayer.contentsGravity = .resize
+    let count = clip.frames.count
+    let cells = (0..<count).map { NSValue(rect:NSRect(x:Double($0)/Double(count), y:0, width:1/Double(count), height:1)) }
+    clipLayer.contentsRect = cells[clip.frame].rectValue
+    let timeline = CAKeyframeAnimation(keyPath: "contentsRect")
+    timeline.values = cells
+    timeline.keyTimes = (0..<count).map { NSNumber(value: Double($0)/Double(count)) }
+    timeline.calculationMode = .discrete
+    timeline.duration = Double(count)/clip.fps
+    timeline.timeOffset = (ProcessInfo.processInfo.systemUptime-clip.start).truncatingRemainder(dividingBy: timeline.duration)
+    timeline.repeatCount = .infinity
+    clipLayer.add(timeline, forKey: "frames")
+    lastPoseRect = bounds
+    lastPoseTransform = .identity
+    needsDisplay = true
   }
   func loadClipLibrary(_ root: URL) {
     let privateArt = support.appendingPathComponent(
       "appearance/" + root.lastPathComponent + "/current"
     ).resolvingSymlinksInPath()
-    let assets = [root, privateArt, shippedPacks.appendingPathComponent(root.lastPathComponent)]
+    let assets = [root, shippedPacks.appendingPathComponent(root.lastPathComponent), privateArt]
       .first { FileManager.default.fileExists(atPath: $0.appendingPathComponent("pet-plus.json").path) } ?? root
     clipRoot = assets
     activeClip = nil
@@ -54,21 +80,20 @@ extension Sprite {
       let w = props[kCGImagePropertyPixelWidth] as? Int,
       let h = props[kCGImagePropertyPixelHeight] as? Int,
       h > 0, h <= 512, w > 0, w % spec.frames == 0, w / spec.frames <= 512, w * h <= 8_388_608,
-      let cg = CGImageSourceCreateImageAtIndex(source, 0, nil)
+      let cg = CGImageSourceCreateImageAtIndex(source, 0, [kCGImageSourceShouldCacheImmediately: true] as CFDictionary)
     else { return false }
     var images = [NSImage]()
-    var masks = [NSBitmapImageRep]()
+    let mask = NSBitmapImageRep(cgImage: cg)
     for i in 0..<spec.frames {
       guard
         let c = cg.cropping(
           to: CGRect(x: i * w / spec.frames, y: 0, width: w / spec.frames, height: h))
       else { return false }
       images.append(NSImage(cgImage: c, size: .zero))
-      masks.append(NSBitmapImageRep(cgImage: c))
     }
     let fps = max(1, min(30, spec.fps ?? 8))
     let now = ProcessInfo.processInfo.systemUptime
-    activeClip = ClipPlayer(key: key, frames: images, masks: masks, fps: fps, start: now)
+    activeClip = ClipPlayer(key: key, frames: images, atlas: cg, mask: mask, fps: fps, start: now)
     effect = nil
     activeScene = nil
     effectEnd = 0

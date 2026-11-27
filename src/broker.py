@@ -15,7 +15,12 @@ from state import Reducer, allow_whisper
 from archive import context, normalize, keep_image
 import uuid
 from observe import Tail
-from chat import generate
+from pet_response import answer
+from dialogue import Rules, gallery, cue_line
+from providers import account, list_models
+from usage import Ledger
+from observe import quota_view
+from state import VALID_ID
 
 os.umask(0o077)
 base = Path(
@@ -77,6 +82,93 @@ def run():
     sel.register(sock, selectors.EVENT_READ, "hook")
     tail = Tail(Path(os.environ.get("CODEX_HOME", Path.home() / ".codex")) / "sessions")
     reducer = Reducer()
+    ledger = Ledger(folder)
+    usage_view = None
+    pending_reads = set()
+    interaction_file = folder / "interaction.json"
+    interaction = load(interaction_file, {})
+    last_performed = interaction.get("clip", "")
+    last_picture = interaction.get("picture", "")
+    last_kind = interaction.get("kind", "")
+    recent_picture = ""
+    def remember():
+        save(interaction_file, dict(clip=last_performed, picture=last_picture, kind=last_kind))
+    active_turns = {}
+    def official(operation, tid="", phase="", turn=""):
+        key = (operation, tid, phase, turn)
+        if key in pending_reads or len(pending_reads) >= 8:
+            return
+        pending_reads.add(key)
+        options = dict(cfg)
+        def read():
+            result = None
+            problem = ""
+            try:
+                if operation == "quota":
+                    result = quota_view(account("account/rateLimits/read"))
+                elif operation == "billing":
+                    result = account("account/usage/read", threadId=tid).get("threadUsage")
+                else:
+                    result = list_models(operation, options)
+            except (RuntimeError, ValueError, KeyError, OSError, TimeoutError) as exc:
+                problem = str(exc)[:160]
+            finally:
+                jobs.put((0, "official", (key, result, problem)))
+        threading.Thread(target=read, daemon=True).start()
+
+    def usage_display():
+        if usage_view is not None:
+            data = ledger.view(usage_view)
+            stage_view["usage"] = data
+            emit("usage", **data)
+    def event(e, now):
+        tid, turn, kind = e.get("thread", ""), e.get("turn", ""), e.get("kind")
+        if not isinstance(tid, str) or not VALID_ID.fullmatch(tid):
+            return
+        if e.get("role") == "pet" or (base / "pet-threads" / tid).exists():
+            return
+        if kind == "quota":
+            ledger.quota = dict(text=e["text"], used=e["used"])
+            ledger.dirty = True
+            stage_view["quota"] = e["text"]
+            emit("quota", **ledger.quota)
+            return
+        if not isinstance(turn, str) or not VALID_ID.fullmatch(turn):
+            return
+        if not e.get("role"):
+            e.update(tail.origin(tid))
+        if e["role"] == "pet":
+            return
+        old_turn = active_turns.get(tid)
+        new_turn = kind == "start" and old_turn != turn and (tid, turn) not in reducer.closed
+        ledger.observe(e)
+        if usage_view is not None and (kind in ("usage","end","abort","error") or new_turn):
+            usage_display()
+        if e["role"] == "child":
+            reducer.turns.pop((tid, turn), None)
+            return
+        if new_turn:
+            if old_turn:
+                reducer.turns.pop((tid, old_turn), None)
+            active_turns[tid] = turn
+            emit("turn-start", thread=tid, turn=turn)
+            if (usage_view is not None or cfg.get("trackCost")) and e["role"] == "root":
+                official("billing", tid, "start", turn)
+        if kind in ("end", "error") and e["role"] != "root":
+            return
+        if kind in ("end", "abort", "error") and (usage_view is not None or cfg.get("trackCost")) and e["role"] == "root":
+            official("billing", tid, "end", turn)
+        if old_turn and turn != old_turn and not new_turn:
+            if (tid, old_turn) in reducer.turns or (tid, turn) in reducer.closed:
+                return
+            if kind in ("end", "error") and e["role"] != "root":
+                return
+        reducer.event(e, now)
+        if reducer.notice:
+            what, thread = reducer.notice
+            emit("notice", state=what, thread=thread, turn=reducer.notice_turn, otherActive=any(t.thread != thread and not t.terminal for t in reducer.turns.values()))
+            stage_view["notice"] = dict(state=what, thread=thread, turn=reducer.notice_turn, time=time.time())
+            reducer.notice = None
     prev = None
     last = time.monotonic()
     next_poll = 0
@@ -103,7 +195,7 @@ def run():
 
     weather = Weather()
 
-    def begin(user, whisper, image=None, mode=""):
+    def begin(user, whisper, image=None, mode="", picture=""):
         nonlocal cancel, serial
         if cancel:
             cancel.set()
@@ -111,58 +203,24 @@ def run():
         serial += 1
         current, guard = serial, cancel
         opts = dict(cfg)
-        if image and not opts.get("projector"):
-            opts["model"] = "Qwen3VL-2B-Instruct-Q4_K_M.gguf"
-            opts["projector"] = "mmproj-Qwen3VL-2B-Instruct-Q8_0.gguf"
-        if whisper and opts.get("whisperModel"):
-            opts["model"] = opts["whisperModel"]
-        memory = context(history, opts.get("rounds", 10))
-        prompt = "结合你的人设说一句闲聊，不超过三十字。" if whisper else user
-        if mode == "dream":
-            prompt = "你在睡梦中，按人设说一句简短的梦话。"
-        if opts.get("localTime"):
-            prompt += "\n本地时间 " + time.strftime("%H:%M")
-
+        memory = list(history)
+        previous_action, previous_picture = last_performed, last_picture
+        previous_kind, recent_art = last_kind, recent_picture
         def worker():
             try:
-                weather_line = (
-                    weather.current(opts.get("weatherCity", ""))
-                    if opts.get("weatherEnabled")
-                    else ""
-                )
-                if weather_line:
-                    jobs.put((current, "weather", weather_line))
-
-                def infer(model):
-                    return generate(
-                        base / "runtime",
-                        model,
-                        opts["persona"],
-                        [] if whisper else memory,
-                        prompt + (("\n" + weather_line) if weather_line else ""),
-                        guard,
-                        lambda s: jobs.put((current, "part", s))
-                        if not whisper
-                        else None,
-                        image=image,
-                        projector=opts.get("projector"),
-                    )
-
-                try:
-                    result = infer(opts["model"])
-                except (RuntimeError, ValueError, OSError):
-                    if (
-                        not whisper
-                        or guard.is_set()
-                        or opts["model"] == cfg.get("model")
-                    ):
-                        raise
-                    result = infer(cfg["model"])
-                jobs.put((current, "done", (result, user, whisper, mode, image)))
+                rules = Rules(opts)
+                weather_line = ""
+                if (not whisper and opts.get("weatherEnabled") and not rules.places and not rules.weather
+                        and any(word in user for word in ("天气", "气温", "降雨"))):
+                    weather_line = weather.current(opts.get("weatherCity", ""))
+                result = answer(base, folder, opts, memory, user, whisper, mode, image, picture,
+                                previous_action, previous_picture, guard,
+                                lambda part: jobs.put((current, "part", part)), weather_line, previous_kind, recent_art,
+                                lambda phase, route, count: jobs.put((current, "meter", (phase, route, count))))
+                if not guard.is_set():
+                    jobs.put((current, "done", (result, user, whisper, mode, image)))
             except Exception as ex:
-                jobs.put(
-                    (current, "fail", ("本地推理未完成：" + str(ex)[:100], whisper))
-                )
+                jobs.put((current, "fail", ("生成未完成：" + str(ex)[:140], whisper and mode != "manual")))
 
         workers[:] = [t for t in workers if t.is_alive()]
         t = threading.Thread(target=worker, daemon=True)
@@ -263,6 +321,7 @@ def run():
                                     for k in (
                                         "pose",
                                         "bubble",
+                                        "picture",
                                         "mood",
                                         "variant",
                                         "action",
@@ -274,8 +333,49 @@ def run():
                             )
                         if op == "peer" and peers_exist:
                             share(dict(m, channel="peer", v=1, **{"from": profile}))
+                        if op == "read-aloud" and isinstance(m.get("text"), str):
+                            if Rules(cfg).allows(m["text"][:3000]):
+                                emit("read-aloud", text=m["text"][:3000])
+                            else:
+                                emit("ui-error", text="这段旧文字涉及当前人设禁用的话题。")
+                        if op == "gallery-refresh":
+                            items = list(gallery(folder, cfg.get("pack","cartethyia")).values())
+                            emit("gallery", items=items)
+                            stage_view["gallery"] = [{k:v for k,v in item.items() if k != "file"} for item in items]
+                        if op == "action-line" and isinstance(m.get("clip"), str):
+                            if not cfg.get("muted") and not cfg.get("asleep"):
+                                line = cue_line(m["clip"], Rules(cfg))
+                                if line:
+                                    emit("action-line", text=line, clip=m["clip"])
+                        if op == "performed" and isinstance(m.get("clip"), str):
+                            last_performed = m["clip"][:100]
+                            last_kind = "clip"
+                            remember()
+                        if op == "model-list" and m.get("source") in ("api", "codex"):
+                            official(m["source"])
+                        if op == "usage-close":
+                            usage_view = None
+                        if op == "usage":
+                            usage_view = m.get("selected", "")
+                            data = ledger.view(usage_view)
+                            stage_view["usage"] = data
+                            emit("usage", **data)
+                            if data["selected"] and m.get("refresh", True):
+                                official("billing", data["selected"].split("/")[0])
+                        if op == "quota-read":
+                            if ledger.quota:
+                                emit("quota-card", text=ledger.quota["text"] + "（上次快照）")
+                            official("quota")
                         if op == "config":
+                            old_pack = cfg.get("pack")
+                            policy_changed = bool(cfg) and any(cfg.get(k) != m["config"].get(k) for k in
+                                ("persona", "avoidWeather", "avoidPlaces", "blockedWords", "chatSource",
+                                 "whisperSource", "apiURL", "apiKeyEnv", "apiModel", "codexModel"))
                             cfg = m["config"]
+                            if old_pack != cfg.get("pack") or not stage_view.get("gallery"):
+                                items = list(gallery(folder, cfg.get("pack", "cartethyia")).values())
+                                emit("gallery", items=items)
+                                stage_view["gallery"] = [{k:v for k,v in item.items() if k != "file"} for item in items]
                             stage_view.update(
                                 {
                                     k: cfg[k]
@@ -292,20 +392,23 @@ def run():
                                 }
                             )
                             if (
-                                kind_job == "chat"
+                                (policy_changed and cancel is not None) or kind_job == "chat"
                                 and not cfg.get("chat", True)
                                 or kind_job == "whisper"
                                 and (cfg.get("muted") or not cfg.get("whispers"))
                             ):
+                                if policy_changed:
+                                    emit("interrupted")
                                 m = {"op": "cancel"}
                                 op = "cancel"
                         if (
                             op == "whisper"
+                            and cfg.get("whisperReady", True)
                             and not cfg.get("asleep")
                             and kind_job != "chat"
                         ):
                             kind_job = "manual"
-                            begin("", True, mode="manual")
+                            begin("", True, mode="manual", picture=m.get("picture", ""))
                         if (
                             op == "weather"
                             and cfg.get("weatherEnabled")
@@ -361,6 +464,8 @@ def run():
                             kind_job = ""
                             if op == "clear":
                                 history = []
+                                last_performed = last_picture = last_kind = recent_picture = ""
+                                remember()
                                 persist()
                                 emit("history", pairs=[])
                         if (
@@ -395,7 +500,7 @@ def run():
                                 e.get("call", ""),
                             )
                         ] = now
-                        reducer.event(e, now)
+                        event(e, now)
                     except (OSError, ValueError, TypeError, AttributeError):
                         pass
             if (
@@ -418,26 +523,7 @@ def run():
                 next_poll = now + 0.20
                 try:
                     for e in tail.poll():
-                        if e["kind"] == "quota":
-                            stage_view["quota"] = e["text"]
-                            emit("quota", text=e["text"], used=e["used"])
-                            continue
-                        if e["kind"] == "plan" and e.get("completed"):
-                            emit(
-                                "todo",
-                                text="计划已完成",
-                                thread=e["thread"],
-                                completed=True,
-                            )
-                        if (
-                            now
-                            - hook_seen.get(
-                                (e["thread"], e["turn"], e["kind"], e.get("call", "")),
-                                -999,
-                            )
-                            > 1.5
-                        ):
-                            reducer.event(e, now)
+                        event(e, now)
                 except OSError:
                     pass
                 hook_seen = {k: v for k, v in hook_seen.items() if now - v < 2}
@@ -450,10 +536,11 @@ def run():
                 save(folder / "status.json", s)
                 emit("status", **s)
                 prev = s
+            ledger.flush()
             if reducer.notice:
                 what, thread = reducer.notice
                 stage_view["notice"] = dict(state=what, thread=thread, time=time.time())
-                emit("notice", state=what, thread=thread)
+                emit("notice", state=what, thread=thread, turn=reducer.notice_turn)
                 reducer.notice = None
             if kind_job == "whisper" and (
                 s["state"] != "idle"
@@ -484,6 +571,36 @@ def run():
                 if k == "manual-weather":
                     emit(k, text=data)
                     continue
+                if k == "official":
+                    key, result, problem = data
+                    pending_reads.discard(key)
+                    op, tid, phase, turn = key
+                    if op == "quota":
+                        if result:
+                            ledger.quota = result
+                            ledger.dirty = True
+                            stage_view["quota"] = result["text"]
+                            emit("quota", **result)
+                        text = (ledger.quota or {}).get("text", "账户暂未提供额度。")
+                        emit("quota-card", text=text + ("（上次快照）" if problem and ledger.quota else ""))
+                    elif op == "billing":
+                        ledger.remember_billing(tid, result, time.time())
+                        row = ledger.turns.get(tid + "/" + turn)
+                        if row and result and result.get("threadId") == tid and active_turns.get(tid) == turn:
+                            if phase == "start" and not row["samples"] and row["status"] == "进行中":
+                                row["opening"] = ledger.billing[tid].copy()
+                            elif phase == "end" and row.get("opening") and row["status"] != "进行中":
+                                row["cost"] = {k:result[k]-v for k,v in row["opening"].items()
+                                               if k != "at" and isinstance(v,int) and isinstance(result.get(k),int)
+                                               and result[k] >= v}
+                        usage_display()
+                    else:
+                        emit("model-list", source=op, models=result or [], error=problem)
+                    continue
+                if k == "meter":
+                    ledger.record_pet(*data)
+                    usage_display()
+                    continue
                 if ident != serial:
                     continue
                 if k == "weather":
@@ -495,6 +612,15 @@ def run():
                     cancel = None
                     kind_job = ""
                     if result:
+                        result.pop("reported", None)
+                        if result.get("clip"):
+                            last_performed = result["clip"]
+                            last_kind = "clip"
+                        recent_picture = result.get("picture", "")
+                        if recent_picture:
+                            last_picture = recent_picture
+                            last_kind = "picture"
+                        remember()
                         if mode != "dream":
                             stage_view["action"] = result["action"]
                         if not w:
@@ -511,26 +637,7 @@ def run():
                                     pair["image"] = keep_image(folder, image)
                                 except (ValueError, OSError):
                                     pass
-                            if cfg.get("replyArt"):
-                                stickers = folder / "stickers"
-                                candidates = sorted(
-                                    p
-                                    for p in stickers.glob("*")
-                                    if p.suffix.lower() in (".jpg", ".png", ".jpeg")
-                                    and p.is_file()
-                                )
-                                matching = [
-                                    p
-                                    for p in candidates
-                                    if p.stem.startswith(result["emotion"])
-                                ]
-                                pair["art"] = [
-                                    str(p)
-                                    for p in (matching or candidates)[
-                                        : max(1, min(3, cfg.get("artLimit", 1)))
-                                    ]
-                                ]
-                                pair["spriteArt"] = not pair["art"]
+                            pair.update(clip=result["clip"], picture=result["picture"], art=result["art"])
                             history.append(pair)
                             persist()
                             emit("archive-entry", pair=pair)
@@ -580,6 +687,7 @@ def run():
             cancel.set()
         for t in workers:
             t.join(3)
+        ledger.flush(force=True)
         tail.close()
         sock.close()
         addr.unlink(missing_ok=True)

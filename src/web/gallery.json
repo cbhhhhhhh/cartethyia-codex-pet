@@ -1,0 +1,62 @@
+[
+  {
+    "id": "calm-0",
+    "title": "安静陪你",
+    "description": "抱着围巾，安静陪你坐一会儿",
+    "mood": "calm"
+  },
+  {
+    "id": "calm-1",
+    "title": "认真倾听",
+    "description": "微微侧头，耐心听你说完",
+    "mood": "calm"
+  },
+  {
+    "id": "happy-0",
+    "title": "弯眼微笑",
+    "description": "闭眼微笑，替你高兴",
+    "mood": "happy"
+  },
+  {
+    "id": "happy-1",
+    "title": "送你一颗心",
+    "description": "温暖的笑意与小小的祝贺",
+    "mood": "happy"
+  },
+  {
+    "id": "curious-0",
+    "title": "有点好奇",
+    "description": "睁大眼，好像刚发现一件有趣的事",
+    "mood": "curious"
+  },
+  {
+    "id": "curious-1",
+    "title": "让我看看",
+    "description": "向前探身，等待你的回答",
+    "mood": "curious"
+  },
+  {
+    "id": "focused-0",
+    "title": "认真思考",
+    "description": "安静凝神，仔细思考",
+    "mood": "focused"
+  },
+  {
+    "id": "focused-1",
+    "title": "我有主意",
+    "description": "专注的小骑士想给你出个主意",
+    "mood": "focused"
+  },
+  {
+    "id": "sad-0",
+    "title": "轻轻安慰",
+    "description": "带一点担心，想陪在你身边",
+    "mood": "sad"
+  },
+  {
+    "id": "sad-1",
+    "title": "抱抱围巾",
+    "description": "低下眼睛，给你安静的安慰",
+    "mood": "sad"
+  }
+]

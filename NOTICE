@@ -7,7 +7,7 @@ https://github.com/PC2005-cloud/dsh-pet
 本次交互复核取自 fb38ce620576f5ed3735a99536d2b1a4a9eb313f，包括 dsh-pet/src/shared/physics/release.ts、src/client/pet/motion、src/shared/menu/tree.ts、FEATURES.md 与 API.md。轨迹窗口、初速度估算和弹弓比例依据上游算法移植。角色舞台动作、系统符号组合与 AppKit 气泡在本工程中编排。
 本工程参考其工作事件、碎碎念节流、人设、聊天和运动行为，独立实现 macOS 窗口、状态归约、通信和存储。未分发 dsh-pet 的美术、音频、贴图或表情。上游代码许可为 MIT，美术和音频受上游另行规定。
 
-角色补充包由 scripts/render-repertoire.swift 在构建时生成。art/repertoire.json 包含 109 项动作的原创舞台编排和上游对应标识。道具使用 macOS 系统字形与本工程绘制的运动线、光圈和粒子，生成器读取随附的 Cartethyia 图集或用户提供的替换图集。系统字体与游戏角色图像的权利属于各自权利人。
+2.3.0 的 109 个动作使用本仓库已公开的 Cartethyia 造型作参考，借助图像生成工具制作独立关键姿势。scripts/compile-performances.py 负责透明边缘处理、定位、动作关键帧之间的光流过渡和 WebP 图集打包。art/repertoire.json 保留动作名称和上游对应动作标识。scripts/render-repertoire.swift 记录了 2.2 的系统符号与基础角色帧编排。右键配图中的十张人物插画沿用 2.1 版。
 
 Cartethyia 是库洛游戏《鸣潮》的角色。此非官方粉丝项目包含依照用户提供的二创参考图制作的 Q 版桌宠图集、头像和衍生动画。参考原图未随项目分发。游戏角色与参考作品的权利归各自权利人。此项目未取得或授予对这些素材的商业授权。
 

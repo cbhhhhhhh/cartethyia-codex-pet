@@ -60,7 +60,7 @@ while True:
             max_30s_percent=round(max(rates), 3),
             intervals=len(values),
         )
-        f = root / "docs" / (prefix+"idle-cpu.json")
+        f = source.parent / (prefix+"idle-cpu.json")
         tmp = f.with_suffix(".tmp")
         tmp.write_text(json.dumps(d, indent=2))
         os.replace(tmp, f)

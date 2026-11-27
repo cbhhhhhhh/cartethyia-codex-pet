@@ -5,18 +5,18 @@ import SwiftUI
 struct PetTask: Codable, Identifiable {
   let id: String, text: String, due: Double?, done: Bool
 }
-enum PetCard { case hover, work, speech, compose, todos }
+enum PetCard { case details, work, speech, compose, todos, usage }
 final class CardPanel: NSPanel {
   override var canBecomeKey: Bool { true }
   override var canBecomeMain: Bool { false }
 }
 final class CardState: ObservableObject {
-  @Published var inspecting = false
+  @Published var picture = ""
   @Published var mood = CardMood.calm
   @Published var variant = 0
   @Published var tipAtTop = false
   @Published var tipX: CGFloat = 120
-  @Published var mode = PetCard.hover
+  @Published var mode = PetCard.details
   @Published var message = ""
   @Published var speaker = "Cartethyia"
   @Published var target = ""
@@ -49,7 +49,7 @@ struct PetCardView: View {
     }.font(.custom("STYuanti-SC-Regular", fixedSize: 12))
   }
   var body: some View {
-    let detail = card.mode == .hover || card.mode == .work
+    let detail = card.mode == .details || card.mode == .work
     let mood = detail ? CardMood(status: state.status) : card.mood
     let shape = PaperBubble(tipAtTop: card.tipAtTop, tipX: card.tipX)
     VStack(alignment: .leading, spacing: 6) {
@@ -59,17 +59,19 @@ struct PetCardView: View {
             .frame(width: 65, height: card.mode == .work ? 61 : 76)
           VStack(alignment: .leading, spacing: 5) {
             Text(titles[state.status] ?? state.status).font(PetLettering.title(17))
-            if card.mode == .hover { details }
+            if card.mode == .details { details }
             else {
               let content = [state.tool, state.progress].filter { !$0.isEmpty }.joined(separator: " · ")
               Text(content.isEmpty ? (state.status == "thinking" ? "让我想一想。" : "我在跟进这个回合。") : content)
                 .font(.system(size: 12, design: .rounded)).lineLimit(2)
             }
           }
+          Spacer()
+          icon("收起", "xmark") { host.closeCard() }
         }
       } else {
         HStack {
-          Text(card.mode == .todos ? "待办事项" : card.speaker)
+          Text(card.mode == .todos ? "待办事项" : card.mode == .usage ? "当前任务用量" : card.speaker)
             .font(card.speaker == "Cartethyia" && card.mode != .todos
                   ? .system(size: 13, weight: .semibold, design: .serif).italic() : PetLettering.title(14))
           Spacer()
@@ -78,17 +80,19 @@ struct PetCardView: View {
         }.foregroundStyle(cardPine)
       }
       switch card.mode {
-      case .hover, .work: EmptyView()
+      case .details, .work: EmptyView()
       case .speech:
-        CardPortrait(sprite: host.sprite, mood: mood, variant: card.variant, large: true)
-          .frame(maxWidth: .infinity).frame(height: 110)
+        if let picture = state.pictures.first(where: { $0.id == card.picture }),
+          let image = picture.thumbnail(size: 160) {
+          Image(nsImage: image).resizable().scaledToFit().frame(maxWidth: .infinity)
+            .frame(height: 111).accessibilityLabel(picture.title)
+        }
         ScrollView {
           Text(card.message).font(PetLettering.title(17)).lineSpacing(3)
             .multilineTextAlignment(card.message.count < 45 ? .center : .leading)
             .textSelection(.enabled).frame(maxWidth: .infinity)
         }
-        if card.inspecting && state.status != "idle" { details }
-        if let art = card.art { PairArt(pair: art, host: host) }
+        if card.picture.isEmpty, let art = card.art { PairArt(pair: art, host: host) }
         HStack {
           if state.talking { Button("中断") { host.cancel(); host.closeCard() } }
           else if !card.target.isEmpty { Button("打开对应会话") { host.openThread(card.target) } }
@@ -98,6 +102,18 @@ struct PetCardView: View {
             icon("朗读这句话", "speaker.wave.2") { host.readAloud(card.message) }
           }
         }.buttonStyle(.plain).font(PetLettering.title(13)).foregroundStyle(cardPine)
+      case .usage:
+        if !state.usageChoices.isEmpty {
+          Picker("主回合", selection: Binding(get: { state.usageSelected }, set: { value in
+            state.usageSelected = value
+            host.send(["op":"usage","selected":value])
+          })) {
+            ForEach(state.usageChoices, id: \.key) { Text($0.label).tag($0.key) }
+          }
+        }
+        ScrollView { Text(state.usage).font(.system(size:13)).textSelection(.enabled)
+          .frame(maxWidth:.infinity, alignment:.leading) }
+        Button("刷新账户数据") { host.send(["op":"usage", "selected":state.usageSelected]) }
       case .compose:
         HStack(spacing: 8) {
           CardPortrait(sprite: host.sprite, mood: .curious, variant: card.variant).frame(width: 48,height: 46)
@@ -210,6 +226,7 @@ extension Host {
   func surface(_ mode: PetCard, focus: Bool = false) {
     guard overlay.isVisible else { return }
     let same = bubble?.isVisible == true && card.mode == mode
+    if card.mode == .usage && mode != .usage { send(["op":"usage-close"]) }
     card.mode = mode
     if bubble == nil {
       let p = CardPanel(
@@ -227,24 +244,24 @@ extension Host {
     guard let panel = bubble else { return }
     let desired: NSSize
     switch mode {
-    case .hover: desired = NSSize(width: 288, height: 122)
+    case .details: desired = NSSize(width: 288, height: 122)
     case .work: desired = NSSize(width: 241, height: 97)
     case .compose:
       desired = NSSize(width: 312, height: s.attachment != nil || !card.note.isEmpty ? 186 : 148)
     case .todos: desired = NSSize(width: 345, height: 266)
+    case .usage: desired = NSSize(width: 366, height: 310)
     case .speech:
       desired = NSSize(
         width: 273,
         height: min(
           440,
-          228 + CGFloat(card.message.count / 13) * 22 + (card.art == nil ? 0 : 58)
-            + (card.inspecting && s.status != "idle" ? 58 : 0)))
+          124 + CGFloat(card.message.count / 14) * 22 + (card.picture.isEmpty ? (card.art == nil ? 0 : 58) : 111)))
     }
     if panel.frame.size != desired { panel.setContentSize(desired) }
     panel.title =
-      mode == .hover
+      mode == .details
       ? "卡提 · 工作详情" : mode == .compose ? "卡提 · 输入" : mode == .todos ? "卡提 · 待办" : "卡提 · 气泡"
-    panel.ignoresMouseEvents = mode == .hover || mode == .work
+    panel.ignoresMouseEvents = false
     if panel.parent !== overlay { overlay.addChildWindow(panel, ordered: .above) }
     anchorCard()
     if !same { panel.orderFrontRegardless() }
@@ -277,53 +294,36 @@ extension Host {
   }
   func closeCard() {
     if stageReady { send(["op": "display", "bubble": ""]) }
+    if card.mode == .usage { send(["op":"usage-close"]) }
     dictation.cancel()
     bubbleTimer?.invalidate()
     bubble?.orderOut(nil)
+    pendingNotices.removeAll { $0.expires < uptime }
     if !sleeping && !s.config.muted && !s.talking && overlay.isVisible && !pendingNotices.isEmpty {
       let n = pendingNotices.removeFirst()
-      showSpoken(n.text, target: n.thread, duration: 10, mood: n.mood)
-    } else if s.status != "idle" && !sleeping && overlay.isVisible {
-      surface(.work)
-    }
+      shownNotice = (n.thread, n.turn)
+      showSpoken(n.text, target: n.thread, duration: 10, mood: n.mood, picture: n.picture)
+    } else { shownNotice = nil }
   }
   func dismissHover() {
-    hoverTimer?.invalidate()
-    hoverTimer = nil
     overPet = false
-    card.inspecting = false
     refreshHoverKeys()
-    if card.mode == .hover { bubble?.orderOut(nil) }
   }
   func pointer(_ hit: Bool) {
-    if overPet == hit { return }
+    guard overPet != hit else { return }
     overPet = hit
-    card.inspecting = hit
     refreshHoverKeys()
-    if bubble?.isVisible == true && card.mode == .speech { surface(.speech) }
-    hoverTimer?.invalidate()
-    hoverTimer = nil
-    if hit && !sleeping {
-      hoverTimer = Timer.scheduledTimer(withTimeInterval: 0.24, repeats: false) { [weak self] _ in
-        guard let self = self, self.overPet, !self.sprite.held, self.hoverMayAppear else { return }
-        self.surface(.hover)
-      }
-    } else if card.mode == .hover {
-      closeCard()
-    }
-  }
-  var hoverMayAppear: Bool {
-    bubble?.isVisible != true || card.mode == .work || card.mode == .hover
   }
   func showSpoken(
     _ text: String, title: String = "Cartethyia", target: String = "", duration: Double = 9,
-    art: ChatPair? = nil, mood: CardMood = .calm
+    art: ChatPair? = nil, mood: CardMood = .calm, picture: String = ""
   ) {
-    if stageReady { send(["op": "display", "bubble": text, "duration": duration, "mood": mood.rawValue, "variant": card.variant]) }
+    if stageReady { send(["op": "display", "bubble": text, "duration": duration, "mood": mood.rawValue, "variant": card.variant, "picture": picture]) }
     guard overlay.isVisible else { return }
     bubbleTimer?.invalidate()
-    if bubble?.isVisible == true && (card.mode == .todos || card.mode == .compose) { return }
+    if bubble?.isVisible == true && (card.mode == .todos || card.mode == .compose || card.mode == .usage) { return }
     if card.mood != mood { card.mood = mood }
+    card.picture = picture
     card.art = art
     card.message = text
     card.speaker = title
@@ -337,7 +337,6 @@ extension Host {
           self.waitForVoice()
         } else {
           self.closeCard()
-          if self.overPet && self.hoverMayAppear { self.surface(.hover) }
         }
       }
     }
@@ -350,36 +349,39 @@ extension Host {
   }
   func petMenu() -> NSMenu {
     let m = NSMenu()
-    func add(_ title: String, _ cmd: String, _ parent: NSMenu? = nil, _ enabled: Bool = true) {
+    @discardableResult func add(_ title: String, _ cmd: String, _ parent: NSMenu? = nil, _ enabled: Bool = true) -> NSMenuItem {
       let i = NSMenuItem(title: title, action: #selector(petCommand(_:)), keyEquivalent: "")
       i.target = self
       i.representedObject = cmd
       i.isEnabled = enabled
       (parent ?? m).addItem(i)
+      return i
     }
     m.autoenablesItems = false
     add(sleeping ? "叫醒卡提" : "睡觉", "sleep")
-    add("和卡提说话　T", "chat", nil, !sleeping)
-    add("说句碎碎念", "whisper", nil, !sleeping)
+    add("和卡提说话　T", "chat", nil, !sleeping && s.config.chat && chatModelReady)
+    add("说句碎碎念", "whisper", nil, !sleeping && whisperModelReady)
     add("待办事项　D", "todos", nil, !sleeping)
     add("工作详情", "details", nil, !sleeping)
-    add("查看额度", "quota", nil, !sleeping)
+    add("账户额度", "quota", nil, !sleeping)
+    add("当前任务用量", "usage", nil, !sleeping)
+    let gallery = NSMenu()
+    m.addItem(withTitle: "配图", action: nil, keyEquivalent: "").submenu = gallery
+    let caption = add(s.config.replyArt == true ? "可用于对话与碎碎念" : "手动点选配图", "", gallery, false)
+    caption.isEnabled = false
+    gallery.autoenablesItems = false
+    for picture in s.pictures {
+      let item = add(picture.title, "picture:" + picture.id, gallery, !sleeping && whisperModelReady)
+      item.image = picture.thumbnail(size: 40)
+      item.toolTip = picture.description
+    }
     add("查询天气", "weather", nil, !sleeping)
     let actions = NSMenu()
     let slot = m.addItem(withTitle: "点播动作", action: nil, keyEquivalent: "")
     slot.submenu = actions
     slot.isEnabled = !sleeping
-    for trick in PetTrick.allCases { add(trick.rawValue, "trick:" + trick.rawValue, actions) }
-    for group in ["四季", "风与潮", "旅途", "茶点", "额度"] {
-      let sub = NSMenu()
-      actions.addItem(withTitle: group, action: nil, keyEquivalent: "").submenu = sub
-      for scene in PetScene.allCases where scene.group == group {
-        add(scene.rawValue, "scene:" + scene.rawValue, sub)
-      }
-    }
     if let clips = sprite.clipLibrary?.clips, !clips.isEmpty {
-      let sub = NSMenu()
-      actions.addItem(withTitle: "角色包动作", action: nil, keyEquivalent: "").submenu = sub
+      let sub = actions
       for (group, keys) in Dictionary(grouping: clips.keys, by: { clips[$0]?.group ?? "" }).sorted(
         by: { $0.key < $1.key })
       {
@@ -392,6 +394,10 @@ extension Host {
         }
         for key in keys.sorted() { add(key, "clip:" + key, branch) }
       }
+    }
+    if sprite.clipLibrary?.clips.isEmpty != false {
+      for trick in PetTrick.allCases { add(trick.rawValue, "trick:" + trick.rawValue, actions) }
+      for scene in PetScene.allCases { add(scene.rawValue, "scene:" + scene.rawValue, actions) }
     }
     m.addItem(.separator())
     add(s.config.roaming == true ? "停止漫游" : "开始漫游", "roam")
@@ -417,8 +423,13 @@ extension Host {
       send(["op": "web-event", "id": String(cmd.dropFirst(7))])
       return
     }
+    if cmd.hasPrefix("picture:"), !sleeping {
+      closeCard()
+      send(["op":"whisper", "picture":String(cmd.dropFirst(8))])
+      return
+    }
     if cmd.hasPrefix("clip:"), !sleeping {
-      _ = sprite.playClip(String(cmd.dropFirst(5)))
+      _ = performClip(String(cmd.dropFirst(5)), speak: true)
       return
     }
     if cmd.hasPrefix("scene:"), let scene = PetScene(rawValue: String(cmd.dropFirst(6))), !sleeping
@@ -435,7 +446,7 @@ extension Host {
     case "chat": showChat()
     case "details":
       bubbleTimer?.invalidate()
-      surface(.hover)
+      surface(.details)
     case "todos": showTodos()
     case "whisper":
       if !sleeping {
@@ -444,10 +455,14 @@ extension Host {
         send(["op": "whisper"])
       }
     case "quota":
-      if let tier = quotaTier {
-        sprite.playScene(PetScene.allCases.filter { $0.group == "额度" }[tier])
-      }
-      showSpoken(s.quota.isEmpty ? "本机会话还没有提供额度快照。" : s.quota, title: "Codex 额度")
+      closeCard()
+      showSpoken(s.quota.isEmpty ? "正在读取账户额度…" : s.quota, title: "Codex 账户额度", duration: 18)
+      send(["op":"quota-read"])
+    case "usage":
+      closeCard()
+      s.usage = "正在读取本机回合记录…"
+      surface(.usage, focus: true)
+      send(["op":"usage", "selected":""])
     case "weather":
       if s.config.weatherEnabled == true && !(s.config.weatherCity ?? "").isEmpty {
         send(["op": "weather"])
@@ -471,6 +486,7 @@ extension Host {
           at: url, configuration: NSWorkspace.OpenConfiguration(), completionHandler: nil)
       }
     case "reload":
+      send(["op":"gallery-refresh"])
       if let data = try? Data(contentsOf: s.folder.appendingPathComponent("config.json")),
         let cfg = try? JSONDecoder().decode(Config.self, from: data)
       {
@@ -512,8 +528,7 @@ extension Host {
     surface(.todos, focus: true)
   }
   func readAloud(_ text: String) {
-    speech.stopSpeaking(at: .immediate)
-    speak(text, true, manual: true)
+    send(["op":"read-aloud","text":text])
   }
   func attachPasteboard(_ pb: NSPasteboard) -> Bool {
     guard !sleeping, s.visionAvailable else { return false }
@@ -599,7 +614,7 @@ extension Host {
   }
   func idleLife() {
     guard uptime >= nextIdleAction else { return }
-    nextIdleAction = uptime + Double.random(in: 14...36)
+    nextIdleAction = uptime + (s.config.roaming == true ? Double.random(in: 14...36) : Double.random(in: 40...76))
     guard s.status == "idle", !leased, !sleeping, !sprite.held, flight == nil, !overPet,
       bubble?.isVisible != true, overlay.isVisible
     else { return }

@@ -71,7 +71,7 @@ def leaks():
 
 if "--leaks-now" in sys.argv:
     result = leaks()
-    write(ROOT / "docs" / (prefix+"initial-leaks.json"), result)
+    write(source.parent / (prefix+"initial-leaks.json"), result)
     print(result)
     sys.exit()
 target = json.loads(source.read_text())["target"]
@@ -83,7 +83,7 @@ while True:
     if thresholds and data["elapsed"] >= thresholds[0]:
         thresholds.pop(0)
         checks.append(dict(t=data["elapsed"], **cli_probe()))
-        write(ROOT / "docs" / (prefix+"cli-probes.json"), checks)
+        write(source.parent / (prefix+"cli-probes.json"), checks)
     if data["complete"] and not thresholds:
         break
     time.sleep(15)
@@ -113,5 +113,5 @@ summary = dict(
     cli_seconds=measure([c["wall_seconds"] for c in checks]),
     final_leaks=leaks(),
 )
-write(ROOT / "docs" / (prefix+"stability-summary.json"), summary)
+write(source.parent / (prefix+"stability-summary.json"), summary)
 print(json.dumps(summary, indent=2))

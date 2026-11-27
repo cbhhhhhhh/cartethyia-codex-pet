@@ -5,7 +5,11 @@ source scripts/python-runtime.sh
 source scripts/download.sh
 mkdir -p .runtime
 fetch_checked "$python_url" .runtime/python-runtime.tar.gz "$python_sha"
-scripts/build.sh
+case "${1:-}" in
+  "") scripts/build.sh ;;
+  --built-app) codesign --verify --deep --strict ".build/Codex Pet Plus.app" ;;
+  *) echo "Usage: package-macos.sh [--built-app]" >&2; exit 2 ;;
+esac
 mkdir -p .build dist
 stage=$(mktemp -d ".build/distribution.XXXXXXXX")
 trap 'rm -rf "$stage"' EXIT
