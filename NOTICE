@@ -1,3 +1,6 @@
+卡提希娅 Codex 桌宠的原创软件代码采用根目录 LICENSE 中的 MIT 许可证。下文列出角色美术、衍生动画和第三方组件各自的权利与许可。Windows 发行包的组件许可另见 windows/THIRD-PARTY.txt。
+The MIT License in LICENSE covers the original software in Cartethyia Codex Pet. Separate artwork rights, attributions and third-party licenses are described below and in windows/THIRD-PARTY.txt.
+
 2.1 的应用图标和十张气泡插画取自用户已有的卡提希娅本地源图，经重新取景和透明背景处理后使用。气泡装饰由应用绘制，中文字形使用 macOS 随系统提供的可用字体。
 
 Codex Pet Plus
@@ -7,7 +10,7 @@ https://github.com/PC2005-cloud/dsh-pet
 本次交互复核取自 fb38ce620576f5ed3735a99536d2b1a4a9eb313f，包括 dsh-pet/src/shared/physics/release.ts、src/client/pet/motion、src/shared/menu/tree.ts、FEATURES.md 与 API.md。轨迹窗口、初速度估算和弹弓比例依据上游算法移植。角色舞台动作、系统符号组合与 AppKit 气泡在本工程中编排。
 本工程参考其工作事件、碎碎念节流、人设、聊天和运动行为，独立实现 macOS 窗口、状态归约、通信和存储。未分发 dsh-pet 的美术、音频、贴图或表情。上游代码许可为 MIT，美术和音频受上游另行规定。
 
-2.3.0 的 109 个动作使用本仓库已公开的 Cartethyia 造型作参考，借助图像生成工具制作独立关键姿势。scripts/compile-performances.py 负责透明边缘处理、定位、动作关键帧之间的光流过渡和 WebP 图集打包。art/repertoire.json 保留动作名称和上游对应动作标识。scripts/render-repertoire.swift 记录了 2.2 的系统符号与基础角色帧编排。右键配图中的十张人物插画沿用 2.1 版。
+0.2.0 的 109 个动作使用本仓库已公开的 Cartethyia 造型作参考，借助图像生成工具制作独立关键姿势。scripts/compile-performances.py 负责透明边缘处理、定位、动作关键帧之间的光流过渡和 WebP 图集打包。art/repertoire.json 保留动作名称和上游对应动作标识。scripts/render-repertoire.swift 记录了 0.1.0 的系统符号与基础角色帧编排。右键配图中的十张人物插画沿用 2.1 版。
 
 Cartethyia 是库洛游戏《鸣潮》的角色。此非官方粉丝项目包含依照用户提供的二创参考图制作的 Q 版桌宠图集、头像和衍生动画。参考原图未随项目分发。游戏角色与参考作品的权利归各自权利人。此项目未取得或授予对这些素材的商业授权。
 

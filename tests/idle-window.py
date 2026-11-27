@@ -12,7 +12,7 @@ root = Path(__file__).resolve().parents[1]
 actual = Path.home() / "Library/Application Support/CodexPetPlus"
 parser = argparse.ArgumentParser()
 parser.add_argument("--binary", type=Path, default=Path.home()/"Applications/Codex Pet Plus.app/Contents/MacOS/Companion")
-parser.add_argument("--output", type=Path, default=root/".build/v23/isolated-idle.json")
+parser.add_argument("--output", type=Path, default=root/".build/qa/isolated-idle.json")
 args = parser.parse_args()
 binary = args.binary.resolve()
 

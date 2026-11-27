@@ -1,6 +1,6 @@
 # 架构与本机勘察
 
-## 2.3.0 的事件归属与计量
+## 0.2.0 的事件归属与计量
 
 本地 hook 经带令牌的 Unix datagram 发送最小事件。Codex 插件没有订阅桌面客户端所有会话的接口。独立启动的 app-server 能看见它自己发起的回合，其他 Codex 客户端由本机只读 JSONL 观察器补全。观察器在文件末尾接续，首先验证 `session_meta` 的身份、父会话和继承边界。真实分叉会用新的时间戳重写继承记录，因此须按 `subagent_history_start_ordinal` 跳过前缀。
 
@@ -31,7 +31,7 @@ broker 保存每个档案的完整历史，再从中截取模型上下文。图�
 
 | 勘察对象 | 结果与工程决定 |
 | --- | --- |
-| ChatGPT.app、Codex CLI | 初次勘察使用桌面版 26.1117.41037、CLI 0.171.0-alpha.13。2.3.0 的真机测试使用桌面版 26.1120.50957、CLI 0.171.0-alpha.13.2，bundle ID 为 `com.openai.codex`。接口以 CLI 生成的 app-server JSON Schema 与实际请求核对。安装写入用户目录，独立桌宠使用 ad hoc 签名。 |
+| ChatGPT.app、Codex CLI | 初次勘察使用桌面版 26.1117.41037、CLI 0.171.0-alpha.13。0.2.0 的真机测试使用桌面版 26.1120.50957、CLI 0.171.0-alpha.13.2，bundle ID 为 `com.openai.codex`。接口以 CLI 生成的 app-server JSON Schema 与实际请求核对。安装写入用户目录，独立桌宠使用 ad hoc 签名。 |
 | `~/.codex/config.toml` | 已有官方 marketplace、多个已启用插件，以及带环境配置的 MCP。工程用 CLI 加入独立 `cartethyia-local` marketplace，保留原设置。 |
 | 官方插件 manifest | `browser`、`chrome`、`unified-computer-use` 含 Stop、Interrupt、SubagentStop。`codex-app-tools` 等声明本地 MCP。插件支持 skills、命令 hooks、stdio MCP 以及客户端承载的应用内容。当前公开协议没有注册系统级、可拖动且每像素穿透的原生桌宠窗口的 API。 |
 | app-server 和 IPC | 公共协议提供回合、item、审批以及 `account/rateLimits/read`；审批是发给负责会话的客户端的请求。存在权限为用户私有的 `~/.codex/ipc/ipc.sock`，未发现对第三方保证的全桌面只读广播契约。工程对自己负责的公有协议请求使用 stdio，观察已有桌面任务采用 hook 与只读日志。 |

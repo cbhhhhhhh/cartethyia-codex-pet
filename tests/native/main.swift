@@ -55,7 +55,7 @@ func snapshot(_ label: String) {
   {
     try? png.write(
       to: URL(fileURLWithPath: env["PET_PLUS_PREVIEW"]!).deletingLastPathComponent()
-        .appendingPathComponent("v23-" + label + ".png"))
+        .appendingPathComponent("pet-preview-" + label + ".png"))
   }
 }
 let thread = UUID().uuidString.lowercased()

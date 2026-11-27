@@ -150,7 +150,7 @@ def wire():
 if __name__ == "__main__":
     r = dict(wire_ms=wire(), chat=offline_chat())
     print(json.dumps(r, ensure_ascii=False, indent=2))
-    output = P / ".build/v23/integration.json"
+    output = P / ".build/qa/integration.json"
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(
         json.dumps(r, ensure_ascii=False, indent=2)

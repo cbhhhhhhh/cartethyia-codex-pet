@@ -41,7 +41,7 @@ def server(cwd=None, isolate=False):
                 options += ["-c", "mcp_servers." + name + ".enabled=false"]
     rpc = Rpc(options, cwd)
     try:
-        rpc.call("initialize", {"clientInfo": {"name": "cartethyia_companion", "version": "2.3.0"},
+        rpc.call("initialize", {"clientInfo": {"name": "cartethyia_companion", "version": "0.2.0"},
                                 "capabilities": {"experimentalApi": True}})
         rpc.send({"method": "initialized", "params": {}})
         yield rpc
@@ -62,7 +62,7 @@ def route(cfg, whisper):
     if not key:
         raise ValueError("模型来源无效")
     override = {"local": "whisperModel", "api": "whisperApiModel", "codex": "whisperCodexModel"}[source]
-    # Pre-2.3 profiles may already have a GGUF exclusively for whispers.
+    # Pre-0.2.0 profiles may already have a GGUF exclusively for whispers.
     separate = cfg.get("whisperSource") == source or (not cfg.get("whisperSource") and source == "local")
     model = (cfg.get(override) if whisper and separate else None) or cfg.get(key) or ""
     return source, model

@@ -1,14 +1,16 @@
-# 卡提希娅 Codex 桌宠 2.3.0
+# 卡提希娅 Codex 桌宠 0.2.0
+
+本版于 2026 年 11 月 27 日首次发布，原版本号 2.3.0，现统一为 **0.2.0**。两个编号对应同一批功能，本页安装包使用新版本号。
 
 这次更新面向 Apple Silicon Mac。卡提学会了提裙行礼、在本子上落笔、解开礼盒，也能记得刚刚给你看的那张图。工作时，她会等你发起的主回合真正结束才庆祝。
 
-![从安装包中取出的提裙行礼、写字、拆礼物动画](https://raw.githubusercontent.com/cbhhhhhhh/cartethyia-codex-pet/v2.3.0/docs/v23-actions.gif)
+![从安装包中取出的提裙行礼、写字、拆礼物动画](https://raw.githubusercontent.com/cbhhhhhhh/cartethyia-codex-pet/v0.2.0/docs/qa/0.2.0/actions.gif)
 
 ## 下载
 
-| 平台 | 2.3.0 安装包 |
+| 平台 | 0.2.0 安装包 |
 | --- | --- |
-| Apple M 系列芯片，macOS 27.2 或更新版本 | **[下载 macOS arm64 ZIP（约 61.3 MiB）](https://github.com/cbhhhhhhh/cartethyia-codex-pet/releases/download/v2.3.0/Cartethyia-Codex-Pet-macOS-arm64.zip)** |
+| Apple M 系列芯片，macOS 27.2 或更新版本 | **[下载 macOS arm64 ZIP（约 61.3 MiB）](https://github.com/cbhhhhhhh/cartethyia-codex-pet/releases/download/v0.2.0/Cartethyia-Codex-Pet-macOS-arm64.zip)** |
 | Windows | |
 
 Windows 版这次尚未更新。每个版本的安装包都保留在各自的发布页。[全部版本](https://github.com/cbhhhhhhh/cartethyia-codex-pet/releases)
@@ -27,4 +29,4 @@ Windows 版这次尚未更新。每个版本的安装包都保留在各自的发
 2. 默认的本地文字聊天首次需下载约 1.1 GB。选择「仅事件」可先使用角色和工作提醒，之后也可在「设置 → 模型」选择已有的 Codex 账户或兼容 API。
 3. 在 Codex 的「设置 → Hooks」审阅 pet-plus 的 hooks。从应用列表打开 **Codex Pet Plus** 可调整设置。单击卡提聊天，右键打开动作、配图、账户额度或任务用量。
 
-如需校验下载文件，把 ZIP 与校验文件放在同一目录，运行 `shasum -a 256 -c SHA256SUMS`。应用使用本地临时签名。回退时退出桌宠，运行所需旧版本的 Mac 安装器。手册含 Gatekeeper、备份和完整卸载步骤。[下载 SHA256SUMS](https://github.com/cbhhhhhhh/cartethyia-codex-pet/releases/download/v2.3.0/SHA256SUMS) · [安装与卸载手册](https://github.com/cbhhhhhhh/cartethyia-codex-pet/blob/v2.3.0/docs/INSTALL-macOS.md) · [本版实测](https://github.com/cbhhhhhhh/cartethyia-codex-pet/blob/v2.3.0/docs/QA-2.3.0.md)
+如需校验下载文件，把 ZIP 与校验文件放在同一目录，运行 `shasum -a 256 -c SHA256SUMS`。应用使用本地临时签名。回退时退出桌宠，运行所需旧版本的 Mac 安装器。手册含 Gatekeeper、备份和完整卸载步骤。[下载 SHA256SUMS](https://github.com/cbhhhhhhh/cartethyia-codex-pet/releases/download/v0.2.0/SHA256SUMS) · [安装与卸载手册](https://github.com/cbhhhhhhh/cartethyia-codex-pet/blob/v0.2.0/docs/INSTALL-macOS.md) · [本版实测](https://github.com/cbhhhhhhh/cartethyia-codex-pet/blob/v0.2.0/docs/QA-0.2.0.md)

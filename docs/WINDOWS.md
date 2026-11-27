@@ -1,6 +1,6 @@
 # 卡提希娅 · Windows 桌宠
 
-下载 Windows x64 安装包，双击 `Cartethyia-2.2.0-Windows-x64-Setup.exe`，按提示为当前用户安装。安装包内含运行环境、基础图集、10 张对话插画和 109 段扩展动作。此版本未作 Authenticode 签名。可在 PowerShell 用 `Get-FileHash` 核对安装包的 SHA-256。[下载 Windows 安装包](https://github.com/cbhhhhhhh/cartethyia-codex-pet/releases/download/v2.2.0/Cartethyia-2.2.0-Windows-x64-Setup.exe) · [下载校验文件](https://github.com/cbhhhhhhh/cartethyia-codex-pet/releases/download/v2.2.0/SHA256SUMS-Windows.txt)
+下载 Windows x64 安装包，双击 `Cartethyia-0.1.0-Windows-x64-Setup.exe`，按提示为当前用户安装。安装包内含运行环境、基础图集、10 张对话插画和 109 段扩展动作。此版本未作 Authenticode 签名。可在 PowerShell 用 `Get-FileHash` 核对安装包的 SHA-256。[下载 Windows 安装包](https://github.com/cbhhhhhhh/cartethyia-codex-pet/releases/download/v0.1.0/Cartethyia-0.1.0-Windows-x64-Setup.exe) · [下载校验文件](https://github.com/cbhhhhhhh/cartethyia-codex-pet/releases/download/v0.1.0/SHA256SUMS-Windows.txt)
 
 ## 三步体验
 

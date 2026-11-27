@@ -59,7 +59,7 @@ result = dict(
     transparent_backgrounds=True,
     disk_MiB=round(sum(f.stat().st_size for f in directory.glob("clips/*.webp")) / 1048576, 2),
 )
-output = root / ".build/v23/artwork.json"
+output = root / ".build/qa/artwork.json"
 output.parent.mkdir(parents=True, exist_ok=True)
 output.write_text(json.dumps(result, indent=2))
 print(result)

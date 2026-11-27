@@ -51,7 +51,7 @@ def main():
             deadline = time.monotonic()+430
             assert inbox.get(timeout=10)["type"]=="history"
             send("config",config=dict(pack="cartethyia",muted=True,chat=False,whispers=False))
-            rpc.call("initialize",dict(clientInfo=dict(name="cartethyia_release_test",version="2.3.0"),
+            rpc.call("initialize",dict(clientInfo=dict(name="cartethyia_release_test",version="0.2.0"),
                                        capabilities=dict(experimentalApi=True)))
             rpc.send(dict(method="initialized",params={}))
             def start(prompt):

@@ -13,7 +13,7 @@ from urllib.parse import urlsplit
 root = Path(__file__).resolve().parents[1]
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument("--binary", type=Path, default=Path.home() / "Applications/Codex Pet Plus.app/Contents/MacOS/Companion")
-parser.add_argument("--output", type=Path, default=root / ".build/v23/two-pets.json")
+parser.add_argument("--output", type=Path, default=root / ".build/qa/two-pets.json")
 args = parser.parse_args()
 app = args.binary.resolve()
 runtime = Path.home() / "Library/Application Support/CodexPetPlus/runtime"

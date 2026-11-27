@@ -1,6 +1,6 @@
 # Windows 构建与接口
 
-本移植以仓库 main 的 3fc5934 和 v2.2.0 发行素材为基准。macOS 应用继续使用原有 AppKit、Swift 构建脚本和发行流程。Windows 版本使用 PySide6、Win32 分层窗口、当前用户命名管道与 Inno Setup。
+本移植以仓库 main 的 3fc5934 和 v0.1.0 发行素材为基准。macOS 应用继续使用原有 AppKit、Swift 构建脚本和发行流程。Windows 版本使用 PySide6、Win32 分层窗口、当前用户命名管道与 Inno Setup。
 
 ## 在开发机生成安装包
 
@@ -8,10 +8,10 @@
 
 ```powershell
 python windows/build.py
-Get-FileHash .\dist\Cartethyia-2.2.0-Windows-x64-Setup.exe -Algorithm SHA256
+Get-FileHash .\dist\Cartethyia-0.1.0-Windows-x64-Setup.exe -Algorithm SHA256
 ```
 
-构建脚本固定 CPython 3.13.9 x64 embeddable、PySide6 Essentials 6.9.3、shiboken6 6.9.3 的归档摘要。它验证 v2.2.0 的 SHA256SUMS，并用清单校验 Mac ZIP，再从应用 Resources/pets/cartethyia 提取预渲染素材。生成的安装包附带图集、插画、动作、图标及运行环境。可选模型和 llama.cpp 引擎通过 Windows 设置页按需获取，版本和哈希在 model_store.py 中。源码署名见 NOTICE 和 windows/THIRD-PARTY.txt。
+构建脚本固定 CPython 3.13.9 x64 embeddable、PySide6 Essentials 6.9.3、shiboken6 6.9.3 的归档摘要。它验证 v0.1.0 的 SHA256SUMS，并用清单校验 Mac ZIP，再从应用 Resources/pets/cartethyia 提取预渲染素材。生成的安装包附带图集、插画、动作、图标及运行环境。可选模型和 llama.cpp 引擎通过 Windows 设置页按需获取，版本和哈希在 model_store.py 中。源码署名见 NOTICE 和 windows/THIRD-PARTY.txt。
 
 ## 工作与聊天
 

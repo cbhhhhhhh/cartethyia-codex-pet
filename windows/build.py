@@ -18,7 +18,7 @@ CACHE.mkdir(exist_ok=True)
 BUILD.mkdir(exist_ok=True)
 STAGE.mkdir(exist_ok=True)
 RUNTIME.mkdir(exist_ok=True)
-BASE="https://github.com/cbhhhhhhh/cartethyia-codex-pet/releases/download/v2.2.0/"
+BASE="https://github.com/cbhhhhhhh/cartethyia-codex-pet/releases/download/v0.1.0/"
 
 
 def sha(p):
@@ -86,7 +86,7 @@ extract(py,lambda n:True,RUNTIME)
 wheel("PySide6-Essentials","21f98077c135864473089e59a6a0bd828e64c6644b3dd7267b102da4a2ee8f21",qt_member)
 wheel("shiboken6","f1498176d2d5bcade7d662e1fc5143980fb008b6c78b966289d29a4ae86cd0c6",
       lambda n:n.endswith((".py",".dll",".pyd","METADATA",".txt")))
-sums=checked("SHA256SUMS",BASE+"SHA256SUMS","5a3f6a6be83065e86bdddb115dab990d05eac40a4d7878cee4e26547b1139cca")
+sums=checked("SHA256SUMS",BASE+"SHA256SUMS","17fd06aa22b029c65abd6224f75ea92d380e627a103900437c8971c1f641cd31")
 digest,filename=sums.read_text().split()
 archive=checked(filename,BASE+filename,digest)
 shutil.copytree(ROOT/"art/pets",STAGE/"art/pets",dirs_exist_ok=True)
@@ -106,7 +106,7 @@ for filename in ("chat","state","observe","watch","archive","reminders","weather
 for filename in ("app","cards","common","core","events","model_store","pet","service","transport"):
     copy(ROOT/f"windows/{filename}.py",STAGE/f"windows/{filename}.py")
 shutil.copytree(ROOT/"src/web/portraits",STAGE/"src/web/portraits",dirs_exist_ok=True)
-for f in ("NOTICE","windows/THIRD-PARTY.txt","examples/config.json","art/cartethyia.ico","docs/WINDOWS.md"):
+for f in ("LICENSE","NOTICE","windows/THIRD-PARTY.txt","examples/config.json","art/cartethyia.ico","docs/WINDOWS.md"):
     copy(ROOT/f,STAGE/f)
 for f in ("LGPL-3.0-only.txt","GPL-3.0-only.txt"):
     copy(ROOT/"windows/licenses"/f,STAGE/"windows/licenses"/f)
@@ -123,7 +123,7 @@ for file in sorted(RUNTIME.rglob("*")):
                    f'Flags: ignoreversion; Check: NeedsRuntimeFile(\'{rel}\', \'{sha(file)}\')')
 (BUILD/"runtime-files.iss").write_text("\n".join(entries),encoding="utf-8-sig")
 subprocess.run([iscc,"/Qp",str(ROOT/"windows/setup.iss")],check=True)
-out=ROOT/"dist/Cartethyia-2.2.0-Windows-x64-Setup.exe"
+out=ROOT/"dist/Cartethyia-0.1.0-Windows-x64-Setup.exe"
 (out.parent/"SHA256SUMS-Windows.txt").write_text(sha(out)+"  "+out.name+"\n",encoding="ascii")
 print(out)
 

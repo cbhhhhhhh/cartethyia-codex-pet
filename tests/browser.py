@@ -44,7 +44,7 @@ with tempfile.TemporaryDirectory() as d:
             raise RuntimeError(result.stderr[-900:])
         data = json.loads(result.stdout)
         assert all(data.values())
-        output = root / ".build/v23/browser.json"
+        output = root / ".build/qa/browser.json"
         output.parent.mkdir(parents=True, exist_ok=True)
         output.write_text(json.dumps(data, indent=2))
         print(data)

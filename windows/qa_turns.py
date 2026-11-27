@@ -58,7 +58,7 @@ def response(ident):
 
 
 def initialize():
-    response(call("initialize",{"clientInfo":{"name":"cartethyia_qa","version":"2.2.0"},"capabilities":{"experimentalApi":True}}))
+    response(call("initialize",{"clientInfo":{"name":"cartethyia_qa","version":"0.1.0"},"capabilities":{"experimentalApi":True}}))
     send({"method":"initialized","params":{}})
 
 try:

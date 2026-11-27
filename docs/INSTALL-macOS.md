@@ -1,8 +1,8 @@
-# 安装卡提希娅桌宠 2.3.0
+# 安装卡提希娅桌宠 0.2.0
 
 适用于 M 系列芯片、macOS 27.2 或更新版本，以及装有 Codex 桌面版的 Mac。查看「苹果菜单 → 关于本机」可核对系统与芯片。
 
-1. 从 [2.3.0 发布页](https://github.com/cbhhhhhhh/cartethyia-codex-pet/releases/tag/v2.3.0) 下载 `Cartethyia-Codex-Pet-macOS-arm64.zip` 并解压。
+1. 从 [0.2.0 发布页](https://github.com/cbhhhhhhh/cartethyia-codex-pet/releases/tag/v0.2.0) 下载 `Cartethyia-Codex-Pet-macOS-arm64.zip` 并解压。
 2. 双击解压目录里的 **安装.command**，选择完整安装。本地文字聊天首次约下载 1.1 GB 的 llama.cpp 与 Qwen 模型，以后可离线运行。只想看工作状态可选「仅事件」。这条安装路径也支持之后直接在设置中选用 API 或 Codex 聊天。安装到当前账户的「应用程序」，无需管理员权限。
 3. 在 Codex 的「设置 → Hooks」审阅 pet-plus 的 hooks，再发一条新消息。单击卡提聊天，右键点播动作、预览配图、查询账户额度或当前任务用量。工作详情移到了右键菜单。
 4. 从应用列表打开 **Codex Pet Plus** 进入设置。「聊天」可以编辑人设与禁用话题。「模型」可以分别选择聊天和碎碎念的来源。本地默认使用 Qwen2.5-1.5B-Instruct。选择 API 或 Codex 后，该通道才会向所选服务发送生成所需的数据。

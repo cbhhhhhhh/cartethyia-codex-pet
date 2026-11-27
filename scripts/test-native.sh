@@ -1,7 +1,7 @@
 #!/bin/bash
 set -euo pipefail
 cd "$(dirname "$0")/.."
-mkdir -p .build/v23
+mkdir -p .build/qa
 scratch=$(mktemp -d "${TMPDIR:-/tmp}/cppqa.XXXXXXXX")
 trap 'rm -rf "$scratch"' EXIT
 out="$scratch/Test.app/Contents"
@@ -35,10 +35,10 @@ cp "$scratch/qa.json" .build/native.json
 cp "$scratch/qa.log" .build/native-exercise.log
 [[ -s .build/native.json ]] || { cat .build/native-exercise.log >&2; exit 1; }
 cp "$PET_PLUS_PREVIEW" .build/native-preview.png
-for card in "$scratch"/v23-*.png; do [[ ! -f "$card" ]] || cp "$card" .build/v23/; done
+for card in "$scratch"/pet-preview-*.png; do [[ ! -f "$card" ]] || cp "$card" .build/qa/; done
 "$out/MacOS/Companion" restore > .build/restore.json
 "$out/MacOS/Companion" real-cli > .build/real-cli.json
-"$out/MacOS/Companion" recovery > .build/v23/recovery.json
+"$out/MacOS/Companion" recovery > .build/qa/recovery.json
 if [[ "${1:-}" == "--preview" ]]; then
  "$out/MacOS/Companion" actions > .build/v2-animation-qa.json
  cp "$scratch/v2-actions.gif" docs/v2-actions.gif
@@ -47,6 +47,6 @@ python3 - <<'PY'
 import json,pathlib
 root=pathlib.Path('.build')
 d=dict(json.loads((root/'native.json').read_text()),**json.loads((root/'restore.json').read_text()),**json.loads((root/'real-cli.json').read_text()))
-pathlib.Path('.build/v23/native.json').write_text(json.dumps(d,indent=2,sort_keys=True))
+pathlib.Path('.build/qa/native.json').write_text(json.dumps(d,indent=2,sort_keys=True))
 print(json.dumps(d,indent=2))
 PY
